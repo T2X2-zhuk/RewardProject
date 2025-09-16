@@ -1,31 +1,31 @@
 version: '1'
 
 networks:
-  javaguru:
+  danil-reward-project:
 
 services:
   reward-calculation-db:
-    networks: [javaguru]
+    networks: [danil-reward-project]
     container_name: reward-calculation-db
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: fkmdbyjdbx383
       MYSQL_DATABASE: reward_calculation_db
     ports:
-      - "3000:3306"
+      - "3006:3306"
 
   reward-payment-db:
-    networks: [javaguru]
+    networks: [danil-reward-project]
     container_name: reward-payment-db
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: fkmdbyjdbx383
       MYSQL_DATABASE: reward_payment_db
     ports:
-      - "3001:3306"
+      - "3005:3306"
 
   reward-calculation-app:
-    networks: [javaguru]
+    networks: [danil-reward-project]
     container_name: reward-calculation-app
     image: reward-calculation-app:1.0.1
     ports:
@@ -34,10 +34,10 @@ services:
       - reward-calculation-db
 
   reward-payment-app:
-    networks: [javaguru]
+    networks: [danil-reward-project]
     container_name: reward-payment-app
     image: reward-payment-app:1.0.1
     ports:
-      - "8090:8090"
+      - "8095:8095"
     depends_on:
       - reward-payment-db

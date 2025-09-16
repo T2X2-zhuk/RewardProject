@@ -1,19 +1,40 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
 plugins {
     id 'java'
+    id 'idea'
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+group 'RewardProject'
 
-repositories {
-    mavenCentral()
-}
+subprojects {
 
-dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-}
+    apply plugin: 'java'
+    apply plugin: 'idea'
 
-test {
-    useJUnitPlatform()
+    version '1.0-SNAPSHOT'
+    sourceCompatibility = '21'
+    targetCompatibility = '21'
+
+
+    repositories {
+        mavenCentral()
+    }
+
+    compileJava {
+        options.encoding = "UTF-8"
+    }
+
+    compileTestJava {
+        options.encoding = "UTF-8"
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
 }
