@@ -1,40 +1,36 @@
-package RewardCalculation.util;
+package RewardCalculation.service.calculate;
 
 import RewardCalculation.JPA.domain.Employee;
 import RewardCalculation.JPA.domain.Reward;
 import RewardCalculation.JPA.domain.Tariff;
 import RewardCalculation.JPA.repositories.RewardRepository;
 import RewardCalculation.JPA.repositories.TariffRepository;
-import RewardCalculation.restClientRewardPayment.RewardPaymentClient;
+import RewardCalculation.dto.PaymentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class SendPaymentAndCalculateRewards {
+public class CalculatePayment {
 
-    @Autowired
-    private RewardPaymentClient rewardPaymentClient;
     @Autowired private TariffRepository tariffRepository;
     @Autowired private RewardRepository rewardRepository;
 
-    public void calculate(List<Employee> employees){
+    public List<PaymentDTO> calculate(List<Employee> employees){
+        List<PaymentDTO> paymentDTOS = new ArrayList<>();
         for (Employee employee : employees) {
-            List<Reward> rewards = rewardRepository.findByEmployeeId(employee.getId());
-            for (Reward reward : rewards) {
-                sendingPayment(employee,reward);
+            for (Reward reward : rewardRepository.findByEmployeeId(employee.getId())) {
+                paymentDTOS.add(createPaymentDto(employee,reward));
             }
         }
+        return paymentDTOS;
     }
-    private void sendingPayment(Employee employee , Reward reward){
+    private PaymentDTO createPaymentDto(Employee employee , Reward reward){
        Tariff tariff = tariffRepository.findByJobType(reward.getJobType()).get();
-       rewardPaymentClient.payReward(employee.getId(), getAmount(employee.getBonusCoefficient(),tariff.getAmount()));
-       System.out.println("Отправлен платеж");
-       reward.setStatus("PAID");
-       rewardRepository.save(reward);
+       return new PaymentDTO(employee.getId(), getAmount(employee.getBonusCoefficient(),tariff.getAmount()));
     }
-
     private double getAmount(Double bonusCoefficient , Double amount){
         return (1 + bonusCoefficient) * amount;
     }

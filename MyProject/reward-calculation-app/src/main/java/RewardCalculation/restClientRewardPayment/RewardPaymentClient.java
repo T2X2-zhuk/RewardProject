@@ -1,9 +1,10 @@
 package RewardCalculation.restClientRewardPayment;
 
-import RewardCalculation.requests.RewardPaymentRequest;
-import RewardCalculation.responses.RewardPaymentResponse;
+import RewardCalculation.dto.PaymentDTO;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
+
+import java.util.List;
 
 @Component
 public class RewardPaymentClient {
@@ -14,16 +15,13 @@ public class RewardPaymentClient {
         this.rewardPaymentRestClient = rewardPaymentRestClient;
     }
 
-    public void payReward(Long employeeId, Double amount) {
-
-        RewardPaymentRequest request = new RewardPaymentRequest(employeeId, amount);
-
-        rewardPaymentRestClient.post()
+    public RewardPaymentResponse payReward(List<PaymentDTO> paymentDTOS) {
+        RewardPaymentRequest request = new RewardPaymentRequest(paymentDTOS);
+        return rewardPaymentRestClient.post()
                 .uri("/reward/payment/")
                 .body(request)
                 .retrieve()
                 .body(RewardPaymentResponse.class);
-
     }
 
 }

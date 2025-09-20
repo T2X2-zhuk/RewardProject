@@ -1,9 +1,12 @@
-package RewardCalculation.requests;
+package RewardCalculation.restClientRewardPayment;
 
+import RewardCalculation.dto.PaymentDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -11,7 +14,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class RewardPaymentRequest {
 
-    private Long employeeId;
-    private Double amount;
+    private List<PaymentDTO> paymentDTOS;
 
 }

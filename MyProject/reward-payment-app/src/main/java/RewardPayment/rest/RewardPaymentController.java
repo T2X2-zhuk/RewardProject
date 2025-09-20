@@ -19,8 +19,7 @@ public class RewardPaymentController {
             consumes = "application/json",
             produces = "application/json")
     public RewardPaymentResponse payReward(@RequestBody RewardPaymentRequest request) {
-        rewardPaymentService.pay(request.getEmployeeId(), request.getAmount());
-        return new RewardPaymentResponse();
+        return rewardPaymentService.pay(request.getPaymentDTOS());
     }
 
 }

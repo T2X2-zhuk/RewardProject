@@ -2,9 +2,13 @@ package RewardPayment.service;
 
 import RewardPayment.JPA.domain.Payment;
 import RewardPayment.JPA.repositories.PaymentRepository;
+import RewardPayment.dto.PaymentDTO;
+import RewardPayment.responses.RewardPaymentResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Component
 @Transactional
@@ -12,11 +16,18 @@ public class RewardPaymentService {
 
     @Autowired private PaymentRepository paymentRepository;
 
-    public void pay(Long employeeId, Double amount) {
-        Payment payment = new Payment();
-        payment.setEmployeeId(employeeId);
-        payment.setAmount(amount);
-        paymentRepository.save(payment);
+    public RewardPaymentResponse pay(List<PaymentDTO> paymentDTOs) {
+        RewardPaymentResponse response = new RewardPaymentResponse();
+        for (PaymentDTO paymentDTO : paymentDTOs){
+            Payment payment = Payment.builder()
+                    .employeeId(paymentDTO.getEmployeeId())
+                    .amount(paymentDTO.getAmount()).build();
+            paymentRepository.save(payment);
+        }
+        response.setStatus("PAID");
+        return response;
     }
+
+
 
 }

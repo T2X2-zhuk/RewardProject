@@ -2,7 +2,7 @@ package RewardCalculation.service;
 
 import org.junit.jupiter.api.Test;
 
-class RewardCalculationServiceTest {
+class RewardCalculationServiceImplTest {
 
     @Test
     public void deleteMe() {
