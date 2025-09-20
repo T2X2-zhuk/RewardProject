@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class CalculatePayment {
@@ -19,17 +20,17 @@ public class CalculatePayment {
     @Autowired private RewardRepository rewardRepository;
 
     public List<PaymentDTO> calculate(List<Employee> employees){
-        List<PaymentDTO> paymentDTOS = new ArrayList<>();
-        for (Employee employee : employees) {
-            for (Reward reward : rewardRepository.findByEmployeeId(employee.getId())) {
-                paymentDTOS.add(createPaymentDto(employee,reward));
-            }
-        }
-        return paymentDTOS;
+        List<Tariff> tariffs = tariffRepository.findAll();
+        return employees.stream()
+                .flatMap(employee -> rewardRepository.findByEmployeeId(employee.getId()).stream()
+                        .map(reward -> createPaymentDto(employee, reward, tariffs)))
+                .toList();
     }
-    private PaymentDTO createPaymentDto(Employee employee , Reward reward){
-       Tariff tariff = tariffRepository.findByJobType(reward.getJobType()).get();
-       return new PaymentDTO(employee.getId(), getAmount(employee.getBonusCoefficient(),tariff.getAmount()));
+    private PaymentDTO createPaymentDto(Employee employee , Reward reward,List<Tariff> tariffs){
+        Optional<Tariff> tariff = tariffs.stream()
+                .filter(t -> reward.getJobType().equals(t.getJobType()))
+                .findFirst();
+       return new PaymentDTO(employee.getId(), getAmount(employee.getBonusCoefficient(),tariff.get().getAmount()));
     }
     private double getAmount(Double bonusCoefficient , Double amount){
         return (1 + bonusCoefficient) * amount;

@@ -25,6 +25,7 @@ public class RewardPaymentService {
             paymentRepository.save(payment);
         }
         response.setStatus("PAID");
+        response.setPaymentDTOS(paymentDTOs);
         return response;
     }
 

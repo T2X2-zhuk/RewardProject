@@ -17,7 +17,7 @@ import java.util.List;
 public class RewardPaymentResponse extends CoreResponse {
 
     private String status;
-
+    private List<PaymentDTO> paymentDTOS;
     public RewardPaymentResponse(List<ValidationError> errors) {
         super(errors);
     }

@@ -36,31 +36,39 @@ class RewardCalculationServiceImpl implements RewardCalculationService {
 
     public RewardCalculationResponse execute(List<Employee> employees) {
         RewardCalculationResponse coreResponse = new RewardCalculationResponse();
-        List<ValidationError> errors = validator.validate(employees);
-        if (!errors.isEmpty()){
-            coreResponse.setErrors(errors);
+        List<ValidationError> validationErrors = validator.validate(employees);
+        if (!validationErrors.isEmpty()) {
+            coreResponse.setErrors(validationErrors);
             return coreResponse;
         }
-        List<PaymentDTO> paymentDTOSList = calculatePayment.calculate(employees);
-        RewardPaymentResponse paymentResponse = sendingToMicroservice.send(paymentDTOSList);
+        RewardPaymentResponse paymentResponse = sendingToMicroservice.send(calculatePayment.calculate(employees));
+
         if (paymentResponse.hasErrors()){
             coreResponse.setErrors(paymentResponse.getErrors());
             return coreResponse;
-        }else {
-            successfulResponse(coreResponse,paymentResponse,paymentDTOSList);
         }
+        else {
+            successfulResponse(coreResponse,paymentResponse);
+        }
+
         return coreResponse;
     }
 
-    private void successfulResponse(RewardCalculationResponse coreResponse,RewardPaymentResponse paymentResponse,List<PaymentDTO> paymentDTOSList) {
+    private void successfulResponse(RewardCalculationResponse coreResponse,
+                                    RewardPaymentResponse paymentResponse) {
         coreResponse.setMessage("Ответ успешен - " + paymentResponse.getStatus());
-        List<Reward> rewards = new ArrayList<>();
-        for (PaymentDTO paymentDTO : paymentDTOSList){
-            rewards.addAll(rewardRepository.findByEmployeeId(paymentDTO.getEmployeeId()));
-        }
+
+        List<Reward> rewards = paymentResponse.getPaymentDTOS().stream()
+                .map(PaymentDTO::getEmployeeId)
+                .map(rewardRepository::findByEmployeeId)
+                .flatMap(List::stream)
+                .toList();
+
         rewardSetStatusOnPaid(rewards, paymentResponse.getStatus());
     }
-    private void rewardSetStatusOnPaid(List<Reward> rewardsAfterPayment , String status){
-        rewardsAfterPayment.forEach(reward ->  rewardRepository.rewardSetStatus(status ,reward.getEmployeeId()));
+    private void rewardSetStatusOnPaid(List<Reward> rewardsAfterPayment, String status) {
+        rewardsAfterPayment.forEach(
+                reward -> rewardRepository.rewardSetStatus(status, reward.getEmployeeId())
+        );
     }
 }
