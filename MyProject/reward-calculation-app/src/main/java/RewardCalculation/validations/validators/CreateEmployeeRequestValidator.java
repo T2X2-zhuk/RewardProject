@@ -1,6 +1,4 @@
 package RewardCalculation.validations.validators;
-
-import RewardCalculation.JPA.repositories.EmployeeRepository;
 import RewardCalculation.requests.CreateEmployeeRequest;
 import RewardCalculation.util.ValidationError;
 import RewardCalculation.validations.MethodsValidatorClasses.ValidatorClassWithMethodsForEmployee;
@@ -17,12 +15,9 @@ public class CreateEmployeeRequestValidator {
 
     public List<ValidationError> validate(CreateEmployeeRequest request){
         List<ValidationError> errors = new ArrayList<>();
-        validator.firstNameMustNotBeEmpty(request.getFirstName()).ifPresent(errors ::add);
-        validator.lastNameMustNotBeEmpty(request.getLastName()).ifPresent(errors ::add);
-        validator.bonusCoefficientMustNotBeEmpty(request.getBonusCoefficient()).ifPresent(errors ::add);
-        if (errors.isEmpty()){
-            validator.duplicateEmployeeError(request.getFirstName(),request.getLastName()).ifPresent(errors ::add);
-        }
+        validator.firstNameMustNotBeEmpty(request.getEmployeeDTO().getFirstName()).ifPresent(errors ::add);
+        validator.lastNameMustNotBeEmpty(request.getEmployeeDTO().getLastName()).ifPresent(errors ::add);
+        validator.bonusCoefficientMustNotBeEmpty(request.getEmployeeDTO().getBonusCoefficient()).ifPresent(errors ::add);
         return errors;
     }
 }

@@ -17,6 +17,7 @@ import java.util.Optional;
     @Autowired
     private ValidationErrorFactory errorFactory;
     @Autowired private RewardRepository rewardRepository;
+
     public Optional<ValidationError> employeeIdMustNotBeEmpty(Long employeeId){
         return (employeeId == null)
                 ? Optional.of(errorFactory.buildError("ERROR_CODE_8"))

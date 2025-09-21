@@ -1,5 +1,6 @@
 package RewardCalculation.requests;
 
+import RewardCalculation.dto.EmployeeDTO;
 import lombok.*;
 
 @Getter
@@ -9,10 +10,5 @@ import lombok.*;
 @Builder
 public class CreateEmployeeRequest {
 
-    private String firstName;
-
-    private String lastName;
-
-    private Double bonusCoefficient;
-
+    private EmployeeDTO employeeDTO;
 }

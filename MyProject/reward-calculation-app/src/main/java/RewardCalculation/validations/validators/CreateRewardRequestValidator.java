@@ -18,10 +18,10 @@ public class CreateRewardRequestValidator {
 
     public List<ValidationError> validate(CreateRewardRequest request){
         List<ValidationError> errors = new ArrayList<>();
-        validator.employeeIdMustNotBeEmpty(request.getEmployeeId()).ifPresent(errors ::add);
-        tariffValidator.jobTypeIsEmpty(request.getJobType()).ifPresent(errors ::add);
+        validator.employeeIdMustNotBeEmpty(request.getRewardDTO().getEmployeeId()).ifPresent(errors ::add);
+        tariffValidator.jobTypeIsEmpty(request.getRewardDTO().getJobType()).ifPresent(errors ::add);
         if (errors.isEmpty()){
-            tariffValidator.suchJobTypesIsNotInDatabase(request.getJobType()).ifPresent(errors::add);
+            tariffValidator.suchJobTypesIsNotInDatabase(request.getRewardDTO().getJobType()).ifPresent(errors::add);
         }
         return errors;
     }

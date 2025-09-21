@@ -42,7 +42,12 @@ public class ValidatorClassWithMethodsForTariff {
             }
         }
         return Optional.empty();
+    }
 
+    public Optional<ValidationError> suchTariffAlwaysIsInDatabase(String jobType){
+        return (tariffRepository.findByJobType(jobType).isPresent())
+                ? Optional.of(errorFactory.buildError("ERROR_CODE_14"))
+                : Optional.empty();
     }
 
     private boolean isNullOrBlankOrEmpty(String parameter) {

@@ -25,27 +25,16 @@ class CreateRewardServiceImpl implements CreateRewardService {
     public CreateRewardResponse execute(CreateRewardRequest request) {
         CreateRewardResponse response = new CreateRewardResponse();
         List<ValidationError> errors = validator.validate(request);
-        if (!errors.isEmpty()){
-            response.setErrors(errors);
+        if (errors.isEmpty()){
+            Reward reward = Reward.builder()
+                    .employeeId(request.getRewardDTO().getEmployeeId())
+                    .jobType(request.getRewardDTO().getJobType())
+                    .status(request.getRewardDTO().getStatus()).build();
+            rewardRepository.save(reward);
+            response.setRewardDTO(request.getRewardDTO());
         }else {
-            response.setRewardDTO(createRewardDTO(storeRewardToDatabase(request)));
+            response.setErrors(errors);
         }
         return response;
-    }
-
-    private Reward storeRewardToDatabase(CreateRewardRequest request) {
-        Reward reward = Reward.builder()
-                .employeeId(request.getEmployeeId())
-                .jobType(request.getJobType())
-                .status(request.getStatus())
-                .build();
-        return rewardRepository.save(reward);
-    }
-
-    private RewardDTO createRewardDTO(Reward reward) {
-        return RewardDTO.builder().id(reward.getId())
-                .employeeId(reward.getEmployeeId())
-                .jobType(reward.getJobType())
-                .status(reward.getStatus()).build();
     }
 }

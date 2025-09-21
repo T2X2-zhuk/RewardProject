@@ -1,5 +1,7 @@
 package RewardCalculation.requests;
 
+import RewardCalculation.JPA.domain.Reward;
+import RewardCalculation.dto.RewardDTO;
 import lombok.*;
 
 @Getter
@@ -9,10 +11,6 @@ import lombok.*;
 @Builder
 public class CreateRewardRequest {
 
-    private Long employeeId;
-
-    private String jobType;
-
-    private String status;
+    private RewardDTO rewardDTO;
 
 }
