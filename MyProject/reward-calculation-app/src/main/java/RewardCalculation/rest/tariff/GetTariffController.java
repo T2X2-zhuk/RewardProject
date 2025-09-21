@@ -1,4 +1,4 @@
-package RewardCalculation.rest.controllers;
+package RewardCalculation.rest.tariff;
 import RewardCalculation.responses.GetTariffResponse;
 import RewardCalculation.service.interfaces.GetTariffService;
 import org.springframework.beans.factory.annotation.Autowired;

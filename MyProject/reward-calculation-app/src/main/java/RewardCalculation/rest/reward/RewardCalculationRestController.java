@@ -1,4 +1,4 @@
-package RewardCalculation.rest.controllers;
+package RewardCalculation.rest.reward;
 
 import RewardCalculation.JPA.repositories.EmployeeRepository;
 import RewardCalculation.responses.RewardCalculationResponse;

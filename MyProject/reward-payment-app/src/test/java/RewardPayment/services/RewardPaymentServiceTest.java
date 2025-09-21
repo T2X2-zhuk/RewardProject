@@ -1,4 +1,4 @@
-package RewardPayment.service;
+package RewardPayment.services;
 
 import org.junit.jupiter.api.Test;
 

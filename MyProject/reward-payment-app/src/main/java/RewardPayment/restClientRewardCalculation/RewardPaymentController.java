@@ -1,8 +1,6 @@
-package RewardPayment.rest;
+package RewardPayment.restClientRewardCalculation;
 
-import RewardPayment.requests.RewardPaymentRequest;
-import RewardPayment.responses.RewardPaymentResponse;
-import RewardPayment.service.RewardPaymentService;
+import RewardPayment.services.RewardPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

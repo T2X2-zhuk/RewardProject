@@ -1,4 +1,5 @@
-package RewardPayment.validations;
+package RewardPayment.validations.MethodsValidatorClasses;
+
 import RewardPayment.util.ErrorCodeUtil;
 import RewardPayment.util.Placeholder;
 import RewardPayment.util.ValidationError;

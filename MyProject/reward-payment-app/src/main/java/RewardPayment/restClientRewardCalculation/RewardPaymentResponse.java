@@ -1,4 +1,4 @@
-package RewardPayment.responses;
+package RewardPayment.restClientRewardCalculation;
 
 import RewardPayment.dto.PaymentDTO;
 import RewardPayment.util.CoreResponse;
@@ -18,6 +18,7 @@ public class RewardPaymentResponse extends CoreResponse {
 
     private String status;
     private List<PaymentDTO> paymentDTOS;
+
     public RewardPaymentResponse(List<ValidationError> errors) {
         super(errors);
     }

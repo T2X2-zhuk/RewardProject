@@ -17,37 +17,37 @@ public class ValidatorClassWithMethodsForEmployee {
 
     public Optional<ValidationError> employeeIsNotDatabase(Long id){
       return (employeeRepository.findById(id).isEmpty())
-      ? Optional.of(errorFactory.buildError("ERROR_CODE_5"))
+      ? Optional.of(errorFactory.buildError("ERROR_CODE_For_Employee_5"))
       : Optional.empty();
     }
 
     public Optional<ValidationError> firstNameMustNotBeEmpty(String firstName){
         return (isNullOrBlankOrEmpty(firstName))
-                ? Optional.of(errorFactory.buildError("ERROR_CODE_1"))
+                ? Optional.of(errorFactory.buildError("ERROR_CODE_For_Employee_1"))
                 : Optional.empty();
     }
 
     public Optional<ValidationError> lastNameMustNotBeEmpty(String lastName){
         return (isNullOrBlankOrEmpty(lastName))
-                ? Optional.of(errorFactory.buildError("ERROR_CODE_2"))
+                ? Optional.of(errorFactory.buildError("ERROR_CODE_For_Employee_2"))
                 : Optional.empty();
     }
 
     public Optional<ValidationError> bonusCoefficientMustNotBeEmpty(double bonusCoefficient){
         return (bonusCoefficient == 0.0)
-                ? Optional.of(errorFactory.buildError("ERROR_CODE_3"))
+                ? Optional.of(errorFactory.buildError("ERROR_CODE_For_Employee_3"))
                 : Optional.empty();
     }
 
     public Optional<ValidationError> duplicateEmployeeError(String firstName,String lastName){
         return (employeeRepository.findByFirstNameAndLastName(firstName,lastName).isPresent())
-                ? Optional.of(errorFactory.buildError("ERROR_CODE_4"))
+                ? Optional.of(errorFactory.buildError("ERROR_CODE_For_Employee_4"))
                 : Optional.empty();
     }
 
     public Optional<ValidationError> listEmployeeIsEmpty(List<Employee> employees){
         return (employees.isEmpty())
-                ? Optional.of(errorFactory.buildError("ERROR_CODE_13"))
+                ? Optional.of(errorFactory.buildError("ERROR_CODE_For_Employee_6"))
                 : Optional.empty();
     }
     private boolean isNullOrBlankOrEmpty(String parameter) {

@@ -1,4 +1,4 @@
-package RewardCalculation.rest.controllers;
+package RewardCalculation.rest.employee;
 import RewardCalculation.requests.CreateEmployeeRequest;
 import RewardCalculation.responses.CreateEmployeeResponse;
 import RewardCalculation.service.interfaces.CreateEmployeeService;

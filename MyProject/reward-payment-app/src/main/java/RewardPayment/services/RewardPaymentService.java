@@ -1,9 +1,9 @@
-package RewardPayment.service;
+package RewardPayment.services;
 
 import RewardPayment.JPA.domain.Payment;
 import RewardPayment.JPA.repositories.PaymentRepository;
 import RewardPayment.dto.PaymentDTO;
-import RewardPayment.responses.RewardPaymentResponse;
+import RewardPayment.restClientRewardCalculation.RewardPaymentResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

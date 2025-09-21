@@ -1,4 +1,4 @@
-package RewardPayment.requests;
+package RewardPayment.restClientRewardCalculation;
 
 import RewardPayment.dto.PaymentDTO;
 import lombok.AllArgsConstructor;

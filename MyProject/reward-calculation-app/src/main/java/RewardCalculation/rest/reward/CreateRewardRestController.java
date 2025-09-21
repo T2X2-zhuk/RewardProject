@@ -1,4 +1,4 @@
-package RewardCalculation.rest.controllers;
+package RewardCalculation.rest.reward;
 
 import RewardCalculation.requests.CreateRewardRequest;
 import RewardCalculation.responses.CreateRewardResponse;

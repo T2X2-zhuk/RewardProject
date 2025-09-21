@@ -1,4 +1,4 @@
-package RewardCalculation.rest.controllers;
+package RewardCalculation.rest.tariff;
 import RewardCalculation.requests.CreateTariffRequest;
 import RewardCalculation.responses.CreateTariffResponse;
 import RewardCalculation.service.interfaces.CreateTariffService;
