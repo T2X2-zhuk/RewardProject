@@ -1,13 +1,11 @@
 package RewardCalculation.service.servises;
 
 import RewardCalculation.JPA.domain.Employee;
-import RewardCalculation.JPA.domain.Reward;
-import RewardCalculation.JPA.repositories.RewardRepository;
-import RewardCalculation.dto.PaymentDTO;
 import RewardCalculation.responses.RewardCalculationResponse;
 import RewardCalculation.restClientRewardPayment.RewardPaymentResponse;
 import RewardCalculation.service.calculate.CalculatePayment;
 import RewardCalculation.service.calculate.SendPaymentsToMicroservice;
+import RewardCalculation.service.calculate.SuccessfulPayment;
 import RewardCalculation.service.interfaces.RewardCalculationService;
 import RewardCalculation.util.ValidationError;
 import RewardCalculation.validations.validators.ListEmployeeValidator;
@@ -15,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,7 +27,7 @@ import java.util.List;
 class RewardCalculationServiceImpl implements RewardCalculationService {
     
     @Autowired private ListEmployeeValidator validator;
-    @Autowired private RewardRepository rewardRepository;
+    @Autowired private SuccessfulPayment successfulPayment;
     @Autowired private SendPaymentsToMicroservice sendingToMicroservice;
     @Autowired private CalculatePayment calculatePayment;
 
@@ -41,6 +38,10 @@ class RewardCalculationServiceImpl implements RewardCalculationService {
             coreResponse.setErrors(validationErrors);
             return coreResponse;
         }
+        return appealAndResponseToRewardPayment(employees, coreResponse);
+    }
+
+    private RewardCalculationResponse appealAndResponseToRewardPayment(List<Employee> employees, RewardCalculationResponse coreResponse) {
         RewardPaymentResponse paymentResponse = sendingToMicroservice.send(calculatePayment.calculate(employees));
 
         if (paymentResponse.hasErrors()){
@@ -48,27 +49,7 @@ class RewardCalculationServiceImpl implements RewardCalculationService {
             return coreResponse;
         }
         else {
-            successfulResponse(coreResponse,paymentResponse);
+            return successfulPayment.execute(coreResponse, paymentResponse);
         }
-
-        return coreResponse;
-    }
-
-    private void successfulResponse(RewardCalculationResponse coreResponse,
-                                    RewardPaymentResponse paymentResponse) {
-        coreResponse.setMessage("Ответ успешен - " + paymentResponse.getStatus());
-
-        List<Reward> rewards = paymentResponse.getPaymentDTOS().stream()
-                .map(PaymentDTO::getEmployeeId)
-                .map(rewardRepository::findByEmployeeId)
-                .flatMap(List::stream)
-                .toList();
-
-        rewardSetStatusOnPaid(rewards, paymentResponse.getStatus());
-    }
-    private void rewardSetStatusOnPaid(List<Reward> rewardsAfterPayment, String status) {
-        rewardsAfterPayment.forEach(
-                reward -> rewardRepository.rewardSetStatus(status, reward.getEmployeeId())
-        );
     }
 }
