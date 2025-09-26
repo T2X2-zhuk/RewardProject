@@ -1,0 +1,26 @@
+package rewardCalculation.validations.MethodsValidatorClasses;
+
+import rewardCalculation.util.ErrorCodeUtil;
+import rewardCalculation.util.Placeholder;
+import rewardCalculation.util.ValidationError;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+@Component
+public class ValidationErrorFactory {
+
+    @Autowired private ErrorCodeUtil errorCodeUtil;
+
+    public ValidationError buildError(String errorCode) {
+        String errorDescription = errorCodeUtil.getErrorDescription(errorCode);
+        return new ValidationError(errorCode, errorDescription);
+    }
+
+    public ValidationError buildError(String errorCode, List<Placeholder> placeholders) {
+        String errorDescription = errorCodeUtil.getErrorDescription(errorCode, placeholders);
+        return new ValidationError(errorCode, errorDescription);
+    }
+
+}
