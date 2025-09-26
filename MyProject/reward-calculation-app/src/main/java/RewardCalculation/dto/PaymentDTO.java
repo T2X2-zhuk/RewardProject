@@ -9,6 +9,7 @@ import lombok.*;
 @Builder
 public class PaymentDTO {
 
+    private Long id;
     private Long employeeId;
     private Double amount;
 }

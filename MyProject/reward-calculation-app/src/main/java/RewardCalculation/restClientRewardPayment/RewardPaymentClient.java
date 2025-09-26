@@ -18,7 +18,7 @@ public class RewardPaymentClient {
     public RewardPaymentResponse payReward(List<PaymentDTO> paymentDTOS) {
         RewardPaymentRequest request = new RewardPaymentRequest(paymentDTOS);
         return rewardPaymentRestClient.post()
-                .uri("/reward/payment/")
+                .uri("/reward/payment/payReward")
                 .body(request)
                 .retrieve()
                 .body(RewardPaymentResponse.class);

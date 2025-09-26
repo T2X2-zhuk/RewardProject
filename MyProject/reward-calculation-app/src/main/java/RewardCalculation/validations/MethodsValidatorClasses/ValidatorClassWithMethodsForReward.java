@@ -22,6 +22,16 @@ import java.util.Optional;
                 : Optional.empty();
     }
 
+    public Optional<ValidationError> isSuchRewardById(Long rewardId){
+        return (rewardRepository.findById(rewardId).isEmpty())
+                ? Optional.of(errorFactory.buildError("ERROR_CODE_For_Reward_4"))
+                : Optional.empty();
+    }
+    public Optional<ValidationError> rewardIdIsNull(Long rewardId){
+        return (rewardId == null)
+                ? Optional.of(errorFactory.buildError("ERROR_CODE_For_Reward_5"))
+                : Optional.empty();
+    }
     public Optional<ValidationError> suchRewardIsDatabase(Long employeeId,String jobType){
         return (rewardRepository.findByEmployeeIdAndJobType(employeeId,jobType).isPresent())
                 ? Optional.of(errorFactory.buildError("ERROR_CODE_For_Reward_3"))

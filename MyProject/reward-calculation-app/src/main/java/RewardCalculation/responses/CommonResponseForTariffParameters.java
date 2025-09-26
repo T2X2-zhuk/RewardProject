@@ -1,10 +1,11 @@
-package RewardCalculation.restClientRewardPayment;
+package RewardCalculation.responses;
 
-import RewardCalculation.dto.PaymentDTO;
+
+import RewardCalculation.dto.TariffDTO;
 import RewardCalculation.util.CoreResponse;
 import RewardCalculation.util.ValidationError;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,13 +15,13 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class RewardPaymentResponse extends CoreResponse {
+public class CommonResponseForTariffParameters extends CoreResponse {
 
-    private String status;
-    private List<PaymentDTO> paymentDTOS;
+    private TariffDTO tariffDTO;
 
-    public RewardPaymentResponse(List<ValidationError> errors) {
+    public CommonResponseForTariffParameters(List<ValidationError> errors) {
         super(errors);
     }
 }
