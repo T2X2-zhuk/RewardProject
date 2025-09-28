@@ -16,10 +16,7 @@ public class GetEmployeeValidator {
 
     public List<ValidationError> validate(Long id){
         List<ValidationError> errors = new ArrayList<>();
-        validator.employeeIdMustNotBeEmpty(id).ifPresent(errors::add);
-        if (errors.isEmpty()){
-            forEmployee.employeeIsNotDatabase(id).ifPresent(errors::add);
-        }
+        forEmployee.employeeIsNotDatabase(id).ifPresent(errors::add);
         return errors;
     }
 }

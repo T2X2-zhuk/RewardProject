@@ -15,7 +15,7 @@ public class ValidatorClassWithMethodsForTariff {
     @Autowired private ValidationErrorFactory errorFactory;
 
     public Optional<ValidationError> isSuchTariffIsNull(Long id){
-        return (id == null || tariffRepository.findById(id).isEmpty())
+        return (tariffRepository.findById(id).isEmpty())
                 ? Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_2"))
                 : Optional.empty();
     }

@@ -15,10 +15,7 @@ public class GetRewardRequestValidator {
 
     public List<ValidationError> validate(Long id){
         List<ValidationError> errors = new ArrayList<>();
-        validator.rewardIdIsNull(id).ifPresent(errors::add);
-        if (errors.isEmpty()){
-            validator.isSuchRewardById(id).ifPresent(errors::add);
-        }
+        validator.isSuchRewardById(id).ifPresent(errors::add);
         return errors;
     }
 }
