@@ -7,6 +7,7 @@ import test.DTOS.RewardDTO;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Builder
 public class CommonRequestForRewardParameters {
 

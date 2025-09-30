@@ -1,6 +1,9 @@
 package rewardCalculation.calculate;
 
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.restClientRewardPayment.RewardPaymentClient;
 import rewardCalculation.dto.PaymentDTO;
 import rewardCalculation.restClientRewardPayment.RewardPaymentRequest;
@@ -12,13 +15,19 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@ToString
+@Slf4j
 public class SendPaymentsToMicroservice {
 
     private final RewardPaymentClient paymentClient;
 
     public RewardPaymentResponse send(List<PaymentDTO> paymentDTOS) {
+        log.info("{} start!", this);
         RewardPaymentRequest request = new RewardPaymentRequest(paymentDTOS);
-        System.out.println("Платеж отправлен!");
-        return paymentClient.payReward(request.getPaymentDTOS());
+       log.debug("PaymentDTOS sent!");
+        RewardPaymentResponse response = paymentClient.payReward(request.getPaymentDTOS());
+        log.debug("Response : {}",response);
+        log.info("{} execute!" , this);
+        return response;
     }
 }

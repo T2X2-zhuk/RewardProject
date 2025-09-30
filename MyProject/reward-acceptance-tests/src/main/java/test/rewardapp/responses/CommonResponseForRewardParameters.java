@@ -13,6 +13,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommonResponseForRewardParameters extends CoreResponse {

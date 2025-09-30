@@ -1,14 +1,11 @@
 package rewardCalculation.responses;
 
 
+import lombok.*;
 import rewardCalculation.util.CoreResponse;
 import rewardCalculation.dto.TariffDTO;
 import rewardCalculation.util.ValidationError;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.List;
 
@@ -16,7 +13,9 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Builder
 public class CommonResponseForTariffParameters extends CoreResponse {
 
     private TariffDTO tariffDTO;

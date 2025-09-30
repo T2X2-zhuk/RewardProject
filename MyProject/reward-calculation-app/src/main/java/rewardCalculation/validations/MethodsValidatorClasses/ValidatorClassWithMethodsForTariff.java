@@ -1,5 +1,7 @@
 package rewardCalculation.validations.MethodsValidatorClasses;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.JPA.repositories.TariffRepository;
 import rewardCalculation.util.Placeholder;
 import rewardCalculation.util.ValidationError;
@@ -11,26 +13,39 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
+@ToString
 public class ValidatorClassWithMethodsForTariff {
 
      private final TariffRepository tariffRepository;
      private final ValidationErrorFactory errorFactory;
 
     public Optional<ValidationError> isSuchTariffIsNull(Long id){
-        return (tariffRepository.findById(id).isEmpty())
-                ? Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_2"))
-                : Optional.empty();
+        if (tariffRepository.findById(id).isEmpty()){
+            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_2"));
+            log.debug("Error : {}",error);
+            return error;
+        }
+
+       return Optional.empty();
     }
 
     public Optional<ValidationError> amountMustNotBeEmpty(double amount){
-        return (amount == 0.0)
-                ? Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_3"))
-                : Optional.empty();
+        if (amount == 0.0){
+            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_3"));
+            log.debug("Error : {}",error);
+            return error;
+        }
+        return Optional.empty();
     }
     public Optional<ValidationError> jobTypeIsEmpty(String jobType){
-        return (isNullOrBlankOrEmpty(jobType))
-                ? Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_1"))
-                : Optional.empty();
+
+        if (isNullOrBlankOrEmpty(jobType)){
+            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_1"));
+            log.debug("Error : {}",error);
+            return error;
+        }
+        return Optional.empty();
     }
     public Optional<ValidationError> suchJobTypesIsNotInDatabase(String jobType){
         List<String> jobTypes = tariffRepository.findAllJobTypes();
@@ -38,18 +53,26 @@ public class ValidatorClassWithMethodsForTariff {
             if (!jobTypes.contains(jobType)){
                 String joinJobTypes = String.join("," ,jobTypes);
                 Placeholder placeholder = new Placeholder("JOB_TYPES",joinJobTypes);
-                return Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_4",List.of(placeholder)));
+                Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_4",List.of(placeholder)));
+                log.debug("Error : {}",error);
+                return error;
             }
         }else {
-            return Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_5"));
+            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_5"));
+            log.debug("Error : {}",error);
+            return error;
         }
-        return Optional.empty();
+
+       return Optional.empty();
     }
 
     public Optional<ValidationError> suchTariffAlwaysIsInDatabase(String jobType){
-        return (tariffRepository.findByJobType(jobType).isPresent())
-                ? Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_6"))
-                : Optional.empty();
+        if (tariffRepository.findByJobType(jobType).isPresent()){
+            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_6"));
+            log.debug("Error : {}",error);
+            return error;
+        }
+        return Optional.empty();
     }
 
     private boolean isNullOrBlankOrEmpty(String parameter) {

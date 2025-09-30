@@ -1,5 +1,7 @@
 package rewardCalculation.rest;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.dto.TariffDTO;
 import rewardCalculation.requests.CommonRequestForTariffParameters;
 import rewardCalculation.responses.CommonResponseForTariffParameters;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/test/tariff")
 @RequiredArgsConstructor
+@ToString
+@Slf4j
 public class TariffController {
 
     private final CreateTariffService createTariffService;
@@ -20,14 +24,20 @@ public class TariffController {
             consumes = "application/json",
             produces = "application/json")
     public CommonResponseForTariffParameters createTariff(@RequestBody CommonRequestForTariffParameters request) {
-       return createTariffService.execute(request);
+        log.info("{} is start!",this);
+        CommonResponseForTariffParameters response = createTariffService.execute(request);
+        log.info("{} is execute!",this);
+        return response;
     }
 
     @GetMapping(path = "/getTariff/{id}",
             produces = "application/json")
     public CommonResponseForTariffParameters getTariff(@PathVariable Long id) {
+        log.info("{} is start!",this);
         CommonRequestForTariffParameters request = CommonRequestForTariffParameters.builder()
                 .tariffDTO(TariffDTO.builder().id(id).build()).build();
-        return getTariffService.execute(request);
+        CommonResponseForTariffParameters response = getTariffService.execute(request);
+        log.info("{} is execute!",this);
+        return response;
     }
 }

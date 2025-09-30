@@ -1,6 +1,7 @@
 package rewardCalculation.validations.MethodsValidatorClasses;
 
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import rewardCalculation.util.ErrorCodeUtil;
 import rewardCalculation.util.Placeholder;
 import rewardCalculation.util.ValidationError;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@ToString
 public class ValidationErrorFactory {
 
     private final ErrorCodeUtil errorCodeUtil;

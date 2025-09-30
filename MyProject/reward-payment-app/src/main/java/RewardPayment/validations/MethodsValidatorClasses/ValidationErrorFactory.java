@@ -4,6 +4,7 @@ import RewardPayment.util.ErrorCodeUtil;
 import RewardPayment.util.Placeholder;
 import RewardPayment.util.ValidationError;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@ToString
 public class ValidationErrorFactory {
 
     private final ErrorCodeUtil errorCodeUtil;

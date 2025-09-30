@@ -19,6 +19,8 @@ services:
      timeout: 5s
      retries: 10
 
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
   reward-payment-db:
     networks: [danil-reward-project]
     container_name: reward-payment-db
@@ -33,6 +35,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
   reward-calculation-app:
     networks: [danil-reward-project]
@@ -43,6 +46,7 @@ services:
     depends_on:
       reward-calculation-db:
          condition: service_healthy
+
 
   reward-payment-app:
     networks: [danil-reward-project]

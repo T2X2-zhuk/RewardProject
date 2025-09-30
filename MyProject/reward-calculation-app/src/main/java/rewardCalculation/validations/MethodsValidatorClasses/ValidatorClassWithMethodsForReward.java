@@ -1,5 +1,7 @@
 package rewardCalculation.validations.MethodsValidatorClasses;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.JPA.domain.Employee;
 import rewardCalculation.JPA.domain.Reward;
 import rewardCalculation.JPA.repositories.RewardRepository;
@@ -12,31 +14,51 @@ import java.util.List;
 import java.util.Optional;
 @Component
 @RequiredArgsConstructor
+@ToString
+@Slf4j
  public class ValidatorClassWithMethodsForReward {
 
     private final ValidationErrorFactory errorFactory;
     private final RewardRepository rewardRepository;
 
     public Optional<ValidationError> employeeIdMustNotBeEmpty(Long employeeId){
-        return (employeeId == null)
-                ? Optional.of(errorFactory.buildError("ERROR_CODE_For_Reward_2"))
-                : Optional.empty();
+        if (employeeId == null){
+            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Reward_2"));
+            log.debug("Error : {}",error);
+            return error;
+        }
+        return Optional.empty();
     }
 
     public Optional<ValidationError> isSuchRewardById(Long rewardId){
-        return (rewardRepository.findById(rewardId).isEmpty())
-                ? Optional.of(errorFactory.buildError("ERROR_CODE_For_Reward_4"))
-                : Optional.empty();
+
+        if (rewardRepository.findById(rewardId).isEmpty()){
+            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Reward_4"));
+            log.debug("Error : {}",error);
+            return error;
+        }
+
+        return Optional.empty();
     }
     public Optional<ValidationError> rewardIdIsNull(Long rewardId){
-        return (rewardId == null)
-                ? Optional.of(errorFactory.buildError("ERROR_CODE_For_Reward_5"))
-                : Optional.empty();
+
+        if (rewardId == null){
+            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Reward_5"));
+            log.debug("Error : {}",error);
+            return error;
+        }
+
+        return Optional.empty();
     }
     public Optional<ValidationError> suchRewardIsDatabase(Long employeeId,String jobType){
-        return (rewardRepository.findByEmployeeIdAndJobType(employeeId,jobType).isPresent())
-                ? Optional.of(errorFactory.buildError("ERROR_CODE_For_Reward_3"))
-                : Optional.empty();
+
+        if (rewardRepository.findByEmployeeIdAndJobType(employeeId,jobType).isPresent()){
+            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Reward_3"));
+            log.debug("Error : {}",error);
+            return error;
+        }
+
+        return Optional.empty();
     }
 
     public Optional<ValidationError> isRewardsForThisEmployees(List<Employee> employees){
@@ -44,8 +66,12 @@ import java.util.Optional;
         for (Employee employee : employees){
             rewards.addAll(rewardRepository.findByEmployeeId(employee.getId()));
         }
-        return (rewards.isEmpty())
-                ? Optional.of(errorFactory.buildError("ERROR_CODE_For_Reward_1"))
-                : Optional.empty();
+        if (rewards.isEmpty()){
+            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Reward_1"));
+            log.debug("Error : {}",error);
+            return error;
+        }
+
+        return Optional.empty();
     }
 }

@@ -1,6 +1,8 @@
 package rewardCalculation.servises.reward;
 
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.validations.validators.employee.ListEmployeeValidator;
 import rewardCalculation.JPA.domain.Employee;
 import rewardCalculation.calculate.CalculatePayment;
@@ -24,6 +26,8 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@ToString
+@Slf4j
 class RewardCalculationServiceImpl implements RewardCalculationService {
     
     private final ListEmployeeValidator validator;
@@ -32,22 +36,29 @@ class RewardCalculationServiceImpl implements RewardCalculationService {
     private final CalculatePayment calculatePayment;
 
     public RewardPaymentResponse execute(List<Employee> employees) {
+        log.info("{} is start!", this);
         RewardPaymentResponse coreResponse = new RewardPaymentResponse();
         List<ValidationError> validationErrors = validator.validate(employees);
         if (!validationErrors.isEmpty()) {
+            log.warn("Request validation failed : {}",validationErrors);
             coreResponse.setErrors(validationErrors);
             return coreResponse;
         }
-        return appealAndResponseToRewardPayment(employees);
+        RewardPaymentResponse paymentResponse = appealAndResponseToRewardPayment(employees);
+        log.info("{} is execute!", this);
+        return paymentResponse;
     }
 
     private RewardPaymentResponse appealAndResponseToRewardPayment(List<Employee> employees) {
         RewardPaymentResponse paymentResponse = sendingToMicroservice.send(calculatePayment.calculate(employees));
-
+        log.debug("Payment sent successfully!");
         if (paymentResponse.hasErrors()){
+            log.warn("Payment response has errors: {}",paymentResponse.getErrors());
             return paymentResponse;
         }
         else {
+            log.debug("Payments is - {}", paymentResponse.getStatus());
+            log.info("Execute!");
             return successfulPayment.execute(paymentResponse);
         }
     }

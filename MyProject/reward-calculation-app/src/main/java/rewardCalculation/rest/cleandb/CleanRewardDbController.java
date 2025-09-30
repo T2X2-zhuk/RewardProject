@@ -1,5 +1,7 @@
 package rewardCalculation.rest.cleandb;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.JPA.repositories.EmployeeRepository;
 import rewardCalculation.JPA.repositories.RewardRepository;
 import rewardCalculation.JPA.repositories.TariffRepository;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/test/rewardDb")
 @RequiredArgsConstructor
+@ToString
+@Slf4j
 public class CleanRewardDbController {
 
     private final EmployeeRepository employeeRepository;
@@ -22,6 +26,7 @@ public class CleanRewardDbController {
             consumes = "application/json",
             produces = "application/json")
     public CleanRewardDbResponse cleanDb(@RequestBody CleanRewardDbRequest request) {
+        log.info("{} is start!",this);
         CleanRewardDbResponse response = new CleanRewardDbResponse();
 
         if (request.isCleanTariff()) {
@@ -36,6 +41,7 @@ public class CleanRewardDbController {
             employeeRepository.deleteAll();
             response.setEmployeeDeleted(true);
         }
+        log.info("{} is execute!",this);
         return response;
     }
 

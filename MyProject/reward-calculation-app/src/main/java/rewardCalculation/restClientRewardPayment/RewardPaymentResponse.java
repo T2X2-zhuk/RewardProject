@@ -1,5 +1,6 @@
 package rewardCalculation.restClientRewardPayment;
 
+import lombok.ToString;
 import rewardCalculation.dto.PaymentDTO;
 import rewardCalculation.util.CoreResponse;
 import rewardCalculation.util.ValidationError;
@@ -13,6 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RewardPaymentResponse extends CoreResponse {
 
