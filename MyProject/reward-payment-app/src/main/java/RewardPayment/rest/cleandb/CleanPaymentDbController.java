@@ -1,6 +1,7 @@
 package RewardPayment.rest.cleandb;
 
 import RewardPayment.JPA.repositories.PaymentRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,9 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/test/paymentDb")
+@RequiredArgsConstructor
 public class CleanPaymentDbController {
 
-    @Autowired private PaymentRepository paymentRepository;
+    private final PaymentRepository paymentRepository;
 
     @PostMapping(path = "/clean",
             consumes = "application/json",

@@ -10,6 +10,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/MyProject" />
+            <option value="$PROJECT_DIR$/MyProject/reward-acceptance-tests" />
             <option value="$PROJECT_DIR$/MyProject/reward-calculation-app" />
             <option value="$PROJECT_DIR$/MyProject/reward-payment-app" />
           </set>

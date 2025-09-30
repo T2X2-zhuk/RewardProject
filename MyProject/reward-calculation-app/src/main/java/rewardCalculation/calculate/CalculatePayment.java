@@ -1,5 +1,6 @@
 package rewardCalculation.calculate;
 
+import lombok.RequiredArgsConstructor;
 import rewardCalculation.JPA.domain.Employee;
 import rewardCalculation.JPA.domain.Reward;
 import rewardCalculation.JPA.domain.Tariff;
@@ -13,10 +14,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor
 public class CalculatePayment {
 
-    @Autowired private TariffRepository tariffRepository;
-    @Autowired private RewardRepository rewardRepository;
+    private final TariffRepository tariffRepository;
+    private final RewardRepository rewardRepository;
 
     public List<PaymentDTO> calculate(List<Employee> employees){
         List<Tariff> tariffs = tariffRepository.findAll();

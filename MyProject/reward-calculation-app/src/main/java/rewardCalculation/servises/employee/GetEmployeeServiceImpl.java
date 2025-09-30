@@ -1,5 +1,6 @@
 package rewardCalculation.servises.employee;
 
+import lombok.RequiredArgsConstructor;
 import rewardCalculation.requests.CommonRequestForEmployeeParameters;
 import rewardCalculation.responses.CommonResponseForEmployeeParameters;
 import rewardCalculation.validations.validators.employee.GetEmployeeValidator;
@@ -15,11 +16,11 @@ import java.util.List;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 class GetEmployeeServiceImpl implements GetEmployeeService {
 
-    @Autowired private EmployeeRepository repository;
-
-    @Autowired private GetEmployeeValidator validator;
+     private final EmployeeRepository repository;
+     private final GetEmployeeValidator validator;
 
     public CommonResponseForEmployeeParameters execute(CommonRequestForEmployeeParameters request){
         CommonResponseForEmployeeParameters response = new CommonResponseForEmployeeParameters();

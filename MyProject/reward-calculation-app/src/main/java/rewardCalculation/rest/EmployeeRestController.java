@@ -1,4 +1,5 @@
 package rewardCalculation.rest;
+import lombok.RequiredArgsConstructor;
 import rewardCalculation.requests.CommonRequestForEmployeeParameters;
 import rewardCalculation.dto.EmployeeDTO;
 
@@ -10,10 +11,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/test/employee")
+@RequiredArgsConstructor
 public class EmployeeRestController {
 
-    @Autowired private GetEmployeeService getEmployeeService;
-    @Autowired private CreateEmployeeService createEmployeeService;
+    private final GetEmployeeService getEmployeeService;
+    private final CreateEmployeeService createEmployeeService;
     @PostMapping(path = "/createEmployee",
             consumes = "application/json",
             produces = "application/json")

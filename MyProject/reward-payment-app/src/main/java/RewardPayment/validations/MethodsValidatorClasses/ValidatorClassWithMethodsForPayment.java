@@ -1,15 +1,17 @@
 package RewardPayment.validations.MethodsValidatorClasses;
 import RewardPayment.JPA.repositories.PaymentRepository;
 import RewardPayment.util.ValidationError;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor
 public class ValidatorClassWithMethodsForPayment {
 
-    @Autowired private PaymentRepository repository;
-    @Autowired private ValidationErrorFactory errorFactory;
+    private final PaymentRepository repository;
+    private final ValidationErrorFactory errorFactory;
 
     public Optional<ValidationError> employeeIdNotBeEmpty(Long employeeId){
       return (employeeId == null)

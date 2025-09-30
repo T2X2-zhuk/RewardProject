@@ -1,5 +1,6 @@
 package rewardCalculation.servises.tariff;
 
+import lombok.RequiredArgsConstructor;
 import rewardCalculation.validations.validators.tariff.CreateTariffRequestValidator;
 import rewardCalculation.JPA.domain.Tariff;
 import rewardCalculation.JPA.repositories.TariffRepository;
@@ -12,12 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 class CreateTariffServiceImpl implements CreateTariffService {
 
-    @Autowired
-    private TariffRepository tariffRepository;
 
-    @Autowired private CreateTariffRequestValidator validator;
+    private final TariffRepository tariffRepository;
+    private final CreateTariffRequestValidator validator;
 
     @Override
     public CommonResponseForTariffParameters execute(CommonRequestForTariffParameters request) {

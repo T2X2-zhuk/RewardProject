@@ -4,15 +4,17 @@ import RewardPayment.requests.CommonRequestForPaymentParameters;
 import RewardPayment.responses.CommonResponseForPaymentParameters;
 import RewardPayment.services.RewardPaymentService;
 import RewardPayment.services.SearchPaymentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/reward/payment")
+@RequiredArgsConstructor
 public class PaymentController {
 
-    @Autowired private SearchPaymentService service;
-    @Autowired private RewardPaymentService rewardPaymentService;
+     private final SearchPaymentService service;
+     private final RewardPaymentService rewardPaymentService;
 
     @GetMapping(path = "/searchPayment",
             produces = "application/json")

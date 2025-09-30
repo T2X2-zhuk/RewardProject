@@ -1,4 +1,5 @@
 package rewardCalculation.rest.cleandb;
+import lombok.RequiredArgsConstructor;
 import rewardCalculation.JPA.repositories.EmployeeRepository;
 import rewardCalculation.JPA.repositories.RewardRepository;
 import rewardCalculation.JPA.repositories.TariffRepository;
@@ -10,11 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/test/rewardDb")
+@RequiredArgsConstructor
 public class CleanRewardDbController {
 
-    @Autowired private EmployeeRepository employeeRepository;
-    @Autowired private RewardRepository rewardRepository;
-    @Autowired private TariffRepository tariffRepository;
+    private final EmployeeRepository employeeRepository;
+    private final RewardRepository rewardRepository;
+    private final TariffRepository tariffRepository;
 
     @PostMapping(path = "/cleanDb",
             consumes = "application/json",

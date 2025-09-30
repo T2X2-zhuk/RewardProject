@@ -5,6 +5,7 @@ import RewardPayment.JPA.repositories.PaymentRepository;
 import RewardPayment.dto.PaymentDTO;
 import RewardPayment.requests.CommonRequestForPaymentParameters;
 import RewardPayment.responses.CommonResponseForPaymentParameters;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,9 +16,10 @@ import java.util.Optional;
 
 @Component
 @Transactional
+@RequiredArgsConstructor
 public class RewardPaymentService {
 
-    @Autowired private PaymentRepository paymentRepository;
+    private final PaymentRepository paymentRepository;
 
     public CommonResponseForPaymentParameters pay(CommonRequestForPaymentParameters request) {
         CommonResponseForPaymentParameters response = new CommonResponseForPaymentParameters();

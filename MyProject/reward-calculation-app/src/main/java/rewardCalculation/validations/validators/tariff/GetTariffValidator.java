@@ -1,4 +1,5 @@
 package rewardCalculation.validations.validators.tariff;
+import lombok.RequiredArgsConstructor;
 import rewardCalculation.validations.MethodsValidatorClasses.ValidatorClassWithMethodsForTariff;
 import rewardCalculation.util.ValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class GetTariffValidator {
 
 
-    @Autowired private ValidatorClassWithMethodsForTariff validatorClassWithMethodsForTariff;
+    private final ValidatorClassWithMethodsForTariff validatorClassWithMethodsForTariff;
 
     public List<ValidationError> validate(Long id){
         List<ValidationError> errors = new ArrayList<>();

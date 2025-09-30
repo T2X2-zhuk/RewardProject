@@ -7,6 +7,7 @@ import RewardPayment.requests.CommonRequestForPaymentParameters;
 import RewardPayment.responses.CommonResponseForPaymentParameters;
 import RewardPayment.util.ValidationError;
 import RewardPayment.validations.validators.GetPaymentValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,10 +17,11 @@ import java.util.Optional;
 
 @Component
 @Transactional
+@RequiredArgsConstructor
 public class SearchPaymentService {
 
-    @Autowired private PaymentRepository paymentRepository;
-    @Autowired private GetPaymentValidator validator;
+    private final PaymentRepository paymentRepository;
+    private final GetPaymentValidator validator;
 
     public CommonResponseForPaymentParameters execute(CommonRequestForPaymentParameters request) {
         CommonResponseForPaymentParameters response = new CommonResponseForPaymentParameters();

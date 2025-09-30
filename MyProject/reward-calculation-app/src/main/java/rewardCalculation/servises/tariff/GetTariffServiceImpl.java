@@ -1,5 +1,6 @@
 package rewardCalculation.servises.tariff;
 
+import lombok.RequiredArgsConstructor;
 import rewardCalculation.JPA.domain.Tariff;
 import rewardCalculation.JPA.repositories.TariffRepository;
 import rewardCalculation.dto.TariffDTO;
@@ -15,10 +16,11 @@ import java.util.List;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 class GetTariffServiceImpl implements GetTariffService {
 
-    @Autowired private GetTariffValidator validator;
-    @Autowired private TariffRepository repository;
+    private final GetTariffValidator validator;
+    private final TariffRepository repository;
     @Override
     public CommonResponseForTariffParameters execute(CommonRequestForTariffParameters request) {
         CommonResponseForTariffParameters response = new CommonResponseForTariffParameters();

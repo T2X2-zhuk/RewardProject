@@ -1,0 +1,27 @@
+package test.rewardapp.responses;
+
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import test.DTOS.TariffDTO;
+import test.utils.CoreResponse;
+import test.utils.ValidationError;
+
+import java.util.List;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class CommonResponseForTariffParameters extends CoreResponse {
+
+    private TariffDTO tariffDTO;
+
+    public CommonResponseForTariffParameters(List<ValidationError> errors) {
+        super(errors);
+    }
+}

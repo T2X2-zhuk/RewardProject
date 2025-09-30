@@ -1,4 +1,5 @@
 package rewardCalculation.validations.MethodsValidatorClasses;
+import lombok.RequiredArgsConstructor;
 import rewardCalculation.JPA.repositories.TariffRepository;
 import rewardCalculation.util.Placeholder;
 import rewardCalculation.util.ValidationError;
@@ -9,10 +10,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor
 public class ValidatorClassWithMethodsForTariff {
 
-    @Autowired private TariffRepository tariffRepository;
-    @Autowired private ValidationErrorFactory errorFactory;
+     private final TariffRepository tariffRepository;
+     private final ValidationErrorFactory errorFactory;
 
     public Optional<ValidationError> isSuchTariffIsNull(Long id){
         return (tariffRepository.findById(id).isEmpty())

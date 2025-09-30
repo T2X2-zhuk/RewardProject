@@ -1,5 +1,6 @@
 package rewardCalculation.servises.reward;
 
+import lombok.RequiredArgsConstructor;
 import rewardCalculation.validations.validators.employee.ListEmployeeValidator;
 import rewardCalculation.JPA.domain.Employee;
 import rewardCalculation.calculate.CalculatePayment;
@@ -22,12 +23,13 @@ import java.util.List;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 class RewardCalculationServiceImpl implements RewardCalculationService {
     
-    @Autowired private ListEmployeeValidator validator;
-    @Autowired private SuccessfulPayment successfulPayment;
-    @Autowired private SendPaymentsToMicroservice sendingToMicroservice;
-    @Autowired private CalculatePayment calculatePayment;
+    private final ListEmployeeValidator validator;
+    private final SuccessfulPayment successfulPayment;
+    private final SendPaymentsToMicroservice sendingToMicroservice;
+    private final CalculatePayment calculatePayment;
 
     public RewardPaymentResponse execute(List<Employee> employees) {
         RewardPaymentResponse coreResponse = new RewardPaymentResponse();

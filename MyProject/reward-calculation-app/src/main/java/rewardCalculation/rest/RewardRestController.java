@@ -1,5 +1,6 @@
 package rewardCalculation.rest;
 
+import lombok.RequiredArgsConstructor;
 import rewardCalculation.JPA.repositories.EmployeeRepository;
 import rewardCalculation.dto.RewardDTO;
 import rewardCalculation.requests.CommonRequestForRewardParameters;
@@ -14,12 +15,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/reward/calculation")
+@RequiredArgsConstructor
 public class RewardRestController {
 
-    @Autowired private CreateRewardService createRewardService;
-    @Autowired private EmployeeRepository repository;
-    @Autowired private RewardCalculationService rewardCalculationService;
-    @Autowired private GetRewardService getRewardService;
+    private final CreateRewardService createRewardService;
+    private final EmployeeRepository repository;
+    private final RewardCalculationService rewardCalculationService;
+    private final GetRewardService getRewardService;
 
     @PostMapping(path = "/createReward",
             consumes = "application/json",

@@ -1,5 +1,6 @@
 package rewardCalculation.validations.MethodsValidatorClasses;
 
+import lombok.RequiredArgsConstructor;
 import rewardCalculation.JPA.domain.Employee;
 import rewardCalculation.JPA.repositories.EmployeeRepository;
 import rewardCalculation.util.ValidationError;
@@ -10,10 +11,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor
 public class ValidatorClassWithMethodsForEmployee {
 
-    @Autowired private EmployeeRepository employeeRepository;
-    @Autowired private ValidationErrorFactory errorFactory;
+     private final EmployeeRepository employeeRepository;
+     private final ValidationErrorFactory errorFactory;
 
     public Optional<ValidationError> employeeIsNotDatabase(Long id){
       return (employeeRepository.findById(id).isEmpty())

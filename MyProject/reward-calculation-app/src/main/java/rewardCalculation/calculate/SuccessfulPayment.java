@@ -1,5 +1,6 @@
 package rewardCalculation.calculate;
 
+import lombok.RequiredArgsConstructor;
 import rewardCalculation.dto.PaymentDTO;
 import rewardCalculation.JPA.domain.Reward;
 import rewardCalculation.JPA.repositories.RewardRepository;
@@ -10,10 +11,10 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class SuccessfulPayment {
 
-
-    @Autowired private RewardRepository rewardRepository;
+    private final RewardRepository rewardRepository;
 
     public RewardPaymentResponse execute(RewardPaymentResponse paymentResponse) {
         List<Reward> rewards = paymentResponse.getPaymentDTOS().stream()

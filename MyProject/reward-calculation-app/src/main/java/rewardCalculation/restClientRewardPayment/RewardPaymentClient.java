@@ -1,5 +1,6 @@
 package rewardCalculation.restClientRewardPayment;
 
+import lombok.RequiredArgsConstructor;
 import rewardCalculation.dto.PaymentDTO;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;

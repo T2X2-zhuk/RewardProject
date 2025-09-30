@@ -1,4 +1,5 @@
 package rewardCalculation.rest;
+import lombok.RequiredArgsConstructor;
 import rewardCalculation.dto.TariffDTO;
 import rewardCalculation.requests.CommonRequestForTariffParameters;
 import rewardCalculation.responses.CommonResponseForTariffParameters;
@@ -9,10 +10,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/test/tariff")
+@RequiredArgsConstructor
 public class TariffController {
 
-    @Autowired private CreateTariffService createTariffService;
-    @Autowired private GetTariffService getTariffService;
+    private final CreateTariffService createTariffService;
+    private final GetTariffService getTariffService;
 
     @PostMapping(path = "/createTariff",
             consumes = "application/json",

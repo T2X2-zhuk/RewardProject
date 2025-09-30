@@ -1,5 +1,6 @@
 package rewardCalculation.validations.validators.reward;
 
+import lombok.RequiredArgsConstructor;
 import rewardCalculation.validations.MethodsValidatorClasses.ValidatorClassWithMethodsForReward;
 import rewardCalculation.util.ValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class GetRewardRequestValidator {
 
-    @Autowired private ValidatorClassWithMethodsForReward validator;
+    private final ValidatorClassWithMethodsForReward validator;
 
     public List<ValidationError> validate(Long id){
         List<ValidationError> errors = new ArrayList<>();

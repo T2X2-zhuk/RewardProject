@@ -1,5 +1,6 @@
 package rewardCalculation.calculate;
 
+import lombok.RequiredArgsConstructor;
 import rewardCalculation.restClientRewardPayment.RewardPaymentClient;
 import rewardCalculation.dto.PaymentDTO;
 import rewardCalculation.restClientRewardPayment.RewardPaymentRequest;
@@ -10,10 +11,10 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class SendPaymentsToMicroservice {
 
-    @Autowired
-    private RewardPaymentClient paymentClient;
+    private final RewardPaymentClient paymentClient;
 
     public RewardPaymentResponse send(List<PaymentDTO> paymentDTOS) {
         RewardPaymentRequest request = new RewardPaymentRequest(paymentDTOS);

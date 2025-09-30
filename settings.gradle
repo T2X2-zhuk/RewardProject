@@ -1,4 +1,5 @@
 rootProject.name = 'RewardProject'
 
+include('MyProject:reward-acceptance-tests')
 include('MyProject:reward-calculation-app')
 include('MyProject:reward-payment-app')

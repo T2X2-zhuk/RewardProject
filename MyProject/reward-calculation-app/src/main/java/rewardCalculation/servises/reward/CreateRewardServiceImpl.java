@@ -1,5 +1,6 @@
 package rewardCalculation.servises.reward;
 
+import lombok.RequiredArgsConstructor;
 import rewardCalculation.JPA.domain.Reward;
 import rewardCalculation.JPA.repositories.RewardRepository;
 import rewardCalculation.dto.RewardDTO;
@@ -15,11 +16,11 @@ import java.util.List;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 class CreateRewardServiceImpl implements CreateRewardService {
 
-    @Autowired
-    private RewardRepository rewardRepository;
-    @Autowired private CreateRewardRequestValidator validator;
+    private final RewardRepository rewardRepository;
+    private final CreateRewardRequestValidator validator;
 
     @Override
     public CommonResponseForRewardParameters execute(CommonRequestForRewardParameters request) {

@@ -1,4 +1,5 @@
 package rewardCalculation.validations.validators.employee;
+import lombok.RequiredArgsConstructor;
 import rewardCalculation.requests.CommonRequestForEmployeeParameters;
 import rewardCalculation.validations.MethodsValidatorClasses.ValidatorClassWithMethodsForEmployee;
 import rewardCalculation.util.ValidationError;
@@ -9,9 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class CreateEmployeeRequestValidator {
 
-    @Autowired private ValidatorClassWithMethodsForEmployee validator;
+    private final ValidatorClassWithMethodsForEmployee validator;
 
     public List<ValidationError> validate(CommonRequestForEmployeeParameters request){
         List<ValidationError> errors = new ArrayList<>();

@@ -1,17 +1,18 @@
 package rewardCalculation.validations.MethodsValidatorClasses;
 
+import lombok.RequiredArgsConstructor;
 import rewardCalculation.util.ErrorCodeUtil;
 import rewardCalculation.util.Placeholder;
 import rewardCalculation.util.ValidationError;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class ValidationErrorFactory {
 
-    @Autowired private ErrorCodeUtil errorCodeUtil;
+    private final ErrorCodeUtil errorCodeUtil;
 
     public ValidationError buildError(String errorCode) {
         String errorDescription = errorCodeUtil.getErrorDescription(errorCode);

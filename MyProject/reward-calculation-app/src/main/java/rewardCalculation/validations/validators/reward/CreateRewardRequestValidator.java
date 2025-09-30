@@ -1,5 +1,6 @@
 package rewardCalculation.validations.validators.reward;
 
+import lombok.RequiredArgsConstructor;
 import rewardCalculation.validations.MethodsValidatorClasses.ValidatorClassWithMethodsForReward;
 import rewardCalculation.validations.MethodsValidatorClasses.ValidatorClassWithMethodsForTariff;
 import rewardCalculation.requests.CommonRequestForRewardParameters;
@@ -11,10 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class CreateRewardRequestValidator {
 
-    @Autowired private ValidatorClassWithMethodsForReward validator;
-    @Autowired private ValidatorClassWithMethodsForTariff tariffValidator;
+    private final ValidatorClassWithMethodsForReward validator;
+    private final ValidatorClassWithMethodsForTariff tariffValidator;
 
     public List<ValidationError> validate(CommonRequestForRewardParameters request){
         List<ValidationError> errors = new ArrayList<>();

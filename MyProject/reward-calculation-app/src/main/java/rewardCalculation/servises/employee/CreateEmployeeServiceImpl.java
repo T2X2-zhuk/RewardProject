@@ -1,5 +1,6 @@
 package rewardCalculation.servises.employee;
 
+import lombok.RequiredArgsConstructor;
 import rewardCalculation.requests.CommonRequestForEmployeeParameters;
 import rewardCalculation.responses.CommonResponseForEmployeeParameters;
 import rewardCalculation.validations.validators.employee.CreateEmployeeRequestValidator;
@@ -11,11 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
+@RequiredArgsConstructor
 class CreateEmployeeServiceImpl implements CreateEmployeeService {
 
-    @Autowired
-    private EmployeeRepository employeeRepository;
-    @Autowired private CreateEmployeeRequestValidator validator;
+    private final EmployeeRepository employeeRepository;
+    private final CreateEmployeeRequestValidator validator;
 
     public CommonResponseForEmployeeParameters execute(CommonRequestForEmployeeParameters request) {
         CommonResponseForEmployeeParameters response = new CommonResponseForEmployeeParameters();

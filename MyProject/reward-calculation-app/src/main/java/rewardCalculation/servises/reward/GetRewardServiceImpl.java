@@ -1,5 +1,6 @@
 package rewardCalculation.servises.reward;
 
+import lombok.RequiredArgsConstructor;
 import rewardCalculation.dto.RewardDTO;
 import rewardCalculation.responses.CommonResponseForRewardParameters;
 import rewardCalculation.validations.validators.reward.GetRewardRequestValidator;
@@ -16,10 +17,11 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 class GetRewardServiceImpl implements GetRewardService {
 
-    @Autowired private GetRewardRequestValidator validator;
-    @Autowired private RewardRepository rewardRepository;
+    private final GetRewardRequestValidator validator;
+    private final RewardRepository rewardRepository;
 
     @Override
     public CommonResponseForRewardParameters execute(CommonRequestForRewardParameters request) {
