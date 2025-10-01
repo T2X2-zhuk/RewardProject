@@ -1,7 +1,7 @@
 <configuration>
 
     <!-- Путь к папке логов -->
-    <property name="LOGS" value="./logs" />
+    <property name="LOGS"  value="MyProject/reward-payment-app/logs" />
 
     <!-- ================== Консоль ================== -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
