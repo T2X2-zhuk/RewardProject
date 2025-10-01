@@ -1,6 +1,5 @@
 package rewardCalculation.JPA.repositories;
 
-import lombok.ToString;
 import rewardCalculation.JPA.domain.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 

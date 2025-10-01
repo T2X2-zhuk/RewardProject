@@ -14,7 +14,6 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-@ToString
 @Slf4j
 public class ListEmployeeValidator {
 
@@ -22,13 +21,13 @@ public class ListEmployeeValidator {
     private final ValidatorClassWithMethodsForReward methodsForReward;
 
     public List<ValidationError> validate(List<Employee> employees){
-        log.info("{} start!", this);
+        log.info("{} start!", this.getClass().getSimpleName());
         List<ValidationError> errors = new ArrayList<>();
         methodsForEmployee.listEmployeeIsEmpty(employees).ifPresent(errors::add);
         if (errors.isEmpty()){
             methodsForReward.isRewardsForThisEmployees(employees).ifPresent(errors::add);
         }
-        log.info("{} execute!", this);
+        log.info("{} execute!", this.getClass().getSimpleName());
         return errors;
     }
 }

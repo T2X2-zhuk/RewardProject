@@ -2,6 +2,7 @@ package rewardCalculation.JPA.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import rewardCalculation.JPA.domain.EnumObject.RewardStatus;
 
 @Entity
 @Table(name = "rewards")
@@ -24,7 +25,8 @@ public class Reward {
     @Column(name = "job_type", nullable = false)
     private String jobType;
 
-    @Column(name = "reward_status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "reward_status",nullable = false)
+    private RewardStatus status;
 
 }

@@ -12,7 +12,6 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-@ToString
 public class ValidationErrorFactory {
 
     private final ErrorCodeUtil errorCodeUtil;

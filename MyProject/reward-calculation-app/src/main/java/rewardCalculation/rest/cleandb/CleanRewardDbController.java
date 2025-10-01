@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/test/rewardDb")
 @RequiredArgsConstructor
-@ToString
 @Slf4j
 public class CleanRewardDbController {
 
@@ -26,7 +25,7 @@ public class CleanRewardDbController {
             consumes = "application/json",
             produces = "application/json")
     public CleanRewardDbResponse cleanDb(@RequestBody CleanRewardDbRequest request) {
-        log.info("{} is start!",this);
+        log.info("{} is start!",this.getClass().getSimpleName());
         CleanRewardDbResponse response = new CleanRewardDbResponse();
 
         if (request.isCleanTariff()) {
@@ -41,7 +40,7 @@ public class CleanRewardDbController {
             employeeRepository.deleteAll();
             response.setEmployeeDeleted(true);
         }
-        log.info("{} is execute!",this);
+        log.info("{} is execute!",this.getClass().getSimpleName());
         return response;
     }
 

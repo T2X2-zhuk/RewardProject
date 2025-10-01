@@ -12,17 +12,16 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-@ToString
 @Slf4j
 public class GetRewardRequestValidator {
 
     private final ValidatorClassWithMethodsForReward validator;
 
     public List<ValidationError> validate(Long id){
-        log.info("{} start!", this);
+        log.info("{} start!", this.getClass().getSimpleName());
         List<ValidationError> errors = new ArrayList<>();
         validator.isSuchRewardById(id).ifPresent(errors::add);
-        log.info("{} execute!" , this);
+        log.info("{} execute!" , this.getClass().getSimpleName());
         return errors;
     }
 }

@@ -14,7 +14,6 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-@ToString
 public class ValidatorClassWithMethodsForTariff {
 
      private final TariffRepository tariffRepository;

@@ -7,7 +7,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Builder
 public class CleanRewardDbResponse {
 
     private boolean employeeDeleted;

@@ -19,7 +19,6 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-@ToString
 @Slf4j
 class CreateEmployeeServiceImpl implements CreateEmployeeService {
 
@@ -27,7 +26,7 @@ class CreateEmployeeServiceImpl implements CreateEmployeeService {
     private final CreateEmployeeRequestValidator validator;
 
     public CommonResponseForEmployeeParameters execute(CommonRequestForEmployeeParameters request) {
-        log.info("{} is start!", this);
+        log.info("{} is start!", this.getClass().getSimpleName());
         CommonResponseForEmployeeParameters response = new CommonResponseForEmployeeParameters();
         List<ValidationError> errors = validator.validate(request);
         log.debug("Validation is execute!");
@@ -46,7 +45,7 @@ class CreateEmployeeServiceImpl implements CreateEmployeeService {
             response.setErrors(errors);
             log.warn("Validation failed errors : {}" , errors);
         }
-        log.info("{} is execute!", this);
+        log.info("{} is execute!", this.getClass().getSimpleName());
         return response;
     }
 }

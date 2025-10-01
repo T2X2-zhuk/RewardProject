@@ -20,7 +20,6 @@ import java.util.Optional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-@ToString
 @Slf4j
 class GetTariffServiceImpl implements GetTariffService {
 
@@ -28,7 +27,7 @@ class GetTariffServiceImpl implements GetTariffService {
     private final TariffRepository repository;
     @Override
     public CommonResponseForTariffParameters execute(CommonRequestForTariffParameters request) {
-        log.info("{} is start!", this);
+        log.info("{} is start!", this.getClass().getSimpleName());
         CommonResponseForTariffParameters response = new CommonResponseForTariffParameters();
         List<ValidationError> errors = validator.validate(request.getTariffDTO().getId());
         if (!errors.isEmpty()){
@@ -39,7 +38,7 @@ class GetTariffServiceImpl implements GetTariffService {
             response.setTariffDTO(createTariffDTO(tariff.get()));
             log.debug("Received tariff : {}", tariff);
         }
-        log.info("{} is execute!", this);
+        log.info("{} is execute!", this.getClass().getSimpleName());
         return response;
     }
 

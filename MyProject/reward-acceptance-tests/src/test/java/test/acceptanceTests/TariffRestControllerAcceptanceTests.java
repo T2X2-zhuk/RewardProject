@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import test.classesWithRestTestsMethod.rewardCalculationApp.CleanRewardDbForTest;
 import test.classesWithRestTestsMethod.rewardCalculationApp.TariffClassWithMethodsForAcceptanceTests;
 
-import static org.hamcrest.Matchers.equalTo;
 
+import static org.hamcrest.Matchers.equalTo;
 public class TariffRestControllerAcceptanceTests {
 
     //Test PASSED!

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.JPA.domain.Employee;
+import rewardCalculation.JPA.domain.EnumObject.RewardStatus;
 import rewardCalculation.JPA.domain.Reward;
 import rewardCalculation.JPA.domain.Tariff;
 import rewardCalculation.JPA.repositories.RewardRepository;
@@ -17,7 +18,6 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-@ToString
 @Slf4j
 public class CalculatePayment {
 
@@ -25,20 +25,20 @@ public class CalculatePayment {
     private final RewardRepository rewardRepository;
 
     public List<PaymentDTO> calculate(List<Employee> employees){
-        log.info("{} start!" ,this);
+        log.info("{} start!",this.getClass().getSimpleName());
         List<Tariff> tariffs = tariffRepository.findAll();
         log.debug("Tariffs - {}",tariffs);
         List<PaymentDTO> paymentDTOList = employees.stream()
-                .flatMap(employee -> rewardRepository.findByEmployeeId(employee.getId()).stream()
+                .flatMap(employee -> rewardRepository.findByEmployeeId(employee.getId(), RewardStatus.UNPAID).stream()
                         .map(reward -> createPaymentDto(employee, reward, tariffs)))
                 .toList();
-        log.debug("Successful create all PaymentDTOS : {}", paymentDTOList);
-        log.info("{} execute!" , this);
+        log.debug("Successful create all paymentDTOS : {}", paymentDTOList);
+        log.info("{} execute!",this.getClass().getSimpleName());
         return  paymentDTOList;
 
     }
     private PaymentDTO createPaymentDto(Employee employee , Reward reward,List<Tariff> tariffs){
-        log.debug("Create paymentDTOs!");
+        log.debug("Create paymentDTO!");
         log.debug("Get tariff by reward job type: {}",reward.getJobType());
         Optional<Tariff> tariff = tariffs.stream()
                 .filter(t -> reward.getJobType().equals(t.getJobType()))
@@ -47,7 +47,7 @@ public class CalculatePayment {
         PaymentDTO paymentDTO =  PaymentDTO.builder()
                 .employeeId(employee.getId())
                 .amount(getAmount(employee.getBonusCoefficient(),tariff.get().getAmount())).build();
-        log.debug("Successful create paymentDTO: {}", paymentDTO);
+        log.info("Отправлен платеж: amount = {}, recipient = {}",paymentDTO.getAmount(), employee.getFirstName() + " " + employee.getLastName());
         return paymentDTO;
     }
     private double getAmount(Double bonusCoefficient , Double amount){

@@ -14,12 +14,10 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RewardPaymentResponse extends CoreResponse {
 
-    private String status;
-    private List<PaymentDTO> paymentDTOS;
+    private boolean successfulSaving;
 
     public RewardPaymentResponse(List<ValidationError> errors) {
         super(errors);

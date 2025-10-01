@@ -3,6 +3,7 @@ package rewardCalculation.servises.reward;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import rewardCalculation.JPA.domain.EnumObject.RewardStatus;
 import rewardCalculation.JPA.domain.Reward;
 import rewardCalculation.JPA.repositories.RewardRepository;
 import rewardCalculation.dto.RewardDTO;
@@ -19,7 +20,6 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-@ToString
 @Slf4j
 class CreateRewardServiceImpl implements CreateRewardService {
 
@@ -28,7 +28,7 @@ class CreateRewardServiceImpl implements CreateRewardService {
 
     @Override
     public CommonResponseForRewardParameters execute(CommonRequestForRewardParameters request) {
-        log.info("{} is start!", this);
+        log.info("{} is start!", this.getClass().getSimpleName());
         CommonResponseForRewardParameters response = new CommonResponseForRewardParameters();
         List<ValidationError> errors = validator.validate(request);
         log.debug("Validation is execute!");
@@ -36,18 +36,19 @@ class CreateRewardServiceImpl implements CreateRewardService {
             Reward reward = Reward.builder()
                     .employeeId(request.getRewardDTO().getEmployeeId())
                     .jobType(request.getRewardDTO().getJobType())
-                    .status(request.getRewardDTO().getStatus()).build();
+                    .status(RewardStatus.UNPAID).build();
             rewardRepository.save(reward);
             log.debug("Reward saved: {}", reward);
             response.setRewardDTO(RewardDTO.builder()
                     .id(reward.getId())
                     .employeeId(reward.getEmployeeId())
-                    .jobType(reward.getJobType()).build());
+                    .jobType(reward.getJobType())
+                    .status(reward.getStatus()).build());
         }else {
             response.setErrors(errors);
             log.warn("Validation failed errors : {}" , errors);
         }
-        log.info("{} is execute!", this);
+        log.info("{} is execute!", this.getClass().getSimpleName());
         return response;
     }
 }

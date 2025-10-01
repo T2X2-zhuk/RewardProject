@@ -13,19 +13,18 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-@ToString
 @Slf4j
 public class CreateEmployeeRequestValidator {
 
     private final ValidatorClassWithMethodsForEmployee validator;
 
     public List<ValidationError> validate(CommonRequestForEmployeeParameters request){
-        log.info("{} start!", this);
+        log.info("{} start!", this.getClass().getSimpleName());
         List<ValidationError> errors = new ArrayList<>();
         validator.firstNameMustNotBeEmpty(request.getEmployeeDTO().getFirstName()).ifPresent(errors ::add);
         validator.lastNameMustNotBeEmpty(request.getEmployeeDTO().getLastName()).ifPresent(errors ::add);
         validator.bonusCoefficientMustNotBeEmpty(request.getEmployeeDTO().getBonusCoefficient()).ifPresent(errors ::add);
-        log.info("{} execute!" , this);
+        log.info("{} execute!" , this.getClass().getSimpleName());
         return errors;
     }
 }

@@ -40,6 +40,7 @@ public class RewardRestControllerAcceptanceTests {
 
         RewardClassWithMethodsForAcceptanceTests.getReward(rewardId).then().statusCode(200).body("rewardDTO.id",equalTo(rewardId.intValue()))
                 .body("rewardDTO.employeeId", equalTo(employeeId.intValue()))
-                .body("rewardDTO.jobType",equalTo("speech"));
+                .body("rewardDTO.jobType",equalTo("speech"))
+                .body("rewardDTO.status",equalTo("UNPAID"));
     }
 }

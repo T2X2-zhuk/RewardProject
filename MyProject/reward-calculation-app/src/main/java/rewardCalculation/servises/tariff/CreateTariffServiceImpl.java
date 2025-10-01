@@ -18,7 +18,6 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-@ToString
 @Slf4j
 class CreateTariffServiceImpl implements CreateTariffService {
 
@@ -28,7 +27,7 @@ class CreateTariffServiceImpl implements CreateTariffService {
 
     @Override
     public CommonResponseForTariffParameters execute(CommonRequestForTariffParameters request) {
-        log.info("{} is start!", this);
+        log.info("{} is start!", this.getClass().getSimpleName());
         CommonResponseForTariffParameters response = new CommonResponseForTariffParameters();
         List<ValidationError> errors = validator.validate(request);
         log.debug("Validation is execute!");
@@ -45,7 +44,7 @@ class CreateTariffServiceImpl implements CreateTariffService {
             response.setErrors(errors);
             log.warn("Validation failed errors : {}" , errors);
         }
-        log.info("{} is execute!", this);
+        log.info("{} is execute!", this.getClass().getSimpleName());
         return response;
     }
 }

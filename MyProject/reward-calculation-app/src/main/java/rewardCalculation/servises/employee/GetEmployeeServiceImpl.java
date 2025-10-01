@@ -18,7 +18,6 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-@ToString
 @Slf4j
 class GetEmployeeServiceImpl implements GetEmployeeService {
 
@@ -26,7 +25,7 @@ class GetEmployeeServiceImpl implements GetEmployeeService {
      private final GetEmployeeValidator validator;
 
     public CommonResponseForEmployeeParameters execute(CommonRequestForEmployeeParameters request){
-        log.info("{} is start!", this);
+        log.info("{} is start!", this.getClass().getSimpleName());
         CommonResponseForEmployeeParameters response = new CommonResponseForEmployeeParameters();
         List<ValidationError> errors = validator.validate(request.getEmployeeDTO().getId());
         log.debug("Validation is execute!");
@@ -37,7 +36,7 @@ class GetEmployeeServiceImpl implements GetEmployeeService {
             response.setEmployeeDTO(createEmployeeDTO(repository.findById(request.getEmployeeDTO().getId()).get()));
             log.info("Employee : {} was successful received", response.getEmployeeDTO());
         }
-        log.info("{} is execute!", this);
+        log.info("{} is execute!", this.getClass().getSimpleName());
         return response;
     }
 

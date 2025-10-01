@@ -13,7 +13,6 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-@ToString
 @Slf4j
 public class GetEmployeeValidator {
 
@@ -21,10 +20,10 @@ public class GetEmployeeValidator {
     private final ValidatorClassWithMethodsForEmployee forEmployee;
 
     public List<ValidationError> validate(Long id){
-        log.info("{} start!", this);
+        log.info("{} start!", this.getClass().getSimpleName());
         List<ValidationError> errors = new ArrayList<>();
         forEmployee.employeeIsNotDatabase(id).ifPresent(errors::add);
-        log.info("{} execute!" , this);
+        log.info("{} execute!" , this.getClass().getSimpleName());
         return errors;
     }
 }

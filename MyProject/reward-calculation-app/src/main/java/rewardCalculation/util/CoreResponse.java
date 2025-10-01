@@ -7,7 +7,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class CoreResponse {
 
     private List<ValidationError> errors;

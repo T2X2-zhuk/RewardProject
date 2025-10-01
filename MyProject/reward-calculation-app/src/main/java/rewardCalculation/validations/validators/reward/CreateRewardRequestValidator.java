@@ -14,7 +14,6 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-@ToString
 @Slf4j
 public class CreateRewardRequestValidator {
 
@@ -22,14 +21,14 @@ public class CreateRewardRequestValidator {
     private final ValidatorClassWithMethodsForTariff tariffValidator;
 
     public List<ValidationError> validate(CommonRequestForRewardParameters request){
-        log.info("{} start!", this);
+        log.info("{} start!", this.getClass().getSimpleName());
         List<ValidationError> errors = new ArrayList<>();
         validator.employeeIdMustNotBeEmpty(request.getRewardDTO().getEmployeeId()).ifPresent(errors ::add);
         tariffValidator.jobTypeIsEmpty(request.getRewardDTO().getJobType()).ifPresent(errors ::add);
         if (errors.isEmpty()){
             tariffValidator.suchJobTypesIsNotInDatabase(request.getRewardDTO().getJobType()).ifPresent(errors::add);
         }
-        log.info("{} execute!" , this);
+        log.info("{} execute!" , this.getClass().getSimpleName());
         return errors;
     }
 }

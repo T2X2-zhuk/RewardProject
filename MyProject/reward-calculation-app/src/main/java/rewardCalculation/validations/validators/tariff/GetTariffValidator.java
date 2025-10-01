@@ -12,7 +12,6 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-@ToString
 @Slf4j
 public class GetTariffValidator {
 
@@ -20,10 +19,10 @@ public class GetTariffValidator {
     private final ValidatorClassWithMethodsForTariff validatorClassWithMethodsForTariff;
 
     public List<ValidationError> validate(Long id){
-        log.info("{} start!", this);
+        log.info("{} start!", this.getClass().getSimpleName());
         List<ValidationError> errors = new ArrayList<>();
         validatorClassWithMethodsForTariff.isSuchTariffIsNull(id).ifPresent(errors::add);
-        log.info("{} execute!" , this);
+        log.info("{} execute!" , this.getClass().getSimpleName());
         return errors;
     }
 }

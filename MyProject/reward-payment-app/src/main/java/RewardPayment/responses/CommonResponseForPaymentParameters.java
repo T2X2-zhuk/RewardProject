@@ -14,13 +14,12 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommonResponseForPaymentParameters extends CoreResponse {
 
     private PaymentDTO paymentDTO;
     private List<PaymentDTO> paymentDTOS;
-    private String status;
+    private boolean successfulSaving;
 
     public CommonResponseForPaymentParameters(List<ValidationError> errors) {
         super(errors);

@@ -1,6 +1,7 @@
 package test.DTOS;
 
 import lombok.*;
+import test.DTOS.EnumObject.RewardStatus;
 
 @Getter
 @Setter
@@ -16,6 +17,6 @@ public class RewardDTO {
 
     private String jobType;
 
-    private String status;
+    private RewardStatus status;
 
 }

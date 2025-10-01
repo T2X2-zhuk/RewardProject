@@ -8,7 +8,6 @@ import test.DTOS.TariffDTO;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Builder
 public class CommonRequestForTariffParameters {
 

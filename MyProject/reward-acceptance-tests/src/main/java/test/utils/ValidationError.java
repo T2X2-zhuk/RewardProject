@@ -8,7 +8,6 @@ import java.lang.annotation.Target;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class ValidationError {
 
     private String errorCode;

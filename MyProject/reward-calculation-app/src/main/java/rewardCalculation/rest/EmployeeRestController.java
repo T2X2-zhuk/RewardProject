@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/test/employee")
 @RequiredArgsConstructor
-@ToString
 @Slf4j
 public class EmployeeRestController {
 
@@ -24,20 +23,20 @@ public class EmployeeRestController {
             consumes = "application/json",
             produces = "application/json")
     public CommonResponseForEmployeeParameters createEmployee(@RequestBody CommonRequestForEmployeeParameters request) {
-        log.info("{} is start!",this);
+        log.info("{} is start!",this.getClass().getSimpleName());
         CommonResponseForEmployeeParameters response = createEmployeeService.execute(request);
-        log.info("{} is execute!",this);
+        log.info("{} is execute!",this.getClass().getSimpleName());
         return response;
     }
 
     @GetMapping(path = "/getEmployee/{id}",
             produces = "application/json")
     public CommonResponseForEmployeeParameters getEmployee(@PathVariable Long id) {
-        log.info("{} is start!",this);
+        log.info("{} is start!",this.getClass().getSimpleName());
         CommonRequestForEmployeeParameters request = CommonRequestForEmployeeParameters.builder()
                 .employeeDTO(EmployeeDTO.builder().id(id).build()).build();
         CommonResponseForEmployeeParameters response = getEmployeeService.execute(request);
-        log.info("{} is execute!",this);
+        log.info("{} is execute!",this.getClass().getSimpleName());
         return response;
     }
 }

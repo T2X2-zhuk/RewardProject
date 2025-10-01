@@ -1,7 +1,7 @@
-<configuration>
+<configuration debug="true">
 
     <!-- Путь к папке логов -->
-    <property name="LOGS" value="./logs" />
+    <property name="LOGS"  value="${LOG_PATH:-logs}" />
 
     <!-- ================== Консоль ================== -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -12,9 +12,9 @@
 
     <!-- ================== Файловый аппендер для INFO/DEBUG ================== -->
     <appender name="FILE_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/app-info.log</file>
+        <file>${LOGS}/app-info.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/app-info-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${LOGS}/app-info-%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>7</maxHistory>
         </rollingPolicy>
         <encoder>
@@ -29,9 +29,9 @@
 
     <!-- ================== Файловый аппендер для ERROR ================== -->
     <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/app-error.log</file>
+        <file>${LOGS}/app-error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/app-error-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${LOGS}/app-error-%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <encoder>

@@ -7,7 +7,6 @@ import test.DTOS.EmployeeDTO;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Builder
 public class CommonRequestForEmployeeParameters {
 

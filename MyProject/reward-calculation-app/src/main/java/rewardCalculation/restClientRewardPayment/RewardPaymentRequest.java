@@ -9,7 +9,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class RewardPaymentRequest {
 
     private List<PaymentDTO> paymentDTOS;

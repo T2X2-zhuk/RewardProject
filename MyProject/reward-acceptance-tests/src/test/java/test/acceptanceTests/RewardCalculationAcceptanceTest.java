@@ -30,16 +30,13 @@ public class RewardCalculationAcceptanceTest {
 
         // 3. Делаем расчет
         Response paymentResponse = RewardClassWithMethodsForAcceptanceTests.calculate();
-        paymentResponse.then().statusCode(200);
-        Long paymentId = paymentResponse.jsonPath().getLong("paymentDTOS[0].id");
-        Double amount = paymentResponse.jsonPath().getDouble("paymentDTOS[0].amount");
+        paymentResponse.then().statusCode(200).body("successfulSaving",equalTo(true));
 
        // 4. Проверяем полученный результат
-        PaymentClassWithMethodsForAcceptanceTests.getPayment(employeeId,amount).then()
+        PaymentClassWithMethodsForAcceptanceTests.getPayment(employeeId,51.128).then()
                 .statusCode(200)
-                .body("paymentDTO.id", equalTo(paymentId.intValue()))
-                .body("paymentDTO.employeeId", equalTo(employeeId.intValue()))
-                .body("paymentDTO.amount", equalTo(51.128F));
+                .body("paymentDTOS[0].employeeId", equalTo(employeeId.intValue()))
+                .body("paymentDTOS[0].amount", equalTo(51.128F));
     }
 
     //Test PASSED!

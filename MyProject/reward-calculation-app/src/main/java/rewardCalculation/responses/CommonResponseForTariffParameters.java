@@ -13,7 +13,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
 public class CommonResponseForTariffParameters extends CoreResponse {

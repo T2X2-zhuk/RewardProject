@@ -3,6 +3,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.JPA.domain.Employee;
+import rewardCalculation.JPA.domain.EnumObject.RewardStatus;
 import rewardCalculation.JPA.domain.Reward;
 import rewardCalculation.JPA.repositories.RewardRepository;
 import rewardCalculation.util.ValidationError;
@@ -14,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 @Component
 @RequiredArgsConstructor
-@ToString
 @Slf4j
  public class ValidatorClassWithMethodsForReward {
 
@@ -64,7 +64,7 @@ import java.util.Optional;
     public Optional<ValidationError> isRewardsForThisEmployees(List<Employee> employees){
         List<Reward> rewards = new ArrayList<>();
         for (Employee employee : employees){
-            rewards.addAll(rewardRepository.findByEmployeeId(employee.getId()));
+            rewards.addAll(rewardRepository.findByEmployeeId(employee.getId(), RewardStatus.UNPAID));
         }
         if (rewards.isEmpty()){
             Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Reward_1"));

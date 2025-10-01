@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/test/paymentDb")
 @RequiredArgsConstructor
-@ToString
 @Slf4j
 public class CleanPaymentDbController {
 
@@ -23,13 +22,13 @@ public class CleanPaymentDbController {
             consumes = "application/json",
             produces = "application/json")
     public CleanPaymentDbResponse cleanDb(@RequestBody CleanPaymentDbRequest request) {
-        log.info("{} is start!",this);
+        log.info("{} is start!",this.getClass().getSimpleName());
         CleanPaymentDbResponse response = new CleanPaymentDbResponse();
         if (request.isCleanPayment()) {
             paymentRepository.deleteAll();
             response.setPaymentDeleted(true);
         }
-        log.info("{} is execute!",this);
+        log.info("{} is execute!",this.getClass().getSimpleName());
         return response;
     }
 

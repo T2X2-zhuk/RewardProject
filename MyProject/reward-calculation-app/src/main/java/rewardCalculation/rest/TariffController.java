@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/test/tariff")
 @RequiredArgsConstructor
-@ToString
 @Slf4j
 public class TariffController {
 
@@ -24,20 +23,20 @@ public class TariffController {
             consumes = "application/json",
             produces = "application/json")
     public CommonResponseForTariffParameters createTariff(@RequestBody CommonRequestForTariffParameters request) {
-        log.info("{} is start!",this);
+        log.info("{} is start!",this.getClass().getSimpleName());
         CommonResponseForTariffParameters response = createTariffService.execute(request);
-        log.info("{} is execute!",this);
+        log.info("{} is execute!",this.getClass().getSimpleName());
         return response;
     }
 
     @GetMapping(path = "/getTariff/{id}",
             produces = "application/json")
     public CommonResponseForTariffParameters getTariff(@PathVariable Long id) {
-        log.info("{} is start!",this);
+        log.info("{} is start!",this.getClass().getSimpleName());
         CommonRequestForTariffParameters request = CommonRequestForTariffParameters.builder()
                 .tariffDTO(TariffDTO.builder().id(id).build()).build();
         CommonResponseForTariffParameters response = getTariffService.execute(request);
-        log.info("{} is execute!",this);
+        log.info("{} is execute!",this.getClass().getSimpleName());
         return response;
     }
 }

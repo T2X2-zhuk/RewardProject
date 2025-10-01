@@ -20,7 +20,6 @@ import java.util.Optional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-@ToString
 @Slf4j
 class GetRewardServiceImpl implements GetRewardService {
 
@@ -29,7 +28,7 @@ class GetRewardServiceImpl implements GetRewardService {
 
     @Override
     public CommonResponseForRewardParameters execute(CommonRequestForRewardParameters request) {
-        log.info("{} is start!", this);
+        log.info("{} is start!", this.getClass().getSimpleName());
         CommonResponseForRewardParameters response = new CommonResponseForRewardParameters();
         List<ValidationError> errors = validator.validate(request.getRewardDTO().getId());
         log.debug("Validation is execute!");
@@ -44,7 +43,7 @@ class GetRewardServiceImpl implements GetRewardService {
             response.setErrors(errors);
             log.warn("Validation failed errors : {}" , errors);
         }
-        log.info("{} is execute!", this);
+        log.info("{} is execute!", this.getClass().getSimpleName());
         return response;
     }
 }

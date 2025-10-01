@@ -9,7 +9,6 @@ import org.springframework.web.client.RestClient;
 import java.util.List;
 
 @Component
-@ToString
 @Slf4j
 public class RewardPaymentClient {
 
@@ -20,14 +19,14 @@ public class RewardPaymentClient {
     }
 
     public RewardPaymentResponse payReward(List<PaymentDTO> paymentDTOS) {
-        log.info("{} is start!",this);
+        log.info("{} is start!",this.getClass().getSimpleName());
         RewardPaymentRequest request = new RewardPaymentRequest(paymentDTOS);
         RewardPaymentResponse response = rewardPaymentRestClient.post()
                 .uri("/reward/payment/payReward")
                 .body(request)
                 .retrieve()
                 .body(RewardPaymentResponse.class);
-        log.info("{} is execute!",this);
+        log.info("{} is execute!",this.getClass().getSimpleName());
         return response;
     }
 

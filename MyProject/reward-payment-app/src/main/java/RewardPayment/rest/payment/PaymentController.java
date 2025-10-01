@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/reward/payment")
 @RequiredArgsConstructor
-@ToString
 @Slf4j
 public class PaymentController {
 
@@ -23,12 +22,12 @@ public class PaymentController {
     @GetMapping(path = "/searchPayment",
             produces = "application/json")
     public CommonResponseForPaymentParameters searchPayment(@RequestParam Long employeeId, @RequestParam Double amount) {
-        log.info("{} is start!",this);
+        log.info("{} is start!",this.getClass().getSimpleName());
         CommonRequestForPaymentParameters request = CommonRequestForPaymentParameters.builder()
                 .paymentDTO(PaymentDTO.builder()
                         .employeeId(employeeId).amount(amount).build()).build();
         CommonResponseForPaymentParameters response =  service.execute(request);
-        log.info("{} is execute!",this);
+        log.info("{} is execute!",this.getClass().getSimpleName());
         return response;
     }
 
@@ -36,9 +35,9 @@ public class PaymentController {
             consumes = "application/json",
             produces = "application/json")
     public CommonResponseForPaymentParameters payReward(@RequestBody CommonRequestForPaymentParameters request) {
-        log.info("{} is start!",this);
+        log.info("PaymentController is start!");
         CommonResponseForPaymentParameters response = rewardPaymentService.pay(request);
-        log.info("{} is execute!",this);
+        log.info("PaymentController is execute!");
         return response;
     }
 }

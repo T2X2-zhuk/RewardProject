@@ -14,17 +14,16 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-@ToString
 @Slf4j
 public class GetPaymentValidator {
 
     private final ValidatorClassWithMethodsForPayment validatorClassWithMethodsForPayment;
 
     public List<ValidationError> validate(CommonRequestForPaymentParameters request){
-        log.info("{} start!", this);
+        log.info("{} start!",this.getClass().getSimpleName());
         List<ValidationError> errors = new ArrayList<>();
         validatorClassWithMethodsForPayment.isSuchPaymentInDatabase(request.getPaymentDTO().getEmployeeId(),request.getPaymentDTO().getAmount()).ifPresent(errors::add);
-        log.info("{} execute!" , this);
+        log.info("{} execute!",this.getClass().getSimpleName());
         return errors;
     }
 }

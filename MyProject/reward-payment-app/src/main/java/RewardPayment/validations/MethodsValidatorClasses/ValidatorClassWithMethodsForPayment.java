@@ -10,7 +10,6 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-@ToString
 @Slf4j
 public class ValidatorClassWithMethodsForPayment {
 

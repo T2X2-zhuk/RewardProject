@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/reward/calculation")
 @RequiredArgsConstructor
-@ToString
 @Slf4j
 public class RewardRestController {
 
@@ -31,29 +30,29 @@ public class RewardRestController {
             consumes = "application/json",
             produces = "application/json")
     public CommonResponseForRewardParameters createReward(@RequestBody CommonRequestForRewardParameters request) {
-        log.info("{} is start!",this);
+        log.info("{} is start!",this.getClass().getSimpleName());
         CommonResponseForRewardParameters response = createRewardService.execute(request);
-        log.info("{} is execute!",this);
+        log.info("{} is execute!",this.getClass().getSimpleName());
         return response;
     }
 
     @GetMapping(path = "/getReward/{id}",
             produces = "application/json")
     public CommonResponseForRewardParameters getReward(@PathVariable Long id) {
-        log.info("{} is start!",this);
+        log.info("{} is start!",this.getClass().getSimpleName());
         CommonRequestForRewardParameters request = CommonRequestForRewardParameters.builder().rewardDTO(RewardDTO.builder()
                 .id(id).build()).build();
         CommonResponseForRewardParameters response = getRewardService.execute(request);
-        log.info("{} is execute!",this);
+        log.info("{} is execute!",this.getClass().getSimpleName());
         return response;
     }
 
     @PostMapping(path = "/rewardCalculationExecute",
             produces = "application/json")
     public RewardPaymentResponse rewardCalculationExecute() {
-        log.info("{} is start!",this);
+        log.info("{} is start!",this.getClass().getSimpleName());
         RewardPaymentResponse response = rewardCalculationService.execute(repository.findAll());
-        log.info("{} is execute!",this);
+        log.info("{} is execute!",this.getClass().getSimpleName());
         return response;
     }
 }
