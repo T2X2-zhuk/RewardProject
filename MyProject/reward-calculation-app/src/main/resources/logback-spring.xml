@@ -1,4 +1,4 @@
-<configuration debug="true">
+<configuration>
 
     <!-- Путь к папке логов -->
     <property name="LOGS"   value="MyProject/reward-calculation-app/logs" />
@@ -10,7 +10,7 @@
         </encoder>
     </appender>
 
-    <!-- ================== Файловый аппендер для INFO/DEBUG ================== -->
+    <!-- ================== Файловый аппендер для INFO/DEBUG/WARN  ================== -->
     <appender name="FILE_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOGS}/app-info.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -20,6 +20,7 @@
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n</pattern>
         </encoder>
+        <!-- Всё, кроме ERROR -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
             <onMatch>DENY</onMatch>
@@ -37,6 +38,7 @@
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n</pattern>
         </encoder>
+        <!-- Только ERROR -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
             <onMatch>ACCEPT</onMatch>
@@ -55,6 +57,7 @@
     <!-- Минимизируем логи Spring и Hibernate -->
     <logger name="org.springframework" level="WARN"/>
     <logger name="org.hibernate" level="WARN"/>
+
 
     <!-- Твой код -->
     <logger name="rewardCalculation.rest" level="DEBUG"/>

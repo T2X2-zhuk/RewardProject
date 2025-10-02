@@ -1,6 +1,7 @@
 package test.acceptanceTests;
 
 import io.restassured.response.Response;
+import org.junit.jupiter.api.Test;
 import test.classesWithRestTestsMethod.rewardCalculationApp.CleanRewardDbForTest;
 import test.classesWithRestTestsMethod.rewardCalculationApp.EmployeeClassWithRestMethodsForAcceptanceTests;
 
