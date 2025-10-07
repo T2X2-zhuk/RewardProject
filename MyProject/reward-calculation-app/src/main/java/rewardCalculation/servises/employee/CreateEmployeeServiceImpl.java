@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.RoundingMode;
 import java.util.List;
 
 @Service
@@ -34,7 +35,7 @@ class CreateEmployeeServiceImpl implements CreateEmployeeService {
             Employee employee = Employee.builder()
                     .firstName(request.getEmployeeDTO().getFirstName())
                     .lastName(request.getEmployeeDTO().getLastName())
-                    .bonusCoefficient(request.getEmployeeDTO().getBonusCoefficient()).build();
+                    .bonusCoefficient(request.getEmployeeDTO().getBonusCoefficient().setScale(2, RoundingMode.HALF_UP)).build();
             employeeRepository.save(employee);
             log.debug("Employee: {} successful saved!", employee);
             response.setEmployeeDTO(EmployeeDTO.builder().id(employee.getId())

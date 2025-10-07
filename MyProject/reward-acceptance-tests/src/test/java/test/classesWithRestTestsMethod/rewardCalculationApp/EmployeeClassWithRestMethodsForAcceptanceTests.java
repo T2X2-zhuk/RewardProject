@@ -4,6 +4,8 @@ import io.restassured.response.Response;
 import test.DTOS.EmployeeDTO;
 import test.rewardapp.requests.CommonRequestForEmployeeParameters;
 
+import java.math.BigDecimal;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -11,7 +13,7 @@ public class EmployeeClassWithRestMethodsForAcceptanceTests {
 
     private static final String BASE_URL_REWARD_CALCULATION_APP = "http://localhost:8080";
 
-    public static Response createEmployee(String firstName, String lastName, double bonusCoefficient) {
+    public static Response createEmployee(String firstName, String lastName, BigDecimal bonusCoefficient) {
         EmployeeDTO dto = EmployeeDTO.builder().firstName(firstName)
                 .lastName(lastName).bonusCoefficient(bonusCoefficient).build();
         return given()

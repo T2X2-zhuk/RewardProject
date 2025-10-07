@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "tariffs")
 @Getter
@@ -26,7 +28,7 @@ public class Tariff {
     @Column(name = "job_type", nullable = false)
     private String jobType;
 
-    @Column(name = "amount")
-    private Double amount;
+    @Column(name = "amount", nullable = false, precision = 10, scale = 2)
+    private BigDecimal amount;
 
 }

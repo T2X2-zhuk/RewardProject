@@ -13,6 +13,8 @@ import rewardCalculation.dto.PaymentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,7 +52,8 @@ public class CalculatePayment {
         log.info("Отправлен платеж: amount = {}, recipient = {}",paymentDTO.getAmount(), employee.getFirstName() + " " + employee.getLastName());
         return paymentDTO;
     }
-    private double getAmount(Double bonusCoefficient , Double amount){
-        return (1 + bonusCoefficient) * amount;
+    private BigDecimal getAmount(BigDecimal bonusCoefficient , BigDecimal amount){
+        BigDecimal result = BigDecimal.ONE.add(bonusCoefficient).multiply(amount);
+        return result.setScale(2, RoundingMode.HALF_UP);
     }
 }

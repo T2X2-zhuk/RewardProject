@@ -27,6 +27,7 @@ public class CreateRewardRequestValidator {
         tariffValidator.jobTypeIsEmpty(request.getRewardDTO().getJobType()).ifPresent(errors ::add);
         if (errors.isEmpty()){
             tariffValidator.suchJobTypesIsNotInDatabase(request.getRewardDTO().getJobType()).ifPresent(errors::add);
+            validator.suchRewardIsDatabase(request.getRewardDTO().getEmployeeId(), request.getRewardDTO().getJobType()).ifPresent(errors::add);
         }
         log.info("{} execute!" , this.getClass().getSimpleName());
         return errors;

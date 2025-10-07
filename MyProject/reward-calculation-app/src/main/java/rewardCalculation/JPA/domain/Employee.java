@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "employees")
 @Getter
@@ -29,7 +31,7 @@ public class Employee {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "bonus_coefficient", nullable = false)
-    private Double bonusCoefficient;
+    @Column(name = "bonus_coefficient", nullable = false, precision = 10, scale = 2)
+    private BigDecimal bonusCoefficient;
 
 }

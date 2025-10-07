@@ -35,7 +35,7 @@ class CreateRewardServiceImpl implements CreateRewardService {
         if (errors.isEmpty()){
             Reward reward = Reward.builder()
                     .employeeId(request.getRewardDTO().getEmployeeId())
-                    .jobType(request.getRewardDTO().getJobType())
+                    .jobType(request.getRewardDTO().getJobType().toUpperCase())
                     .status(RewardStatus.UNPAID).build();
             rewardRepository.save(reward);
             log.debug("Reward saved: {}", reward);

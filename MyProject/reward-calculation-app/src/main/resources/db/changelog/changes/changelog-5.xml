@@ -21,17 +21,17 @@
     <changeSet author = "Danil" id = "7">
         <sql>
             INSERT INTO rewards(employee_id, job_type, reward_status)
-            SELECT ep.id, 'speech', 'UNPAID'
+            SELECT ep.id, 'SPEECH', 'UNPAID'
             FROM employees as ep
             WHERE ep.first_name = 'Mister' and ep.last_name = 'X';
 
             INSERT INTO rewards(employee_id, job_type, reward_status)
-            SELECT ep.id, 'lesson', 'UNPAID'
+            SELECT ep.id, 'LESSON', 'UNPAID'
             FROM employees as ep
             WHERE ep.first_name = 'Mister' and ep.last_name = 'Y';
 
             INSERT INTO rewards(employee_id, job_type, reward_status)
-            SELECT ep.id, 'help', 'UNPAID'
+            SELECT ep.id, 'HELP', 'UNPAID'
             FROM employees as ep
             WHERE ep.first_name = 'Mister' and ep.last_name = 'Z';
         </sql>

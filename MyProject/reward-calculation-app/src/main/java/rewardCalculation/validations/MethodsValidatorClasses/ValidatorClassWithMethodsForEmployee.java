@@ -9,6 +9,7 @@ import rewardCalculation.util.ValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,24 +48,12 @@ public class ValidatorClassWithMethodsForEmployee {
         return Optional.empty();
     }
 
-    public Optional<ValidationError> bonusCoefficientMustNotBeEmpty(double bonusCoefficient){
-
-        if (bonusCoefficient == 0.0){
+    public Optional<ValidationError> bonusCoefficientMustNotBeEmpty(BigDecimal bonusCoefficient){
+        if (bonusCoefficient == null || bonusCoefficient.compareTo(BigDecimal.ZERO) == 0){
             Optional<ValidationError> error  = Optional.of(errorFactory.buildError("ERROR_CODE_For_Employee_3"));
             log.debug("Error : {}",error);
             return error;
         }
-        return Optional.empty();
-    }
-
-    public Optional<ValidationError> duplicateEmployeeError(String firstName,String lastName){
-
-        if (employeeRepository.findByFirstNameAndLastName(firstName,lastName).isPresent()){
-            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Employee_4"));
-            log.debug("Error : {}",error);
-            return error;
-        }
-
         return Optional.empty();
     }
 

@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import test.classesWithRestTestsMethod.rewardCalculationApp.CleanRewardDbForTest;
 import test.classesWithRestTestsMethod.rewardCalculationApp.EmployeeClassWithRestMethodsForAcceptanceTests;
 
+import java.math.BigDecimal;
+
 import static org.hamcrest.Matchers.equalTo;
 
 public class EmployeeRestControllerAcceptanceTests {
@@ -16,7 +18,7 @@ public class EmployeeRestControllerAcceptanceTests {
         CleanRewardDbForTest.rewardCalculationCleanDb(true,true,true);
         //Unsuccessful
         EmployeeClassWithRestMethodsForAcceptanceTests.createEmployee
-                (null,null,0.0).
+                (null,null,new BigDecimal("0.0")).
                 then().statusCode(200).body("errors[0].errorCode" ,
                         equalTo("ERROR_CODE_For_Employee_1"))
                 .body("errors[1].errorCode",
@@ -26,7 +28,7 @@ public class EmployeeRestControllerAcceptanceTests {
         EmployeeClassWithRestMethodsForAcceptanceTests.getEmployee(2L).then().statusCode(200).body("errors[0].errorCode",equalTo("ERROR_CODE_For_Employee_5"));
         //Successful
         Response response = EmployeeClassWithRestMethodsForAcceptanceTests.createEmployee
-                ("Harbon","Lasamanba",3.5);
+                ("Harbon","Lasamanba",new BigDecimal("3.5"));
         response.then().statusCode(200);
         Long employeeId = response.jsonPath().getLong("employeeDTO.id");
 

@@ -1,6 +1,8 @@
 package RewardPayment.dto;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -10,5 +12,5 @@ public class PaymentDTO {
 
     private Long id;
     private Long employeeId;
-    private Double amount;
+    private BigDecimal amount;
 }

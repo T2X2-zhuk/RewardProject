@@ -31,33 +31,21 @@ import java.util.Optional;
     }
 
     public Optional<ValidationError> isSuchRewardById(Long rewardId){
-
         if (rewardRepository.findById(rewardId).isEmpty()){
             Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Reward_4"));
             log.debug("Error : {}",error);
             return error;
         }
-
         return Optional.empty();
     }
-    public Optional<ValidationError> rewardIdIsNull(Long rewardId){
 
-        if (rewardId == null){
-            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Reward_5"));
-            log.debug("Error : {}",error);
-            return error;
-        }
-
-        return Optional.empty();
-    }
     public Optional<ValidationError> suchRewardIsDatabase(Long employeeId,String jobType){
-
-        if (rewardRepository.findByEmployeeIdAndJobType(employeeId,jobType).isPresent()){
+        Optional<Reward> reward = rewardRepository.findByEmployeeIdAndJobType(employeeId,jobType.toUpperCase());
+        if (reward.isPresent() && reward.get().getStatus().equals(RewardStatus.UNPAID)){
             Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Reward_3"));
             log.debug("Error : {}",error);
             return error;
         }
-
         return Optional.empty();
     }
 

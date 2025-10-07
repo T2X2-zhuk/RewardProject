@@ -2,6 +2,8 @@ package test.DTOS;
 
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,6 +18,6 @@ public class EmployeeDTO {
 
     private String lastName;
 
-    private Double bonusCoefficient;
+    private BigDecimal bonusCoefficient;
 
 }

@@ -6,6 +6,8 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Component
@@ -25,8 +27,8 @@ public class ValidatorClassWithMethodsForPayment {
        return Optional.empty();
     }
 
-    public Optional<ValidationError> amountMustNotBeEmpty(Double amount){
-        if (amount == 0.0){
+    public Optional<ValidationError> amountMustNotBeEmpty(BigDecimal amount){
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) == 0){
             Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_PAYMENT_2"));
             log.debug("Error : {}",error);
             return error;
@@ -34,7 +36,7 @@ public class ValidatorClassWithMethodsForPayment {
         return Optional.empty();
     }
 
-    public Optional<ValidationError> isSuchPaymentInDatabase(Long employeeId,Double amount){
+    public Optional<ValidationError> isSuchPaymentInDatabase(Long employeeId,BigDecimal amount){
         if (repository.findByEmployeeIdAndAmount(employeeId,amount).isEmpty()){
             Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_PAYMENT_3"));
             log.debug("Error : {}",error);

@@ -1,13 +1,12 @@
 package rewardCalculation.validations.MethodsValidatorClasses;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.JPA.repositories.TariffRepository;
 import rewardCalculation.util.Placeholder;
 import rewardCalculation.util.ValidationError;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,8 +28,8 @@ public class ValidatorClassWithMethodsForTariff {
        return Optional.empty();
     }
 
-    public Optional<ValidationError> amountMustNotBeEmpty(double amount){
-        if (amount == 0.0){
+    public Optional<ValidationError> amountMustNotBeEmpty(BigDecimal amount){
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) == 0){
             Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_3"));
             log.debug("Error : {}",error);
             return error;
@@ -49,7 +48,7 @@ public class ValidatorClassWithMethodsForTariff {
     public Optional<ValidationError> suchJobTypesIsNotInDatabase(String jobType){
         List<String> jobTypes = tariffRepository.findAllJobTypes();
         if (!jobTypes.isEmpty()){
-            if (!jobTypes.contains(jobType)){
+            if (!jobTypes.contains(jobType.toUpperCase())){
                 String joinJobTypes = String.join("," ,jobTypes);
                 Placeholder placeholder = new Placeholder("JOB_TYPES",joinJobTypes);
                 Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_4",List.of(placeholder)));
@@ -61,12 +60,11 @@ public class ValidatorClassWithMethodsForTariff {
             log.debug("Error : {}",error);
             return error;
         }
-
        return Optional.empty();
     }
 
     public Optional<ValidationError> suchTariffAlwaysIsInDatabase(String jobType){
-        if (tariffRepository.findByJobType(jobType).isPresent()){
+        if (tariffRepository.findByJobType(jobType.toUpperCase()).isPresent()){
             Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_6"));
             log.debug("Error : {}",error);
             return error;

@@ -16,7 +16,6 @@ import java.util.List;
 @Slf4j
 public class GetEmployeeValidator {
 
-    private final ValidatorClassWithMethodsForReward validator;
     private final ValidatorClassWithMethodsForEmployee forEmployee;
 
     public List<ValidationError> validate(Long id){
