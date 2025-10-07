@@ -50,7 +50,7 @@ import java.util.Optional;
     public Optional<ValidationError> isRewardsForThisEmployees(List<Employee> employees){
         List<Reward> rewards = new ArrayList<>();
         for (Employee employee : employees){
-            rewards.addAll(rewardRepository.findByEmployeeId(employee.getId(), RewardStatus.UNPAID));
+            rewards.addAll(rewardRepository.findByEmployeeIdAndStatus(employee.getId(), RewardStatus.UNPAID));
         }
         if (rewards.isEmpty()){
             Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Reward_1"));

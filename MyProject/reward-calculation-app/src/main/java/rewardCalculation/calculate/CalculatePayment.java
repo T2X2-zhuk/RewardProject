@@ -1,7 +1,6 @@
 package rewardCalculation.calculate;
 
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.JPA.domain.Employee;
 import rewardCalculation.JPA.domain.EnumObject.RewardStatus;
@@ -10,7 +9,6 @@ import rewardCalculation.JPA.domain.Tariff;
 import rewardCalculation.JPA.repositories.RewardRepository;
 import rewardCalculation.JPA.repositories.TariffRepository;
 import rewardCalculation.dto.PaymentDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -31,7 +29,7 @@ public class CalculatePayment {
         List<Tariff> tariffs = tariffRepository.findAll();
         log.debug("Tariffs - {}",tariffs);
         List<PaymentDTO> paymentDTOList = employees.stream()
-                .flatMap(employee -> rewardRepository.findByEmployeeId(employee.getId(), RewardStatus.UNPAID).stream()
+                .flatMap(employee -> rewardRepository.findByEmployeeIdAndStatus(employee.getId(), RewardStatus.UNPAID).stream()
                         .map(reward -> createPaymentDto(employee, reward, tariffs)))
                 .toList();
         log.debug("Successful create all paymentDTOS : {}", paymentDTOList);
