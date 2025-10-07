@@ -17,7 +17,7 @@ public interface RewardRepository extends JpaRepository<Reward, Long> {
     @Query("SELECT rd FROM Reward rd where rd.employeeId = :employeeId AND rd.status = :status")
     List<Reward> findByEmployeeId(@Param("employeeId") Long employeeId, @Param("status") RewardStatus status);
 
-    Optional<Reward> findByEmployeeIdAndJobType(Long employeeId,String jobType);
+    Optional<Reward> findByEmployeeIdAndJobTypeAndStatus(Long employeeId, String jobType,RewardStatus status);
 
     @Transactional
     @Modifying

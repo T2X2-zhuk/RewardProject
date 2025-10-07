@@ -1,13 +1,11 @@
 package rewardCalculation.validations.MethodsValidatorClasses;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.JPA.domain.Employee;
 import rewardCalculation.JPA.domain.EnumObject.RewardStatus;
 import rewardCalculation.JPA.domain.Reward;
 import rewardCalculation.JPA.repositories.RewardRepository;
 import rewardCalculation.util.ValidationError;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -40,8 +38,8 @@ import java.util.Optional;
     }
 
     public Optional<ValidationError> suchRewardIsDatabase(Long employeeId,String jobType){
-        Optional<Reward> reward = rewardRepository.findByEmployeeIdAndJobType(employeeId,jobType.toUpperCase());
-        if (reward.isPresent() && reward.get().getStatus().equals(RewardStatus.UNPAID)){
+        Optional<Reward> reward = rewardRepository.findByEmployeeIdAndJobTypeAndStatus(employeeId,jobType.toUpperCase(),RewardStatus.UNPAID);
+        if (reward.isPresent()){
             Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Reward_3"));
             log.debug("Error : {}",error);
             return error;
