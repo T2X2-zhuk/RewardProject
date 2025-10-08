@@ -1,7 +1,12 @@
 package test.acceptanceTests;
 
 import io.restassured.response.Response;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cache.CacheManager;
 import test.classesWithRestTestsMethod.paymentApp.CleanPaymentDbForTest;
 import test.classesWithRestTestsMethod.paymentApp.PaymentClassWithMethodsForAcceptanceTests;
 import test.classesWithRestTestsMethod.rewardCalculationApp.CleanRewardDbForTest;
@@ -10,16 +15,20 @@ import test.classesWithRestTestsMethod.rewardCalculationApp.RewardClassWithMetho
 import test.classesWithRestTestsMethod.rewardCalculationApp.TariffClassWithMethodsForAcceptanceTests;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 import static org.hamcrest.Matchers.equalTo;
 
 public class RewardCalculationAcceptanceTest {
 
+    //@BeforeEach
+    public void cleanDB(){
+        CleanRewardDbForTest.rewardCalculationCleanDb(true,true,true);
+        CleanPaymentDbForTest.rewardPaymentCleanDb(true);
+    }
     //Test PASSED!
     //@Test
     public void acceptanceTest(){
-        CleanRewardDbForTest.rewardCalculationCleanDb(true,true,true);
-        CleanPaymentDbForTest.rewardPaymentCleanDb(true);
         TariffClassWithMethodsForAcceptanceTests.createTariff("speech",new BigDecimal("23.24")).then().statusCode(200);
 
         // 1. Создаём сотрудника
@@ -35,7 +44,7 @@ public class RewardCalculationAcceptanceTest {
         paymentResponse.then().statusCode(200).body("successfulSaving",equalTo(true));
 
        // 4. Проверяем полученный результат
-        PaymentClassWithMethodsForAcceptanceTests.getPayment(employeeId,new BigDecimal("51.128")).then()
+        PaymentClassWithMethodsForAcceptanceTests.getPayment(employeeId,new BigDecimal("51.13")).then()
                 .statusCode(200)
                 .body("paymentDTOS[0].employeeId", equalTo(employeeId.intValue()))
                 .body("paymentDTOS[0].amount", equalTo(51.13F));
@@ -44,7 +53,6 @@ public class RewardCalculationAcceptanceTest {
     //Test PASSED!
     //@Test
     public void acceptanceTest2(){
-        CleanRewardDbForTest.rewardCalculationCleanDb(true,true,true);
         TariffClassWithMethodsForAcceptanceTests.createTariff("speech",new BigDecimal("23.24")).then().statusCode(200);
 
         RewardClassWithMethodsForAcceptanceTests.calculate().then().statusCode(200)

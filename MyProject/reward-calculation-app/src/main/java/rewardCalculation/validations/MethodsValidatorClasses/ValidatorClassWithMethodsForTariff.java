@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -46,21 +47,16 @@ public class ValidatorClassWithMethodsForTariff {
         return Optional.empty();
     }
     public Optional<ValidationError> suchJobTypesIsNotInDatabase(String jobType){
-        List<String> jobTypes = tariffRepository.findAllJobTypes();
-        if (!jobTypes.isEmpty()){
-            if (!jobTypes.contains(jobType.toUpperCase())){
-                String joinJobTypes = String.join("," ,jobTypes);
-                Placeholder placeholder = new Placeholder("JOB_TYPES",joinJobTypes);
-                Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_4",List.of(placeholder)));
-                log.debug("Error : {}",error);
-                return error;
-            }
-        }else {
-            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_5"));
-            log.debug("Error : {}",error);
+        Set<String> jobTypes = tariffRepository.findAllJobTypes();
+        if (!jobTypes.contains(jobType.toUpperCase())) {
+            Optional<ValidationError> error = jobTypes.isEmpty()
+                    ? Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_5"))
+                    : Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_4",
+                    List.of(new Placeholder("JOB_TYPES", String.join(",", jobTypes)))));
+            log.debug("Error : {}", error);
             return error;
         }
-       return Optional.empty();
+        return Optional.empty();
     }
 
     public Optional<ValidationError> suchTariffAlwaysIsInDatabase(String jobType){
@@ -73,6 +69,6 @@ public class ValidatorClassWithMethodsForTariff {
     }
 
     private boolean isNullOrBlankOrEmpty(String parameter) {
-        return parameter == null || parameter.isBlank() || parameter.isEmpty();
+        return parameter == null || parameter.isBlank();
     }
 }

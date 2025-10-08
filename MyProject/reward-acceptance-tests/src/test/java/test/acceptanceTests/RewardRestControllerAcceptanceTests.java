@@ -1,23 +1,31 @@
 package test.acceptanceTests;
 
 import io.restassured.response.Response;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import test.classesWithRestTestsMethod.paymentApp.CleanPaymentDbForTest;
 import test.classesWithRestTestsMethod.rewardCalculationApp.CleanRewardDbForTest;
 import test.classesWithRestTestsMethod.rewardCalculationApp.EmployeeClassWithRestMethodsForAcceptanceTests;
 import test.classesWithRestTestsMethod.rewardCalculationApp.RewardClassWithMethodsForAcceptanceTests;
 import test.classesWithRestTestsMethod.rewardCalculationApp.TariffClassWithMethodsForAcceptanceTests;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 import static org.hamcrest.Matchers.equalTo;
 
 public class RewardRestControllerAcceptanceTests {
 
-
+    //@BeforeEach
+    public void cleanDB(){
+        CleanRewardDbForTest.rewardCalculationCleanDb(true,true,true);
+        CleanPaymentDbForTest.rewardPaymentCleanDb(true);
+    }
     //Test PASSED!
     //@Test
     public void acceptanceTest(){
-        CleanRewardDbForTest.rewardCalculationCleanDb(true,true,true);
         TariffClassWithMethodsForAcceptanceTests.createTariff("speech",new BigDecimal("29.29"));
         //Unsuccessful
         EmployeeClassWithRestMethodsForAcceptanceTests.createEmployee
@@ -49,7 +57,6 @@ public class RewardRestControllerAcceptanceTests {
     //Test PASSED!
     //@Test
     public void acceptanceTest2(){
-        CleanRewardDbForTest.rewardCalculationCleanDb(true,true,true);
         TariffClassWithMethodsForAcceptanceTests.createTariff("speech",new BigDecimal("23.24")).then().statusCode(200);
 
         // 1. Создаём сотрудника
@@ -62,5 +69,18 @@ public class RewardRestControllerAcceptanceTests {
 
         RewardClassWithMethodsForAcceptanceTests.createReward(employeeId,"speech")
                 .then().statusCode(200).body("errors[0].errorCode", equalTo("ERROR_CODE_For_Reward_3"));
+    }
+    //@Test
+    public void acceptanceTest3(){
+        // 1. Создаём сотрудника
+        Response employeeResponse = EmployeeClassWithRestMethodsForAcceptanceTests.createEmployee("Иван","Иванов",new BigDecimal("1.2"));
+        employeeResponse.then().statusCode(200);
+        Long employeeId = employeeResponse.jsonPath().getLong("employeeDTO.id");
+
+        // 2. Создаём награду
+        RewardClassWithMethodsForAcceptanceTests.createReward(employeeId,"speech");
+
+        RewardClassWithMethodsForAcceptanceTests.createReward(employeeId,"speech")
+                .then().statusCode(200).body("errors[0].errorCode", equalTo("ERROR_CODE_For_Tariff_5"));
     }
 }

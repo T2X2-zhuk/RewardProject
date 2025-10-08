@@ -1,22 +1,26 @@
 package test.acceptanceTests;
 
 import io.restassured.response.Response;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import test.classesWithRestTestsMethod.paymentApp.CleanPaymentDbForTest;
 import test.classesWithRestTestsMethod.rewardCalculationApp.CleanRewardDbForTest;
 import test.classesWithRestTestsMethod.rewardCalculationApp.EmployeeClassWithRestMethodsForAcceptanceTests;
 
 import java.math.BigDecimal;
-
 import static org.hamcrest.Matchers.equalTo;
 
 public class EmployeeRestControllerAcceptanceTests {
 
-
+    //@BeforeEach
+    public void cleanDB(){
+        CleanRewardDbForTest.rewardCalculationCleanDb(true,true,true);
+        CleanPaymentDbForTest.rewardPaymentCleanDb(true);
+    }
     //Test PASSED!
     //@Test
     public void acceptanceTest(){
-        CleanRewardDbForTest.rewardCalculationCleanDb(true,true,true);
-        //Unsuccessful
+       //Unsuccessful
         EmployeeClassWithRestMethodsForAcceptanceTests.createEmployee
                 (null,null,new BigDecimal("0.0")).
                 then().statusCode(200).body("errors[0].errorCode" ,

@@ -67,6 +67,6 @@ public class ValidatorClassWithMethodsForEmployee {
         return Optional.empty();
     }
     private boolean isNullOrBlankOrEmpty(String parameter) {
-        return parameter == null || parameter.isBlank() || parameter.isEmpty();
+        return parameter == null || parameter.isBlank();
     }
 }
