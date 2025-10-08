@@ -1,9 +1,12 @@
 package rewardCalculation.rest;
 
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import rewardCalculation.JPA.domain.Employee;
+import rewardCalculation.JPA.domain.EnumObject.RewardStatus;
+import rewardCalculation.JPA.domain.Reward;
 import rewardCalculation.JPA.repositories.EmployeeRepository;
+import rewardCalculation.JPA.repositories.RewardRepository;
 import rewardCalculation.dto.RewardDTO;
 import rewardCalculation.requests.CommonRequestForRewardParameters;
 import rewardCalculation.responses.CommonResponseForRewardParameters;
@@ -12,8 +15,9 @@ import rewardCalculation.restClientRewardPayment.RewardPaymentResponse;
 import rewardCalculation.servises.reward.CreateRewardService;
 import rewardCalculation.servises.reward.GetRewardService;
 import rewardCalculation.servises.reward.RewardCalculationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/reward/calculation")
@@ -22,7 +26,8 @@ import org.springframework.web.bind.annotation.*;
 public class RewardRestController {
 
     private final CreateRewardService createRewardService;
-    private final EmployeeRepository repository;
+    private final EmployeeRepository employeeRepository;
+    private final RewardRepository rewardRepository;
     private final RewardCalculationService rewardCalculationService;
     private final GetRewardService getRewardService;
 
@@ -51,7 +56,12 @@ public class RewardRestController {
             produces = "application/json")
     public RewardPaymentResponse rewardCalculationExecute() {
         log.info("{} is start!",this.getClass().getSimpleName());
-        RewardPaymentResponse response = rewardCalculationService.execute(repository.findAll());
+        List<Employee> employeeList = employeeRepository.findAll();
+        log.debug("Get all Employees - {}" , employeeList);
+        List<Reward> rewardList = rewardRepository.findAllByStatusNot(RewardStatus.PAID);
+        log.debug("Get all Rewards which is not paid - {}" , rewardList);
+        RewardPaymentResponse response = rewardCalculationService.execute(employeeList,rewardList);
+        log.debug("Response -> {} and his boolean -> {}", response.getClass().getSimpleName(),response.isSuccessfulSaving());
         log.info("{} is execute!",this.getClass().getSimpleName());
         return response;
     }

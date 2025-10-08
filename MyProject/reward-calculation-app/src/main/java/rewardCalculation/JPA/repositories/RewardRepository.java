@@ -19,9 +19,10 @@ public interface RewardRepository extends JpaRepository<Reward, Long> {
 
     Optional<Reward> findByEmployeeIdAndJobTypeAndStatus(Long employeeId, String jobType,RewardStatus status);
 
+    List<Reward> findAllByStatusNot(RewardStatus status);
+
     @Transactional
     @Modifying
-    @Query(value = "UPDATE Reward rd SET rd.status = :status where rd.employeeId = :employeeId")
-    void rewardSetStatus(@Param("status") RewardStatus status, @Param("employeeId") Long employeeId);
-
+    @Query("UPDATE Reward rв SET rв.status = :status WHERE rв.id IN :ids")
+    void rewardSetStatusForList(@Param("status") RewardStatus status, @Param("ids") List<Long> ids);
 }
