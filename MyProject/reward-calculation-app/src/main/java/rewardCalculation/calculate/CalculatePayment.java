@@ -19,11 +19,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CalculatePayment {
 
-    private final TariffRepository tariffRepository;
+    private final GetTariffJobTypesUsingCache getTariffsByJobType;
 
     public List<PaymentDTO> calculate(List<Employee> employeeList,List<Reward> rewardList){
         log.info("{} start!",this.getClass().getSimpleName());
-        Map<String, Tariff> tariffByJobType = getTariffsByJobType();
+        Map<String, Tariff> tariffByJobType = getTariffsByJobType.getTariffsByJobType();
         log.debug("Tariffs - {}",tariffByJobType);
         List<PaymentDTO> paymentDTOList = new ArrayList<>();
         Map<Long, List<Reward>> rewardsByEmployee = rewardList.stream()
@@ -55,10 +55,5 @@ public class CalculatePayment {
     private BigDecimal getAmount(BigDecimal bonusCoefficient , BigDecimal amount){
         BigDecimal result = BigDecimal.ONE.add(bonusCoefficient).multiply(amount);
         return result.setScale(2, RoundingMode.HALF_UP);
-    }
-
-    private Map<String, Tariff> getTariffsByJobType() {
-        List<Tariff> tariffs = tariffRepository.findAll();
-        return tariffs.stream().collect(Collectors.toMap(Tariff::getJobType, t -> t));
     }
 }

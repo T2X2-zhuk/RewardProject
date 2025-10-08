@@ -19,7 +19,6 @@ public class TariffRestControllerAcceptanceTests {
     //@BeforeEach
     public void cleanDB(){
         CleanRewardDbForTest.rewardCalculationCleanDb(true,true,true);
-        CleanPaymentDbForTest.rewardPaymentCleanDb(true);
     }
     //Test PASSED!
     //@Test
