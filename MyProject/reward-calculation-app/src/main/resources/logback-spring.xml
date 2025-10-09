@@ -60,6 +60,7 @@
 
 
     <!-- Твой код -->
+    <logger name="rewardCalculation.calculate" level="DEBUG"/>
     <logger name="rewardCalculation.rest" level="DEBUG"/>
     <logger name="rewardCalculation.services" level="DEBUG"/>
     <logger name="rewardCalculation.restClientRewardPayment" level="DEBUG"/>
