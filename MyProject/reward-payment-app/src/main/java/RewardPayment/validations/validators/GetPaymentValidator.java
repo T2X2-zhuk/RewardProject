@@ -4,9 +4,8 @@ import RewardPayment.requests.CommonRequestForPaymentParameters;
 import RewardPayment.util.ValidationError;
 import RewardPayment.validations.MethodsValidatorClasses.ValidatorClassWithMethodsForPayment;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

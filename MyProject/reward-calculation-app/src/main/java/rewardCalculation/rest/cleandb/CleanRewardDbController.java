@@ -1,18 +1,17 @@
 package rewardCalculation.rest.cleandb;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
 import rewardCalculation.JPA.repositories.EmployeeRepository;
 import rewardCalculation.JPA.repositories.RewardRepository;
 import rewardCalculation.JPA.repositories.TariffRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import rewardCalculation.cacheConfig.LocalCacheConfig;
+import rewardCalculation.cacheConfig.GetEmployeeUsingCache;
+import rewardCalculation.cacheConfig.GetTariffUsingCache;
+import rewardCalculation.cacheConfig.RedisCacheConfig;
 
 @RestController
 @RequestMapping("/api/test/rewardDb")
@@ -23,7 +22,8 @@ public class CleanRewardDbController {
     private final EmployeeRepository employeeRepository;
     private final RewardRepository rewardRepository;
     private final TariffRepository tariffRepository;
-    private final CacheManager cacheManager;
+    private final GetTariffUsingCache getTariffUsingCache;
+    private final GetEmployeeUsingCache getEmployeeUsingCache;
 
     @PostMapping(path = "/cleanDb",
             consumes = "application/json",
@@ -34,13 +34,7 @@ public class CleanRewardDbController {
         if (request.isCleanTariff()) {
             tariffRepository.deleteAll();
             response.setTariffDeleted(true);
-            Cache cache = cacheManager.getCache(LocalCacheConfig.TARIFF_CACHE);
-            if (cache != null) {
-                cache.clear();
-                log.info("Cache 'tariffs' cleared!");
-            } else {
-                log.warn("Cache 'tariffs' not found!");
-            }
+           getTariffUsingCache.clearTARIFF_CACHECache();
         }
         if (request.isCleanReward()) {
             rewardRepository.deleteAll();
@@ -49,6 +43,7 @@ public class CleanRewardDbController {
         if (request.isCleanEmployee()) {
             employeeRepository.deleteAll();
             response.setEmployeeDeleted(true);
+            getEmployeeUsingCache.clearEMPLOYEESCache();
         }
         log.info("{} is execute!",this.getClass().getSimpleName());
         return response;

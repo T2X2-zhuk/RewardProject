@@ -2,8 +2,12 @@ version: '3.9'
 
 networks:
   danil-reward-project:
+    name: danil-reward-project
 
 services:
+  # =============================
+  # MySQL для расчётов
+  # =============================
   reward-calculation-db:
     networks: [danil-reward-project]
     container_name: reward-calculation-db
@@ -14,13 +18,15 @@ services:
     ports:
       - "3006:3306"
     healthcheck:
-     test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root --password=fkmdbyjdbx383"]
-     interval: 10s
-     timeout: 5s
-     retries: 10
-
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root --password=fkmdbyjdbx383"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
+  # =============================
+  # MySQL для выплат
+  # =============================
   reward-payment-db:
     networks: [danil-reward-project]
     container_name: reward-payment-db
@@ -37,25 +43,57 @@ services:
       retries: 10
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
+  # =============================
+  # Redis — глобальный кеш
+  # =============================
+  redis:
+    networks: [danil-reward-project]
+    container_name: redis-cache
+    image: redis:7.2
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+
+  # =============================
+  # Приложение для расчётов
+  # =============================
   reward-calculation-app:
     networks: [danil-reward-project]
     container_name: reward-calculation-app
     image: reward-calculation-app:1.0.1
     ports:
       - "8080:8080"
+    environment:
+      SPRING_REDIS_HOST: redis-cache
+      SPRING_REDIS_PORT: 6379
     depends_on:
       reward-calculation-db:
-         condition: service_healthy
+        condition: service_healthy
+      redis:
+        condition: service_started
 
-
+  # =============================
+  # Приложение для выплат
+  # =============================
   reward-payment-app:
     networks: [danil-reward-project]
     container_name: reward-payment-app
     image: reward-payment-app:1.0.1
     ports:
       - "8095:8095"
+    environment:
+      SPRING_REDIS_HOST: redis-cache
+      SPRING_REDIS_PORT: 6379
     depends_on:
       reward-payment-db:
         condition: service_healthy
       reward-calculation-app:
         condition: service_started
+      redis:
+        condition: service_started
+
+volumes:
+  redis-data:

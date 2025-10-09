@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.JPA.domain.Employee;
 import rewardCalculation.JPA.domain.Reward;
 import rewardCalculation.JPA.domain.Tariff;
-import rewardCalculation.JPA.repositories.TariffRepository;
+import rewardCalculation.cacheConfig.GetTariffUsingCache;
 import rewardCalculation.dto.PaymentDTO;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CalculatePayment {
 
-    private final GetTariffJobTypesUsingCache getTariffsByJobType;
+    private final GetTariffUsingCache getTariffsByJobType;
 
     public List<PaymentDTO> calculate(List<Employee> employeeList,List<Reward> rewardList){
         log.info("{} start!",this.getClass().getSimpleName());

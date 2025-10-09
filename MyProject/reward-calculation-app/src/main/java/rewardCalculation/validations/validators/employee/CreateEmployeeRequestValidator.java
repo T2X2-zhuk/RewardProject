@@ -1,11 +1,9 @@
 package rewardCalculation.validations.validators.employee;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.requests.CommonRequestForEmployeeParameters;
 import rewardCalculation.validations.MethodsValidatorClasses.ValidatorClassWithMethodsForEmployee;
 import rewardCalculation.util.ValidationError;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

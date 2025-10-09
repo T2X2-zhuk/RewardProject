@@ -2,6 +2,7 @@ package RewardPayment.services;
 
 import RewardPayment.JPA.domain.Payment;
 import RewardPayment.JPA.repositories.PaymentRepository;
+import RewardPayment.configCache.GetAllPaymentsUsingCache;
 import RewardPayment.dto.PaymentDTO;
 import RewardPayment.requests.CommonRequestForPaymentParameters;
 import RewardPayment.responses.CommonResponseForPaymentParameters;
@@ -20,6 +21,7 @@ import java.util.List;
 public class RewardPaymentService {
 
     private final PaymentRepository paymentRepository;
+    private final GetAllPaymentsUsingCache getAllPaymentsUsingCache;
 
     public CommonResponseForPaymentParameters pay(CommonRequestForPaymentParameters request) {
         log.info("{} is start!",this.getClass().getSimpleName());
@@ -31,6 +33,7 @@ public class RewardPaymentService {
                     .amount(paymentDTO.getAmount()).build());
         }
         paymentRepository.saveAll(payments);
+        getAllPaymentsUsingCache.clearPAYMENTSCache();
         log.debug("Successful saving all payments!");
         response.setSuccessfulSaving(true);
         log.info("{} is execute!",this.getClass().getSimpleName());

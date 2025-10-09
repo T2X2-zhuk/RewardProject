@@ -5,6 +5,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.JPA.domain.Employee;
 import rewardCalculation.JPA.repositories.EmployeeRepository;
+import rewardCalculation.cacheConfig.GetEmployeeUsingCache;
 import rewardCalculation.util.ValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,11 +19,14 @@ import java.util.Optional;
 @Slf4j
 public class ValidatorClassWithMethodsForEmployee {
 
-     private final EmployeeRepository employeeRepository;
-     private final ValidationErrorFactory errorFactory;
+    private final EmployeeRepository employeeRepository;
+    private final ValidationErrorFactory errorFactory;
+    private final GetEmployeeUsingCache getEmployeeUsingCache;
 
     public Optional<ValidationError> employeeIsNotDatabase(Long id){
-        if (employeeRepository.findById(id).isEmpty()){
+        boolean exists = getEmployeeUsingCache.getAllEmployeesWithCache().stream()
+                .anyMatch(employee -> employee.getId().equals(id));
+        if (!exists){
             Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Employee_5"));
             log.debug("Error : {}",error);
             return error;
@@ -63,7 +67,6 @@ public class ValidatorClassWithMethodsForEmployee {
             log.debug("Error : {}",error);
             return error;
         }
-
         return Optional.empty();
     }
     private boolean isNullOrBlankOrEmpty(String parameter) {

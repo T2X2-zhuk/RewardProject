@@ -1,21 +1,22 @@
 package RewardPayment.services;
 
 import RewardPayment.JPA.domain.Payment;
-import RewardPayment.JPA.repositories.PaymentRepository;
+import RewardPayment.configCache.GetAllPaymentsUsingCache;
 import RewardPayment.dto.PaymentDTO;
 import RewardPayment.requests.CommonRequestForPaymentParameters;
 import RewardPayment.responses.CommonResponseForPaymentParameters;
 import RewardPayment.util.ValidationError;
 import RewardPayment.validations.validators.GetPaymentValidator;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 @Transactional
@@ -23,7 +24,7 @@ import java.util.Optional;
 @Slf4j
 public class SearchPaymentService {
 
-    private final PaymentRepository paymentRepository;
+    private final GetAllPaymentsUsingCache getAllPaymentsUsingCache;
     private final GetPaymentValidator validator;
 
     public CommonResponseForPaymentParameters execute(CommonRequestForPaymentParameters request) {
@@ -42,7 +43,7 @@ public class SearchPaymentService {
     }
 
     private void buildResponseWithoutErrors(CommonResponseForPaymentParameters response,CommonRequestForPaymentParameters request){
-        List<Payment>  payments = paymentRepository.findByEmployeeIdAndAmount(request.getPaymentDTO().getEmployeeId(), request.getPaymentDTO().getAmount());
+        List<Payment>  payments = getPaymentsByEmployeeAndAmount(request.getPaymentDTO().getEmployeeId(), request.getPaymentDTO().getAmount());
         List<PaymentDTO> paymentDTOS = new ArrayList<>();
         for(Payment payment : payments){
             paymentDTOS.add(PaymentDTO.builder().id(payment.getId())
@@ -53,6 +54,10 @@ public class SearchPaymentService {
         log.info("Payment : {} was successful received", paymentDTOS);
     }
 
-
-
+    private List<Payment> getPaymentsByEmployeeAndAmount(Long employeeId, BigDecimal amount) {
+        return getAllPaymentsUsingCache.getAllPaymentsWithCache().stream()
+                .filter(p -> p.getEmployeeId().equals(employeeId)
+                        && p.getAmount().compareTo(amount) == 0)
+                .collect(Collectors.toList());
+    }
 }

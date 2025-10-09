@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.JPA.domain.Employee;
 import rewardCalculation.JPA.domain.EnumObject.RewardStatus;
 import rewardCalculation.JPA.domain.Reward;
-import rewardCalculation.JPA.repositories.EmployeeRepository;
 import rewardCalculation.JPA.repositories.RewardRepository;
+import rewardCalculation.cacheConfig.GetEmployeeUsingCache;
 import rewardCalculation.dto.RewardDTO;
 import rewardCalculation.requests.CommonRequestForRewardParameters;
 import rewardCalculation.responses.CommonResponseForRewardParameters;
@@ -26,11 +26,10 @@ import java.util.List;
 public class RewardRestController {
 
     private final CreateRewardService createRewardService;
-    private final EmployeeRepository employeeRepository;
     private final RewardRepository rewardRepository;
     private final RewardCalculationService rewardCalculationService;
     private final GetRewardService getRewardService;
-
+    private final GetEmployeeUsingCache getEmployeeUsingCache;
     @PostMapping(path = "/createReward",
             consumes = "application/json",
             produces = "application/json")
@@ -56,7 +55,7 @@ public class RewardRestController {
             produces = "application/json")
     public RewardPaymentResponse rewardCalculationExecute() {
         log.info("{} is start!",this.getClass().getSimpleName());
-        List<Employee> employeeList = employeeRepository.findAll();
+        List<Employee> employeeList = getEmployeeUsingCache.getAllEmployeesWithCache();
         log.debug("Get all Employees - {}" , employeeList);
         List<Reward> rewardList = rewardRepository.findAllByStatusNot(RewardStatus.PAID);
         log.debug("Get all Rewards which is not paid - {}" , rewardList);

@@ -1,11 +1,11 @@
 package rewardCalculation.servises.tariff;
 
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import rewardCalculation.cacheConfig.LocalCacheConfig;
+import rewardCalculation.cacheConfig.GetTariffUsingCache;
+import rewardCalculation.cacheConfig.RedisCacheConfig;
 import rewardCalculation.util.ValidationError;
 import rewardCalculation.validations.validators.tariff.CreateTariffRequestValidator;
 import rewardCalculation.JPA.domain.Tariff;
@@ -28,7 +28,7 @@ class CreateTariffServiceImpl implements CreateTariffService {
 
     private final TariffRepository tariffRepository;
     private final CreateTariffRequestValidator validator;
-    private final CacheManager cacheManager;
+    private final GetTariffUsingCache getTariffUsingCache;
 
     @Override
     public CommonResponseForTariffParameters execute(CommonRequestForTariffParameters request) {
@@ -51,13 +51,7 @@ class CreateTariffServiceImpl implements CreateTariffService {
 
     private void saveTariffAndDeleteCacheTariffs(Tariff tariff){
         tariffRepository.save(tariff);
-        Cache cache = cacheManager.getCache(LocalCacheConfig.TARIFF_CACHE);
-        if (cache != null) {
-            cache.clear();
-            log.info("Cache 'tariffs' cleared!");
-        } else {
-            log.warn("Cache 'tariffs' not found!");
-        }
+        getTariffUsingCache.clearTARIFF_CACHECache();
     }
     private Tariff buildTariff(TariffDTO tariffDTO){
         return Tariff.builder().amount(tariffDTO.getAmount().setScale(2, RoundingMode.HALF_UP))

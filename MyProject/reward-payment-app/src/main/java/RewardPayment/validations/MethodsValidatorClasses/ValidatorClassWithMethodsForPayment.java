@@ -1,10 +1,8 @@
 package RewardPayment.validations.MethodsValidatorClasses;
-import RewardPayment.JPA.repositories.PaymentRepository;
+import RewardPayment.configCache.GetAllPaymentsUsingCache;
 import RewardPayment.util.ValidationError;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -15,8 +13,8 @@ import java.util.Optional;
 @Slf4j
 public class ValidatorClassWithMethodsForPayment {
 
-    private final PaymentRepository repository;
     private final ValidationErrorFactory errorFactory;
+    private final GetAllPaymentsUsingCache getAllPaymentsUsingCache;
 
     public Optional<ValidationError> employeeIdNotBeEmpty(Long employeeId){
         if (employeeId == null){
@@ -37,7 +35,10 @@ public class ValidatorClassWithMethodsForPayment {
     }
 
     public Optional<ValidationError> isSuchPaymentInDatabase(Long employeeId,BigDecimal amount){
-        if (repository.findByEmployeeIdAndAmount(employeeId,amount).isEmpty()){
+        boolean exists = getAllPaymentsUsingCache.getAllPaymentsWithCache().stream()
+                .anyMatch(p -> p.getEmployeeId().equals(employeeId)
+                        && p.getAmount().compareTo(amount) == 0);
+        if (!exists){
             Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_PAYMENT_3"));
             log.debug("Error : {}",error);
             return error;

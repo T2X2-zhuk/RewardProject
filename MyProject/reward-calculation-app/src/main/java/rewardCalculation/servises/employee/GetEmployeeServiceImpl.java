@@ -3,6 +3,7 @@ package rewardCalculation.servises.employee;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import rewardCalculation.cacheConfig.GetEmployeeUsingCache;
 import rewardCalculation.requests.CommonRequestForEmployeeParameters;
 import rewardCalculation.responses.CommonResponseForEmployeeParameters;
 import rewardCalculation.validations.validators.employee.GetEmployeeValidator;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -23,6 +25,7 @@ class GetEmployeeServiceImpl implements GetEmployeeService {
 
      private final EmployeeRepository repository;
      private final GetEmployeeValidator validator;
+     private final GetEmployeeUsingCache getEmployeeUsingCache;
 
     public CommonResponseForEmployeeParameters execute(CommonRequestForEmployeeParameters request){
         log.info("{} is start!", this.getClass().getSimpleName());
@@ -33,13 +36,17 @@ class GetEmployeeServiceImpl implements GetEmployeeService {
             log.warn("Validation failed errors : {}" , errors);
             response.setErrors(errors);
         }else {
-            response.setEmployeeDTO(createEmployeeDTO(repository.findById(request.getEmployeeDTO().getId()).get()));
-            log.info("Employee : {} was successful received", response.getEmployeeDTO());
+            getEmployeeById(request.getEmployeeDTO().getId()).ifPresent(employee ->
+                    response.setEmployeeDTO(createEmployeeDTO(employee))
+            );   log.info("Employee : {} was successful received", response.getEmployeeDTO());
         }
         log.info("{} is execute!", this.getClass().getSimpleName());
         return response;
     }
-
+    private Optional<Employee> getEmployeeById(Long id){
+        return getEmployeeUsingCache.getAllEmployeesWithCache().stream()
+                .filter(employee1 -> employee1.getId().equals(id)).findFirst();
+    }
     private EmployeeDTO createEmployeeDTO(Employee employee) {
         return EmployeeDTO.builder().id(employee.getId())
                 .firstName(employee.getFirstName())
