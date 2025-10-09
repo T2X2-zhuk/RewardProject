@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import rewardCalculation.cacheConfig.LocalCacheConfig;
 
 @RestController
 @RequestMapping("/api/test/rewardDb")
@@ -33,7 +34,7 @@ public class CleanRewardDbController {
         if (request.isCleanTariff()) {
             tariffRepository.deleteAll();
             response.setTariffDeleted(true);
-            Cache cache = cacheManager.getCache("tariffs");
+            Cache cache = cacheManager.getCache(LocalCacheConfig.TARIFF_CACHE);
             if (cache != null) {
                 cache.clear();
                 log.info("Cache 'tariffs' cleared!");
