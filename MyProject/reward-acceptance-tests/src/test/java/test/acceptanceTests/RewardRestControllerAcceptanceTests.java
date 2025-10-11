@@ -3,9 +3,6 @@ package test.acceptanceTests;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
-import test.classesWithRestTestsMethod.paymentApp.CleanPaymentDbForTest;
 import test.classesWithRestTestsMethod.rewardCalculationApp.CleanRewardDbForTest;
 import test.classesWithRestTestsMethod.rewardCalculationApp.EmployeeClassWithRestMethodsForAcceptanceTests;
 import test.classesWithRestTestsMethod.rewardCalculationApp.RewardClassWithMethodsForAcceptanceTests;
@@ -31,11 +28,11 @@ public class RewardRestControllerAcceptanceTests {
                 (null,"Lasamanba",new BigDecimal("3.5")).then().statusCode(200);
         RewardClassWithMethodsForAcceptanceTests.createReward(null,null)
                 .then().statusCode(200)
-                .body("errors[0].errorCode",equalTo("ERROR_CODE_For_Reward_2"))
-                .body("errors[1].errorCode",equalTo("ERROR_CODE_For_Tariff_1"));
+                .body("errors[0].errorCode",equalTo("ERROR_CODE_FOR_REWARD_2"))
+                .body("errors[1].errorCode",equalTo("ERROR_CODE_FOR_TARIFF_1"));
         RewardClassWithMethodsForAcceptanceTests.createReward(1L,"null")
                 .then().statusCode(200)
-                .body("errors[0].errorCode",equalTo("ERROR_CODE_For_Tariff_4"));
+                .body("errors[0].errorCode",equalTo("ERROR_CODE_FOR_TARIFF_4"));
         //Successful
 
         Response response =  EmployeeClassWithRestMethodsForAcceptanceTests.createEmployee
@@ -67,8 +64,9 @@ public class RewardRestControllerAcceptanceTests {
         RewardClassWithMethodsForAcceptanceTests.createReward(employeeId,"speech");
 
         RewardClassWithMethodsForAcceptanceTests.createReward(employeeId,"speech")
-                .then().statusCode(200).body("errors[0].errorCode", equalTo("ERROR_CODE_For_Reward_3"));
+                .then().statusCode(200).body("errors[0].errorCode", equalTo("ERROR_CODE_FOR_REWARD_3"));
     }
+    //Test PASSED!
     //@Test
     public void acceptanceTest3(){
         // 1. Создаём сотрудника
@@ -80,6 +78,6 @@ public class RewardRestControllerAcceptanceTests {
         RewardClassWithMethodsForAcceptanceTests.createReward(employeeId,"speech");
 
         RewardClassWithMethodsForAcceptanceTests.createReward(employeeId,"speech")
-                .then().statusCode(200).body("errors[0].errorCode", equalTo("ERROR_CODE_For_Tariff_5"));
+                .then().statusCode(200).body("errors[0].errorCode", equalTo("ERROR_CODE_FOR_TARIFF_5"));
     }
 }

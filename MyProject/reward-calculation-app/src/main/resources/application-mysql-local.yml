@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/reward_calculation_db
+    username: root
+    password: fkmdbyjdbx383
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    database: mysql
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+    database-platform: org.hibernate.dialect.MySQLDialect
+
+reward:
+  payment:
+    api:
+      url: http://reward-payment-app
+      port: 8095

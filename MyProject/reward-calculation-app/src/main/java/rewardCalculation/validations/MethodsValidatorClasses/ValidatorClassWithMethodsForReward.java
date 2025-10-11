@@ -1,7 +1,6 @@
 package rewardCalculation.validations.MethodsValidatorClasses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import rewardCalculation.JPA.domain.Employee;
 import rewardCalculation.JPA.domain.EnumObject.RewardStatus;
 import rewardCalculation.JPA.domain.Reward;
 import rewardCalculation.JPA.repositories.RewardRepository;
@@ -21,7 +20,7 @@ import java.util.Optional;
 
     public Optional<ValidationError> employeeIdMustNotBeEmpty(Long employeeId){
         if (employeeId == null){
-            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Reward_2"));
+            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_REWARD_2"));
             log.debug("Error : {}",error);
             return error;
         }
@@ -30,7 +29,7 @@ import java.util.Optional;
 
     public Optional<ValidationError> isSuchRewardById(Long rewardId){
         if (rewardRepository.findById(rewardId).isEmpty()){
-            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Reward_4"));
+            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_REWARD_4"));
             log.debug("Error : {}",error);
             return error;
         }
@@ -40,7 +39,7 @@ import java.util.Optional;
     public Optional<ValidationError> suchRewardIsDatabase(Long employeeId,String jobType){
         Optional<Reward> reward = rewardRepository.findByEmployeeIdAndJobTypeAndStatus(employeeId,jobType.toUpperCase(),RewardStatus.UNPAID);
         if (reward.isPresent()){
-            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Reward_3"));
+            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_REWARD_3"));
             log.debug("Error : {}",error);
             return error;
         }
@@ -49,7 +48,7 @@ import java.util.Optional;
 
     public Optional<ValidationError> isRewardsForThisEmployees(List<Reward> rewardList){
         if (rewardList.isEmpty()){
-            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Reward_1"));
+            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_REWARD_1"));
             log.debug("Error : {}",error);
             return error;
         }

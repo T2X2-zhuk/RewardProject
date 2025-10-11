@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:reward_calculation_db
+    driver-class-name: org.h2.Driver
+    username: saralon
+    password: saralon2
+
+  jpa:
+    database: h2
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        trace: false
+        web-allow-others: false
+
+reward:
+  payment:
+    api:
+      url: http://reward-payment-app
+      port: 8095
+
+# H2:
+# http://localhost:8080/h2-console

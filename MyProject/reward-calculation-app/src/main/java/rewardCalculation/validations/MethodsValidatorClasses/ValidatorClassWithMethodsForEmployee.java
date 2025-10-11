@@ -19,7 +19,6 @@ import java.util.Optional;
 @Slf4j
 public class ValidatorClassWithMethodsForEmployee {
 
-    private final EmployeeRepository employeeRepository;
     private final ValidationErrorFactory errorFactory;
     private final GetEmployeeUsingCache getEmployeeUsingCache;
 
@@ -27,7 +26,7 @@ public class ValidatorClassWithMethodsForEmployee {
         boolean exists = getEmployeeUsingCache.getAllEmployeesWithCache().stream()
                 .anyMatch(employee -> employee.getId().equals(id));
         if (!exists){
-            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Employee_5"));
+            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_EMPLOYEE_5"));
             log.debug("Error : {}",error);
             return error;
         }
@@ -36,7 +35,7 @@ public class ValidatorClassWithMethodsForEmployee {
 
     public Optional<ValidationError> firstNameMustNotBeEmpty(String firstName){
         if (isNullOrBlankOrEmpty(firstName)){
-            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Employee_1"));
+            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_EMPLOYEE_1"));
             log.debug("Error : {}",error);
             return error;
         }
@@ -45,7 +44,7 @@ public class ValidatorClassWithMethodsForEmployee {
 
     public Optional<ValidationError> lastNameMustNotBeEmpty(String lastName){
         if (isNullOrBlankOrEmpty(lastName)){
-            Optional<ValidationError> error  = Optional.of(errorFactory.buildError("ERROR_CODE_For_Employee_2"));
+            Optional<ValidationError> error  = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_EMPLOYEE_2"));
             log.debug("Error : {}",error);
             return error;
         }
@@ -54,7 +53,7 @@ public class ValidatorClassWithMethodsForEmployee {
 
     public Optional<ValidationError> bonusCoefficientMustNotBeEmpty(BigDecimal bonusCoefficient){
         if (bonusCoefficient == null || bonusCoefficient.compareTo(BigDecimal.ZERO) == 0){
-            Optional<ValidationError> error  = Optional.of(errorFactory.buildError("ERROR_CODE_For_Employee_3"));
+            Optional<ValidationError> error  = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_EMPLOYEE_3"));
             log.debug("Error : {}",error);
             return error;
         }
@@ -63,7 +62,7 @@ public class ValidatorClassWithMethodsForEmployee {
 
     public Optional<ValidationError> listEmployeeIsEmpty(List<Employee> employees){
         if (employees.isEmpty()){
-            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Employee_6"));
+            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_EMPLOYEE_6"));
             log.debug("Error : {}",error);
             return error;
         }

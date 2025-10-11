@@ -24,7 +24,7 @@ public class ValidatorClassWithMethodsForTariff {
 
     public Optional<ValidationError> isSuchTariffIsNull(Long id){
         if (tariffRepository.findById(id).isEmpty()){
-            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_2"));
+            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_TARIFF_2"));
             log.debug("Error : {}",error);
             return error;
         }
@@ -33,7 +33,7 @@ public class ValidatorClassWithMethodsForTariff {
 
     public Optional<ValidationError> amountMustNotBeEmpty(BigDecimal amount){
         if (amount == null || amount.compareTo(BigDecimal.ZERO) == 0){
-            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_3"));
+            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_TARIFF_3"));
             log.debug("Error : {}",error);
             return error;
         }
@@ -42,7 +42,7 @@ public class ValidatorClassWithMethodsForTariff {
     public Optional<ValidationError> jobTypeIsEmpty(String jobType){
 
         if (isNullOrBlankOrEmpty(jobType)){
-            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_1"));
+            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_TARIFF_1"));
             log.debug("Error : {}",error);
             return error;
         }
@@ -52,8 +52,8 @@ public class ValidatorClassWithMethodsForTariff {
         Map<String, Tariff> tariffsMap = getTariffUsingCache.getTariffsByJobType();
         if (!tariffsMap.containsKey(jobType.toUpperCase())) {
             Optional<ValidationError> error = tariffsMap.isEmpty()
-                    ? Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_5"))
-                    : Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_4",
+                    ? Optional.of(errorFactory.buildError("ERROR_CODE_FOR_TARIFF_5"))
+                    : Optional.of(errorFactory.buildError("ERROR_CODE_FOR_TARIFF_4",
                     List.of(new Placeholder("JOB_TYPES", String.join(",", tariffsMap.keySet())))));
             log.debug("Error : {}", error);
             return error;
@@ -66,7 +66,7 @@ public class ValidatorClassWithMethodsForTariff {
         Map<String, Tariff> tariffsMap = getTariffUsingCache.getTariffsByJobType();
 
         if (tariffsMap.containsKey(jobType.toUpperCase())){
-            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_For_Tariff_6"));
+            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_TARIFF_6"));
             log.debug("Error : {}",error);
             return error;
         }

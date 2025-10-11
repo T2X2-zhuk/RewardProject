@@ -1,8 +1,7 @@
 package test.acceptanceTests;
 
 import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
 import test.classesWithRestTestsMethod.rewardCalculationApp.CleanRewardDbForTest;
 import test.classesWithRestTestsMethod.rewardCalculationApp.EmployeeClassWithRestMethodsForAcceptanceTests;
 
@@ -22,12 +21,12 @@ public class EmployeeRestControllerAcceptanceTests {
         EmployeeClassWithRestMethodsForAcceptanceTests.createEmployee
                 (null,null,new BigDecimal("0.0")).
                 then().statusCode(200).body("errors[0].errorCode" ,
-                        equalTo("ERROR_CODE_For_Employee_1"))
+                        equalTo("ERROR_CODE_FOR_EMPLOYEE_1"))
                 .body("errors[1].errorCode",
-                        equalTo("ERROR_CODE_For_Employee_2"))
-                .body("errors[2].errorCode",equalTo("ERROR_CODE_For_Employee_3"));
+                        equalTo("ERROR_CODE_FOR_EMPLOYEE_2"))
+                .body("errors[2].errorCode",equalTo("ERROR_CODE_FOR_EMPLOYEE_3"));
 
-        EmployeeClassWithRestMethodsForAcceptanceTests.getEmployee(2L).then().statusCode(200).body("errors[0].errorCode",equalTo("ERROR_CODE_For_Employee_5"));
+        EmployeeClassWithRestMethodsForAcceptanceTests.getEmployee(2L).then().statusCode(200).body("errors[0].errorCode",equalTo("ERROR_CODE_FOR_EMPLOYEE_5"));
         //Successful
         Response response = EmployeeClassWithRestMethodsForAcceptanceTests.createEmployee
                 ("Harbon","Lasamanba",new BigDecimal("3.5"));

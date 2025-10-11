@@ -1,0 +1,21 @@
+spring:
+  profiles:
+    default: h2
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/changelog-master.xml
+
+
+  cache:
+    type: redis
+    redis:
+      key-prefix: "pay::"
+
+  data:
+    redis:
+      host: redis-cache
+      port: 6379
+
+server:
+  port: 8095

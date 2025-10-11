@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:reward_payment_db
+    driver-class-name: org.h2.Driver
+    username: factor23
+    password: factor25
+
+  jpa:
+    database: h2
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        trace: false
+        web-allow-others: false

@@ -3,10 +3,7 @@ package test.acceptanceTests;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cache.CacheManager;
+
 import test.classesWithRestTestsMethod.paymentApp.CleanPaymentDbForTest;
 import test.classesWithRestTestsMethod.paymentApp.PaymentClassWithMethodsForAcceptanceTests;
 import test.classesWithRestTestsMethod.rewardCalculationApp.CleanRewardDbForTest;
@@ -56,13 +53,13 @@ public class RewardCalculationAcceptanceTest {
         TariffClassWithMethodsForAcceptanceTests.createTariff("speech",new BigDecimal("23.24")).then().statusCode(200);
 
         RewardClassWithMethodsForAcceptanceTests.calculate().then().statusCode(200)
-                .body("errors[0].errorCode", equalTo("ERROR_CODE_For_Employee_6"));
+                .body("errors[0].errorCode", equalTo("ERROR_CODE_FOR_EMPLOYEE_6"));
         // 1. Создаём сотрудника
         Response employeeResponse = EmployeeClassWithRestMethodsForAcceptanceTests.createEmployee("Иван","Иванов",new BigDecimal("1.2"));
         employeeResponse.then().statusCode(200);
         Long employeeId = employeeResponse.jsonPath().getLong("employeeDTO.id");
 
-        RewardClassWithMethodsForAcceptanceTests.calculate().then().statusCode(200).body("errors[0].errorCode",equalTo("ERROR_CODE_For_Reward_1"));
+        RewardClassWithMethodsForAcceptanceTests.calculate().then().statusCode(200).body("errors[0].errorCode",equalTo("ERROR_CODE_FOR_REWARD_1"));
 
         PaymentClassWithMethodsForAcceptanceTests.getPayment(employeeId,new BigDecimal("23.24")).then().statusCode(200).body("errors[0].errorCode",equalTo("ERROR_CODE_FOR_PAYMENT_3"));
     }
