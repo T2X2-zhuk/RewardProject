@@ -22,7 +22,7 @@ resilience4j:
     instances:
       rewardPaymentRetry:
         maxAttempts: 3        # всего 3 попытки
-        waitDuration: 2s      # пауза между попытками
+        waitDuration: 1m      # пауза между попытками
 
 server:
   port: 8080
