@@ -1,10 +1,10 @@
 package rewardCalculation.restClientRewardPayment;
 
-import lombok.ToString;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
-import rewardCalculation.dto.PaymentDTO;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestTemplate;
+import rewardCalculation.dto.PaymentDTO;
 
 import java.util.List;
 
@@ -12,22 +12,27 @@ import java.util.List;
 @Slf4j
 public class RewardPaymentClient {
 
-    private final RestClient rewardPaymentRestClient;
 
-    public RewardPaymentClient(RestClient rewardPaymentRestClient) {
-        this.rewardPaymentRestClient = rewardPaymentRestClient;
+    private final RestTemplate restTemplate;
+    private final String baseUrl;
+
+    public RewardPaymentClient(String baseUrl, RestTemplate restTemplate) {
+        this.baseUrl = baseUrl;
+        this.restTemplate = restTemplate;
     }
 
-    public RewardPaymentResponse payReward(List<PaymentDTO> paymentDTOS) {
-        log.info("{} is start!",this.getClass().getSimpleName());
-        RewardPaymentRequest request = new RewardPaymentRequest(paymentDTOS);
-        RewardPaymentResponse response = rewardPaymentRestClient.post()
-                .uri("/reward/payment/payReward")
-                .body(request)
-                .retrieve()
-                .body(RewardPaymentResponse.class);
-        log.info("{} is execute!",this.getClass().getSimpleName());
+    @Retry(name = "rewardPaymentRetry")
+    public RewardPaymentResponse payReward(List<PaymentDTO> payments) {
+        log.info("Calling reward-payment-app at {}", baseUrl);
+        RewardPaymentRequest request = new RewardPaymentRequest(payments);
+
+        RewardPaymentResponse response = restTemplate.postForObject(
+                baseUrl + "/reward/payment/payReward",
+                request,
+                RewardPaymentResponse.class
+        );
+
+        log.info("Reward-payment-app call succeeded!");
         return response;
     }
-
 }

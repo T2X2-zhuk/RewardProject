@@ -3,7 +3,7 @@ package rewardCalculation.restClientRewardPayment;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class RewardPaymentClientConfig {
@@ -15,14 +15,14 @@ public class RewardPaymentClientConfig {
     private int rewardPaymentApiPort;
 
     @Bean
-    public RestClient rewardPaymentRestClient() {
-        // Combine URL and port to create the full base URL
-        String baseUrl = String.format("%s:%d", rewardPaymentApiUrl, rewardPaymentApiPort);
+    public RestTemplate rewardPaymentRestTemplate() {
+        return new RestTemplate();
+    }
 
-        // Create and configure the RestClient
-        return RestClient.builder()
-                .baseUrl(baseUrl)
-                .build();
+    @Bean
+    public RewardPaymentClient rewardPaymentClient(RestTemplate rewardPaymentRestTemplate) {
+        String baseUrl = String.format("%s:%d", rewardPaymentApiUrl, rewardPaymentApiPort);
+        return new RewardPaymentClient(baseUrl, rewardPaymentRestTemplate);
     }
 
 }
