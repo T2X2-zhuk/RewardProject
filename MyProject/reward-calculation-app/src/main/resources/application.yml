@@ -21,8 +21,13 @@ resilience4j:
   retry:
     instances:
       rewardPaymentRetry:
-        maxAttempts: 3        # всего 3 попытки
-        waitDuration: 1m      # пауза между попытками
-
+        maxAttempts: 3                       # всего 3 попытки
+        waitDuration: 60s                    # 1 минута между первой и второй попыткой
+        enable-exponential-backoff: true    # включаем экспоненциальное увеличение
+        exponential-backoff-multiplier: 2.0 # каждый следующий интервал в 2 раза больше
+        exponential-max-wait-duration: 5m   # максимум 5 минут
+        retry-exceptions:
+          - java.io.IOException
+          - org.springframework.web.client.ResourceAccessException
 server:
   port: 8080

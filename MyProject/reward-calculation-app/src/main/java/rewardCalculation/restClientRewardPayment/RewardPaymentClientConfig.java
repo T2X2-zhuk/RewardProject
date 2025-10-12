@@ -31,23 +31,5 @@ public class RewardPaymentClientConfig {
         return new RewardPaymentClient(baseUrl, rewardPaymentRestTemplate);
     }
 
-    @Bean
-    public Retry rewardPaymentRetry() {
-        RetryConfig config = RetryConfig.custom()
-                .maxAttempts(3)
-                .waitDuration(Duration.ofMinutes(1))
-                .retryExceptions(Exception.class) // любые исключения для демонстрации
-                .build();
-
-        Retry retry = Retry.of("rewardPaymentRetry", config);
-
-        retry.getEventPublisher()
-                .onRetry(event -> log.warn("Retry attempt #{} for {} due to {}",
-                        event.getNumberOfRetryAttempts(),
-                        event.getName(),
-                        event.getLastThrowable() != null ? event.getLastThrowable().getMessage() : "none"));
-
-        return retry;
-    }
 
 }
