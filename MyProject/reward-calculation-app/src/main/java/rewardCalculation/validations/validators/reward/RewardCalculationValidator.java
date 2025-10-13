@@ -3,7 +3,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.JPA.domain.Employee;
 import rewardCalculation.JPA.domain.Reward;
-import rewardCalculation.util.ValidationError;
+import rewardCalculation.util.forError.ValidationError;
 import rewardCalculation.validations.MethodsValidatorClasses.ValidatorClassWithMethodsForEmployee;
 import rewardCalculation.validations.MethodsValidatorClasses.ValidatorClassWithMethodsForReward;
 import org.springframework.stereotype.Component;
@@ -25,6 +25,7 @@ public class RewardCalculationValidator {
         methodsForEmployee.listEmployeeIsEmpty(employees).ifPresent(errors::add);
         if (errors.isEmpty()){
             methodsForReward.isRewardsForThisEmployees(rewardList).ifPresent(errors::add);
+            methodsForReward.isNotASingleRewardWithStatusUNPAID(rewardList).ifPresent(errors::add);
         }
         log.info("{} execute!", this.getClass().getSimpleName());
         return errors;

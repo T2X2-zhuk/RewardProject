@@ -1,8 +1,8 @@
 package rewardCalculation.responses;
 
-import rewardCalculation.util.CoreResponse;
+import rewardCalculation.util.forError.CoreResponse;
 import rewardCalculation.dto.EmployeeDTO;
-import rewardCalculation.util.ValidationError;
+import rewardCalculation.util.forError.ValidationError;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 

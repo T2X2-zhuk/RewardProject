@@ -1,13 +1,10 @@
 package rewardCalculation.validations.MethodsValidatorClasses;
 
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.JPA.domain.Employee;
-import rewardCalculation.JPA.repositories.EmployeeRepository;
 import rewardCalculation.cacheConfig.GetEmployeeUsingCache;
-import rewardCalculation.util.ValidationError;
-import org.springframework.beans.factory.annotation.Autowired;
+import rewardCalculation.util.forError.ValidationError;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;

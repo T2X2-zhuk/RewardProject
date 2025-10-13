@@ -5,13 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.JPA.domain.EnumObject.RewardStatus;
 import rewardCalculation.JPA.domain.Reward;
 import rewardCalculation.JPA.repositories.RewardRepository;
-import rewardCalculation.dto.PaymentDTO;
+import rewardCalculation.util.forServices.AppealAndResponseToRewardPayment;
 import rewardCalculation.validations.validators.reward.RewardCalculationValidator;
 import rewardCalculation.JPA.domain.Employee;
 import rewardCalculation.calculate.CalculatePayment;
 import rewardCalculation.restClientRewardPayment.RewardPaymentResponse;
 import rewardCalculation.calculate.SendPaymentsToRewardPaymentApplication;
-import rewardCalculation.util.ValidationError;
+import rewardCalculation.util.forError.ValidationError;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,9 +31,7 @@ import java.util.List;
 class RewardCalculationServiceImpl implements RewardCalculationService {
     
     private final RewardCalculationValidator validator;
-    private final RewardRepository rewardRepository;
-    private final SendPaymentsToRewardPaymentApplication sendingToMicroservice;
-    private final CalculatePayment calculatePayment;
+    private final AppealAndResponseToRewardPayment appealAndResponseToRewardPayment;
 
     public RewardPaymentResponse execute(List<Employee> employees,List<Reward> rewardList) {
         log.info("{} is start!", this.getClass().getSimpleName());
@@ -44,26 +42,9 @@ class RewardCalculationServiceImpl implements RewardCalculationService {
             coreResponse.setErrors(validationErrors);
             return coreResponse;
         }
-        RewardPaymentResponse paymentResponse = appealAndResponseToRewardPayment(employees,rewardList);
+        RewardPaymentResponse paymentResponse = appealAndResponseToRewardPayment.successful(employees,rewardList);
         log.info("{} is execute!", this.getClass().getSimpleName());
         return paymentResponse;
     }
 
-    private RewardPaymentResponse appealAndResponseToRewardPayment(List<Employee> employees,List<Reward> rewardList) {
-        List<PaymentDTO> paymentDTOS = calculatePayment.calculate(employees,rewardList);
-        RewardPaymentResponse paymentResponse = sendingToMicroservice.send(paymentDTOS);
-        log.debug("Payment sent successfully!");
-        if (paymentResponse.hasErrors() || !paymentResponse.isSuccessfulSaving()){
-            log.warn("Payment response has errors: {}",paymentResponse.getErrors());
-        }
-        else {
-            List<Long> ids = rewardList.stream()
-                    .map(Reward::getId)
-                    .toList();
-            rewardRepository.rewardSetStatusForList(RewardStatus.PAID, ids);
-            log.debug("Rewards is -{} ",RewardStatus.PAID);
-            log.info("Execute!");
-        }
-        return paymentResponse;
-    }
 }

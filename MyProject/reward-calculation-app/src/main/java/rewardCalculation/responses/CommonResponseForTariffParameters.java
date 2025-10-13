@@ -2,9 +2,9 @@ package rewardCalculation.responses;
 
 
 import lombok.*;
-import rewardCalculation.util.CoreResponse;
+import rewardCalculation.util.forError.CoreResponse;
 import rewardCalculation.dto.TariffDTO;
-import rewardCalculation.util.ValidationError;
+import rewardCalculation.util.forError.ValidationError;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;

@@ -30,6 +30,7 @@ public class RewardRestController {
     private final RewardCalculationService rewardCalculationService;
     private final GetRewardService getRewardService;
     private final GetEmployeeUsingCache getEmployeeUsingCache;
+
     @PostMapping(path = "/createReward",
             consumes = "application/json",
             produces = "application/json")

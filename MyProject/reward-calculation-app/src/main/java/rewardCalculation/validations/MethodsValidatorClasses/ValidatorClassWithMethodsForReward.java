@@ -4,10 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.JPA.domain.EnumObject.RewardStatus;
 import rewardCalculation.JPA.domain.Reward;
 import rewardCalculation.JPA.repositories.RewardRepository;
-import rewardCalculation.util.ValidationError;
+import rewardCalculation.util.forError.ValidationError;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 @Component
@@ -49,6 +48,18 @@ import java.util.Optional;
     public Optional<ValidationError> isRewardsForThisEmployees(List<Reward> rewardList){
         if (rewardList.isEmpty()){
             Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_REWARD_1"));
+            log.debug("Error : {}",error);
+            return error;
+        }
+        return Optional.empty();
+    }
+
+    public Optional<ValidationError> isNotASingleRewardWithStatusUNPAID(List<Reward> rewardList){
+        List<Reward> unpaidRewards = rewardList.stream()
+                .filter(r -> r.getStatus() == RewardStatus.UNPAID)
+                .toList();
+        if (unpaidRewards.isEmpty()){
+            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_REWARD_5"));
             log.debug("Error : {}",error);
             return error;
         }

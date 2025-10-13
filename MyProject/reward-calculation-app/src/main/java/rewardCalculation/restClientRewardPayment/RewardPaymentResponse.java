@@ -1,9 +1,7 @@
 package rewardCalculation.restClientRewardPayment;
 
-import lombok.ToString;
-import rewardCalculation.dto.PaymentDTO;
-import rewardCalculation.util.CoreResponse;
-import rewardCalculation.util.ValidationError;
+import rewardCalculation.util.forError.CoreResponse;
+import rewardCalculation.util.forError.ValidationError;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

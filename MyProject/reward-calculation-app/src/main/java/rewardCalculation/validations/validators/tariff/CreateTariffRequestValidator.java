@@ -1,13 +1,11 @@
 package rewardCalculation.validations.validators.tariff;
 
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.validations.MethodsValidatorClasses.ValidatorClassWithMethodsForTariff;
 import rewardCalculation.requests.CommonRequestForTariffParameters;
 
-import rewardCalculation.util.ValidationError;
-import org.springframework.beans.factory.annotation.Autowired;
+import rewardCalculation.util.forError.ValidationError;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

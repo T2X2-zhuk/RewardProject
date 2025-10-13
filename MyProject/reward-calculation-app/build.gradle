@@ -41,9 +41,13 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-data-redis:$springBootVersion"
 
     // Resilience4j
+    implementation 'io.github.resilience4j:resilience4j-circuitbreaker:2.3.0'
     implementation 'io.github.resilience4j:resilience4j-retry:2.3.0'
     implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.3.0'
-
+// Actuator + Micrometer + Prometheus (для мониторинга CircuitBreaker)
+    implementation "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
+    implementation "io.micrometer:micrometer-registry-prometheus:1.11.4" // или актуальная версия
+    implementation 'io.github.resilience4j:resilience4j-micrometer:2.3.0'
     compileOnly('org.projectlombok:lombok:1.18.32')
 	annotationProcessor('org.projectlombok:lombok:1.18.32')
 

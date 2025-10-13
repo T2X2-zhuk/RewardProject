@@ -29,5 +29,28 @@ resilience4j:
         retry-exceptions:
           - java.io.IOException
           - org.springframework.web.client.ResourceAccessException
+  circuitbreaker:
+    instances:
+      rewardPaymentCb:
+        registerHealthIndicator: true
+        sliding-window-type: COUNT_BASED        # или TIME_BASED
+        sliding-window-size: 10                 # анализируем последние 10 вызовов
+        minimum-number-of-calls: 5              # минимум вызовов до вычисления failure rate
+        failure-rate-threshold: 50              # % ошибок для открытия цепи
+        wait-duration-in-open-state: 60s        # время в Open перед переходом в Half-Open
+        permitted-number-of-calls-in-half-open-state: 3
+        slow-call-duration-threshold: 2s        # считать "медленным" вызов >2s (опционально)
+        slow-call-rate-threshold: 100           # если 100% медленных, считать ошибкой (опционально)
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
 server:
   port: 8080

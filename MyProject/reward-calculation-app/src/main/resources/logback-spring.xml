@@ -67,4 +67,8 @@
     <logger name="rewardCalculation.JPA.repository" level="INFO"/>
     <logger name="rewardCalculation.validations" level="DEBUG"/>
 
+    <logger name="io.github.resilience4j" level="DEBUG"/>
+    <logger name="org.springframework.retry" level="DEBUG"/>
+    <logger name="org.springframework.boot.actuate" level="INFO"/>
+    <logger name="io.micrometer" level="INFO"/>
 </configuration>

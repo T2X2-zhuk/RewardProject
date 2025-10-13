@@ -3,7 +3,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.requests.CommonRequestForEmployeeParameters;
 import rewardCalculation.validations.MethodsValidatorClasses.ValidatorClassWithMethodsForEmployee;
-import rewardCalculation.util.ValidationError;
+import rewardCalculation.util.forError.ValidationError;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

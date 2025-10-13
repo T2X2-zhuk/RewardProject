@@ -1,4 +1,4 @@
-package rewardCalculation.util;
+package rewardCalculation.util.forError;
 import lombok.*;
 
 import java.util.List;

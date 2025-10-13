@@ -2,11 +2,8 @@ package rewardCalculation.servises.tariff;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
 import rewardCalculation.cacheConfig.GetTariffUsingCache;
-import rewardCalculation.cacheConfig.RedisCacheConfig;
-import rewardCalculation.util.ValidationError;
+import rewardCalculation.util.forError.ValidationError;
 import rewardCalculation.validations.validators.tariff.CreateTariffRequestValidator;
 import rewardCalculation.JPA.domain.Tariff;
 import rewardCalculation.JPA.repositories.TariffRepository;

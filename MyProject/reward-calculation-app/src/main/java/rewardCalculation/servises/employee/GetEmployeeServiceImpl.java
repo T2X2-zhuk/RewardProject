@@ -1,7 +1,6 @@
 package rewardCalculation.servises.employee;
 
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.cacheConfig.GetEmployeeUsingCache;
 import rewardCalculation.requests.CommonRequestForEmployeeParameters;
@@ -10,7 +9,7 @@ import rewardCalculation.validations.validators.employee.GetEmployeeValidator;
 import rewardCalculation.JPA.domain.Employee;
 import rewardCalculation.JPA.repositories.EmployeeRepository;
 import rewardCalculation.dto.EmployeeDTO;
-import rewardCalculation.util.ValidationError;
+import rewardCalculation.util.forError.ValidationError;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

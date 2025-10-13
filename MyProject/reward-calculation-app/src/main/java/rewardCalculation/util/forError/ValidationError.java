@@ -1,6 +1,5 @@
-package rewardCalculation.util;
+package rewardCalculation.util.forError;
 
-import jakarta.persistence.Table;
 import lombok.*;
 
 @Getter

@@ -1,16 +1,14 @@
 package rewardCalculation.servises.tariff;
 
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.JPA.domain.Tariff;
 import rewardCalculation.JPA.repositories.TariffRepository;
 import rewardCalculation.dto.TariffDTO;
 import rewardCalculation.requests.CommonRequestForTariffParameters;
 import rewardCalculation.responses.CommonResponseForTariffParameters;
-import rewardCalculation.util.ValidationError;
+import rewardCalculation.util.forError.ValidationError;
 import rewardCalculation.validations.validators.tariff.GetTariffValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

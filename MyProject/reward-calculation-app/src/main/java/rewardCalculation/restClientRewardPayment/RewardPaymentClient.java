@@ -1,6 +1,7 @@
 package rewardCalculation.restClientRewardPayment;
-
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -21,6 +22,7 @@ public class RewardPaymentClient {
         this.restTemplate = restTemplate;
     }
 
+    @CircuitBreaker(name = "rewardPaymentCb", fallbackMethod = "payRewardFallback")
     @Retry(name = "rewardPaymentRetry")
     public RewardPaymentResponse payReward(List<PaymentDTO> payments) {
         log.info("Calling reward-payment-app at {}", baseUrl);
@@ -34,5 +36,13 @@ public class RewardPaymentClient {
 
         log.info("Reward-payment-app call succeeded!");
         return response;
+    }
+
+    public RewardPaymentResponse payRewardFallback(List<PaymentDTO> payments, Throwable throwable) {
+        log.error("Fallback triggered for payReward due to: {}", throwable.toString());
+        RewardPaymentResponse fallbackResponse = new RewardPaymentResponse();
+        fallbackResponse.setSuccessfulSaving(false);
+        log.error("Reward Payment service temporarily unavailable. Please try later.");
+        return fallbackResponse;
     }
 }

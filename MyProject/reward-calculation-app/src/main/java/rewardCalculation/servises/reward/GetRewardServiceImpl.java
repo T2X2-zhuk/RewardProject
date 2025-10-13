@@ -1,7 +1,6 @@
 package rewardCalculation.servises.reward;
 
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.dto.RewardDTO;
 import rewardCalculation.responses.CommonResponseForRewardParameters;
@@ -9,8 +8,7 @@ import rewardCalculation.validations.validators.reward.GetRewardRequestValidator
 import rewardCalculation.JPA.domain.Reward;
 import rewardCalculation.JPA.repositories.RewardRepository;
 import rewardCalculation.requests.CommonRequestForRewardParameters;
-import rewardCalculation.util.ValidationError;
-import org.springframework.beans.factory.annotation.Autowired;
+import rewardCalculation.util.forError.ValidationError;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -2,13 +2,10 @@ package rewardCalculation.servises.employee;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
 import rewardCalculation.cacheConfig.GetEmployeeUsingCache;
-import rewardCalculation.cacheConfig.RedisCacheConfig;
 import rewardCalculation.requests.CommonRequestForEmployeeParameters;
 import rewardCalculation.responses.CommonResponseForEmployeeParameters;
-import rewardCalculation.util.ValidationError;
+import rewardCalculation.util.forError.ValidationError;
 import rewardCalculation.validations.validators.employee.CreateEmployeeRequestValidator;
 import rewardCalculation.JPA.domain.Employee;
 import rewardCalculation.JPA.repositories.EmployeeRepository;
