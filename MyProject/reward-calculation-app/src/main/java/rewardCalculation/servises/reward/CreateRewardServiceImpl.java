@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 @Slf4j
 class CreateRewardServiceImpl implements CreateRewardService {
@@ -24,6 +23,7 @@ class CreateRewardServiceImpl implements CreateRewardService {
     private final RewardRepository rewardRepository;
     private final CreateRewardRequestValidator validator;
 
+    @Transactional
     @Override
     public CommonResponseForRewardParameters execute(CommonRequestForRewardParameters request) {
         log.info("{} is start!", this.getClass().getSimpleName());
@@ -31,22 +31,29 @@ class CreateRewardServiceImpl implements CreateRewardService {
         List<ValidationError> errors = validator.validate(request);
         log.debug("Validation is execute!");
         if (errors.isEmpty()){
-            Reward reward = Reward.builder()
-                    .employeeId(request.getRewardDTO().getEmployeeId())
-                    .jobType(request.getRewardDTO().getJobType().toUpperCase())
-                    .status(RewardStatus.UNPAID).build();
+            Reward reward = buildReward(request);
             rewardRepository.save(reward);
             log.debug("Reward saved: {}", reward);
-            response.setRewardDTO(RewardDTO.builder()
-                    .id(reward.getId())
-                    .employeeId(reward.getEmployeeId())
-                    .jobType(reward.getJobType())
-                    .status(reward.getStatus()).build());
+            setRewardDTOOnResponse(response,reward);
         }else {
             response.setErrors(errors);
             log.warn("Validation failed errors : {}" , errors);
         }
         log.info("{} is execute!", this.getClass().getSimpleName());
         return response;
+    }
+
+    private void setRewardDTOOnResponse(CommonResponseForRewardParameters response,Reward reward){
+        response.setRewardDTO(RewardDTO.builder()
+                .id(reward.getId())
+                .employeeId(reward.getEmployeeId())
+                .jobType(reward.getJobType())
+                .status(reward.getStatus()).build());
+    }
+    private Reward buildReward(CommonRequestForRewardParameters request){
+        return Reward.builder()
+                .employeeId(request.getRewardDTO().getEmployeeId())
+                .jobType(request.getRewardDTO().getJobType().toUpperCase())
+                .status(RewardStatus.UNPAID).build();
     }
 }

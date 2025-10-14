@@ -16,13 +16,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 @Slf4j
 class GetTariffServiceImpl implements GetTariffService {
 
     private final GetTariffValidator validator;
     private final TariffRepository repository;
+
+    @Transactional
     @Override
     public CommonResponseForTariffParameters execute(CommonRequestForTariffParameters request) {
         log.info("{} is start!", this.getClass().getSimpleName());

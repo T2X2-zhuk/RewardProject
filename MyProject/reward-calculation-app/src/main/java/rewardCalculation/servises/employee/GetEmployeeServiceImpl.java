@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 @Slf4j
 class GetEmployeeServiceImpl implements GetEmployeeService {
@@ -25,7 +24,7 @@ class GetEmployeeServiceImpl implements GetEmployeeService {
      private final EmployeeRepository repository;
      private final GetEmployeeValidator validator;
      private final GetEmployeeUsingCache getEmployeeUsingCache;
-
+    @Transactional
     public CommonResponseForEmployeeParameters execute(CommonRequestForEmployeeParameters request){
         log.info("{} is start!", this.getClass().getSimpleName());
         CommonResponseForEmployeeParameters response = new CommonResponseForEmployeeParameters();

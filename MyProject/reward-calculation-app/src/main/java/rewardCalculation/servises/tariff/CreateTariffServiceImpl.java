@@ -17,7 +17,6 @@ import java.math.RoundingMode;
 import java.util.List;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 @Slf4j
 class CreateTariffServiceImpl implements CreateTariffService {
@@ -26,7 +25,7 @@ class CreateTariffServiceImpl implements CreateTariffService {
     private final TariffRepository tariffRepository;
     private final CreateTariffRequestValidator validator;
     private final GetTariffUsingCache getTariffUsingCache;
-
+    @Transactional
     @Override
     public CommonResponseForTariffParameters execute(CommonRequestForTariffParameters request) {
         log.info("{} is start!", this.getClass().getSimpleName());
@@ -35,7 +34,8 @@ class CreateTariffServiceImpl implements CreateTariffService {
         log.debug("Validation is execute!");
         if (errors.isEmpty()){
             Tariff tariff = buildTariff(request.getTariffDTO());
-            saveTariffAndDeleteCacheTariffs(tariff);
+            tariffRepository.save(tariff);
+            getTariffUsingCache.clearTARIFF_CACHECache();
             setTariffDTO(response,tariff);
             log.debug("All successful , tariff : {} is save!", tariff);
         }else {
@@ -44,11 +44,6 @@ class CreateTariffServiceImpl implements CreateTariffService {
         }
         log.info("{} is execute!", this.getClass().getSimpleName());
         return response;
-    }
-
-    private void saveTariffAndDeleteCacheTariffs(Tariff tariff){
-        tariffRepository.save(tariff);
-        getTariffUsingCache.clearTARIFF_CACHECache();
     }
     private Tariff buildTariff(TariffDTO tariffDTO){
         return Tariff.builder().amount(tariffDTO.getAmount().setScale(2, RoundingMode.HALF_UP))

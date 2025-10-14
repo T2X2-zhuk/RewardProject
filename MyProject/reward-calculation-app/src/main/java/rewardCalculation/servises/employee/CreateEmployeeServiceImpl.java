@@ -17,7 +17,6 @@ import java.math.RoundingMode;
 import java.util.List;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 @Slf4j
 class CreateEmployeeServiceImpl implements CreateEmployeeService {
@@ -25,7 +24,7 @@ class CreateEmployeeServiceImpl implements CreateEmployeeService {
     private final EmployeeRepository employeeRepository;
     private final CreateEmployeeRequestValidator validator;
     private final GetEmployeeUsingCache getEmployeeUsingCache;
-
+    @Transactional
     public CommonResponseForEmployeeParameters execute(CommonRequestForEmployeeParameters request) {
         log.info("{} is start!", this.getClass().getSimpleName());
         CommonResponseForEmployeeParameters response = new CommonResponseForEmployeeParameters();
@@ -33,7 +32,8 @@ class CreateEmployeeServiceImpl implements CreateEmployeeService {
         log.debug("Validation is execute!");
         if (errors.isEmpty()) {
             Employee employee = buildEmployee(request.getEmployeeDTO());
-            saveEmployeeAndDeleteCacheEmployee(employee);
+            employeeRepository.save(employee);
+            getEmployeeUsingCache.clearEMPLOYEESCache();
             log.debug("Employee : {} successful saved!",employee);
             setEmployeeDTO(response,employee);
         } else {
@@ -42,11 +42,6 @@ class CreateEmployeeServiceImpl implements CreateEmployeeService {
         }
         log.info("{} is execute!", this.getClass().getSimpleName());
         return response;
-    }
-
-    private void saveEmployeeAndDeleteCacheEmployee(Employee employee){
-        employeeRepository.save(employee);
-        getEmployeeUsingCache.clearEMPLOYEESCache();
     }
     private Employee buildEmployee(EmployeeDTO employeeDTO){
         return Employee.builder()

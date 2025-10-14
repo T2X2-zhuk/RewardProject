@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 @Slf4j
 class GetRewardServiceImpl implements GetRewardService {
@@ -24,6 +23,7 @@ class GetRewardServiceImpl implements GetRewardService {
     private final GetRewardRequestValidator validator;
     private final RewardRepository rewardRepository;
 
+    @Transactional
     @Override
     public CommonResponseForRewardParameters execute(CommonRequestForRewardParameters request) {
         log.info("{} is start!", this.getClass().getSimpleName());

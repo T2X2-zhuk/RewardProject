@@ -25,13 +25,13 @@ import java.util.List;
  */
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 @Slf4j
 class RewardCalculationServiceImpl implements RewardCalculationService {
     
     private final RewardCalculationValidator validator;
     private final AppealAndResponseToRewardPayment appealAndResponseToRewardPayment;
+    private final RewardRepository rewardRepository;
 
     public RewardPaymentResponse execute(List<Employee> employees,List<Reward> rewardList) {
         log.info("{} is start!", this.getClass().getSimpleName());
@@ -42,9 +42,26 @@ class RewardCalculationServiceImpl implements RewardCalculationService {
             coreResponse.setErrors(validationErrors);
             return coreResponse;
         }
+        changesTheStatusOfAwardsThatPreviouslyHadTheStatusPROCESSING(rewardList);
         RewardPaymentResponse paymentResponse = appealAndResponseToRewardPayment.successful(employees,rewardList);
         log.info("{} is execute!", this.getClass().getSimpleName());
         return paymentResponse;
+    }
+
+
+    private void changesTheStatusOfAwardsThatPreviouslyHadTheStatusPROCESSING(List<Reward> rewardList){
+        List<Reward> processingRewards = rewardList.stream()
+                .filter(r -> r.getStatus() == RewardStatus.PROCESSING)
+                .toList();
+        List<Long> processingRewardsIds = processingRewards.stream()
+                .map(Reward::getId)
+                .toList();
+        if (!processingRewardsIds.isEmpty()) {
+            rewardRepository.rewardSetStatusForList(RewardStatus.PAID, processingRewardsIds);
+            log.info("Processing rewards set to PAID: {}", processingRewardsIds);
+        } else {
+            log.debug("No rewards with status PROCESSING found.");
+        }
     }
 
 }
