@@ -58,7 +58,7 @@ public class RewardRestController {
         log.info("{} is start!",this.getClass().getSimpleName());
         List<Employee> employeeList = getEmployeeUsingCache.getAllEmployeesWithCache();
         log.debug("Get all Employees - {}" , employeeList);
-        List<Reward> rewardList = rewardRepository.findAllByStatusNot(RewardStatus.PAID);
+        List<Reward> rewardList = rewardRepository.findTop15ByStatusNot(RewardStatus.PAID);
         log.debug("Get all Rewards which is not paid - {}" , rewardList);
         RewardPaymentResponse response = rewardCalculationService.execute(employeeList,rewardList);
         log.debug("Response -> {} and his boolean -> {}", response.getClass().getSimpleName(),response.isSuccessfulSaving());
