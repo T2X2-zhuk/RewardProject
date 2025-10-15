@@ -59,11 +59,13 @@ public class RewardRestControllerAcceptanceTests {
         Response employeeResponse = EmployeeClassWithRestMethodsForAcceptanceTests.createEmployee("Иван","Иванов",new BigDecimal("1.2"));
         employeeResponse.then().statusCode(200);
         Long employeeId = employeeResponse.jsonPath().getLong("employeeDTO.id");
-
-        // 2. Создаём награду
+       // 2.Создаём награду с несуществующем employeeId
+        RewardClassWithMethodsForAcceptanceTests.createReward(2L,"speech").then().statusCode(200)
+                .body("errors[0].errorCode", equalTo("ERROR_CODE_FOR_EMPLOYEE_5"));
+        // 3. Создаём награду
         RewardClassWithMethodsForAcceptanceTests.createReward(employeeId,"speech");
-
-        RewardClassWithMethodsForAcceptanceTests.createReward(employeeId,"speech")
+        // 3. Дубляж
+        RewardClassWithMethodsForAcceptanceTests.createReward(employeeId, "speech")
                 .then().statusCode(200).body("errors[0].errorCode", equalTo("ERROR_CODE_FOR_REWARD_3"));
     }
     //Test PASSED!

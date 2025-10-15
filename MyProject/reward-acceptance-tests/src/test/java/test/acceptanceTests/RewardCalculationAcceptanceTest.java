@@ -1,21 +1,15 @@
 package test.acceptanceTests;
 
 import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
-import test.DTOS.PaymentDTO;
 import test.classesWithRestTestsMethod.paymentApp.CleanPaymentDbForTest;
 import test.classesWithRestTestsMethod.paymentApp.PaymentClassWithMethodsForAcceptanceTests;
 import test.classesWithRestTestsMethod.rewardCalculationApp.CleanRewardDbForTest;
 import test.classesWithRestTestsMethod.rewardCalculationApp.EmployeeClassWithRestMethodsForAcceptanceTests;
 import test.classesWithRestTestsMethod.rewardCalculationApp.RewardClassWithMethodsForAcceptanceTests;
 import test.classesWithRestTestsMethod.rewardCalculationApp.TariffClassWithMethodsForAcceptanceTests;
-import test.paymentapp.requests.CommonRequestForPaymentParameters;
-import test.paymentapp.responses.CommonResponseForPaymentParameters;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -45,7 +39,7 @@ public class RewardCalculationAcceptanceTest {
         paymentResponse.then().statusCode(200).body("successfulSaving",equalTo(true));
 
        // 4. Проверяем полученный результат
-        PaymentClassWithMethodsForAcceptanceTests.getPayment(employeeId,new BigDecimal("51.13")).then()
+        PaymentClassWithMethodsForAcceptanceTests.getPayments(employeeId).then()
                 .statusCode(200)
                 .body("paymentDTOS[0].employeeId", equalTo(employeeId.intValue()))
                 .body("paymentDTOS[0].amount", equalTo(51.13F));
@@ -65,7 +59,7 @@ public class RewardCalculationAcceptanceTest {
 
         RewardClassWithMethodsForAcceptanceTests.calculate().then().statusCode(200).body("errors[0].errorCode",equalTo("ERROR_CODE_FOR_REWARD_1"));
 
-        PaymentClassWithMethodsForAcceptanceTests.getPayment(employeeId,new BigDecimal("23.24")).then().statusCode(200).body("errors[0].errorCode",equalTo("ERROR_CODE_FOR_PAYMENT_3"));
+        PaymentClassWithMethodsForAcceptanceTests.getPayments(employeeId).then().statusCode(200).body("errors[0].errorCode",equalTo("ERROR_CODE_FOR_PAYMENT_3"));
     }
 
 }

@@ -1,7 +1,7 @@
 package RewardPayment.validations.validators;
 
 import RewardPayment.requests.CommonRequestForPaymentParameters;
-import RewardPayment.util.ValidationError;
+import RewardPayment.util.forErrors.ValidationError;
 import RewardPayment.validations.MethodsValidatorClasses.ValidatorClassWithMethodsForPayment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ public class GetPaymentValidator {
     public List<ValidationError> validate(CommonRequestForPaymentParameters request){
         log.info("{} start!",this.getClass().getSimpleName());
         List<ValidationError> errors = new ArrayList<>();
-        validatorClassWithMethodsForPayment.isSuchPaymentInDatabase(request.getPaymentDTO().getEmployeeId(),request.getPaymentDTO().getAmount()).ifPresent(errors::add);
+        validatorClassWithMethodsForPayment.isSuchPaymentInDatabase(request.getPaymentDTO().getEmployeeId()).ifPresent(errors::add);
         log.info("{} execute!",this.getClass().getSimpleName());
         return errors;
     }

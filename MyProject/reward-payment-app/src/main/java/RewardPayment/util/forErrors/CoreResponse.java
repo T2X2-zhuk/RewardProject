@@ -1,4 +1,4 @@
-package RewardPayment.util;
+package RewardPayment.util.forErrors;
 import lombok.*;
 
 import java.util.List;

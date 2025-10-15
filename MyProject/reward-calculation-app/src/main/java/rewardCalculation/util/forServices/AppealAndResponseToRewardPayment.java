@@ -23,6 +23,7 @@ public class AppealAndResponseToRewardPayment {
     private final SendPaymentsToRewardPaymentApplication sendingToMicroservice;
     private final CalculatePayment calculatePayment;
 
+    @Transactional
     public RewardPaymentResponse successful(List<Employee> employees, List<Reward> rewardList) {
         List<Reward> unpaidRewards = rewardList.stream()
                 .filter(r -> r.getStatus() == RewardStatus.UNPAID)
@@ -37,20 +38,33 @@ public class AppealAndResponseToRewardPayment {
         log.debug("Payment sent successfully!");
         // Обновление статуса в зависимости от результата
         updateRewardStatuses(unpaidRewardsIds,paymentResponse);
-
+        changesTheStatusOfAwardsThatPreviouslyHadTheStatusPROCESSING(rewardList);
         return paymentResponse;
     }
 
-    @Transactional
-    protected void updateRewardStatuses(List<Long> unpaidRewardsIds, RewardPaymentResponse paymentResponse) {
+    private void updateRewardStatuses(List<Long> unpaidRewardsIds, RewardPaymentResponse paymentResponse) {
         rewardRepository.rewardSetStatusForList(
                 paymentResponse.hasErrors() || !paymentResponse.isSuccessfulSaving()
                         ? RewardStatus.PROCESSING
-                        : RewardStatus.PAID,
-                unpaidRewardsIds
+                        : RewardStatus.PAID,unpaidRewardsIds
         );
         log.debug("Rewards updated to {}",
                 paymentResponse.hasErrors() ? RewardStatus.PROCESSING : RewardStatus.PAID);
+    }
+
+    private void changesTheStatusOfAwardsThatPreviouslyHadTheStatusPROCESSING(List<Reward> rewardList){
+        List<Reward> processingRewards = rewardList.stream()
+                .filter(r -> r.getStatus() == RewardStatus.PROCESSING)
+                .toList();
+        List<Long> processingRewardsIds = processingRewards.stream()
+                .map(Reward::getId)
+                .toList();
+        if (!processingRewardsIds.isEmpty()) {
+            rewardRepository.rewardSetStatusForList(RewardStatus.PAID,processingRewardsIds);
+            log.info("Processing rewards set to PAID: {}", processingRewardsIds);
+        } else {
+            log.debug("No rewards with status PROCESSING found.");
+        }
     }
 
 }

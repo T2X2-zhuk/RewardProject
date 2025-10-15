@@ -13,11 +13,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GetEmployeeUsingCache {
 
-    private final EmployeeRepository repository;
+    private final EmployeeRepository employeeRepository;
 
     @Cacheable(cacheNames = RedisCacheConfig.EMPLOYEES)
     public List<Employee> getAllEmployeesWithCache() {
-        return repository.findAll();
+        return employeeRepository.findAll();
     }
     @CacheEvict(value = RedisCacheConfig.EMPLOYEES,allEntries = true)
     public void clearEMPLOYEESCache(){

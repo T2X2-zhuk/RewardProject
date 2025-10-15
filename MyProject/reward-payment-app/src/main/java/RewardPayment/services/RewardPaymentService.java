@@ -6,6 +6,7 @@ import RewardPayment.configCache.GetAllPaymentsUsingCache;
 import RewardPayment.dto.PaymentDTO;
 import RewardPayment.requests.CommonRequestForPaymentParameters;
 import RewardPayment.responses.CommonResponseForPaymentParameters;
+import RewardPayment.util.forServices.TransactionalClassWithMethodsForPayment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@Transactional
 @RequiredArgsConstructor
 @Slf4j
 public class RewardPaymentService {
@@ -23,6 +23,7 @@ public class RewardPaymentService {
     private final PaymentRepository paymentRepository;
     private final GetAllPaymentsUsingCache getAllPaymentsUsingCache;
 
+    @Transactional
     public CommonResponseForPaymentParameters pay(CommonRequestForPaymentParameters request) {
         log.info("{} is start!",this.getClass().getSimpleName());
         CommonResponseForPaymentParameters response = new CommonResponseForPaymentParameters();

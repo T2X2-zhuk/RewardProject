@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GetTariffUsingCache {
 
-    private final TariffRepository repository;
+    private final TariffRepository tariffRepository;
 
     @Cacheable(cacheNames = RedisCacheConfig.TARIFF_CACHE)
     public Map<String, Tariff> getTariffsByJobType() {
-        List<Tariff> tariffs = repository.findAll();
+        List<Tariff> tariffs = tariffRepository.findAll();
         return tariffs.stream().collect(Collectors.toMap(Tariff::getJobType, t -> t));
     }
 

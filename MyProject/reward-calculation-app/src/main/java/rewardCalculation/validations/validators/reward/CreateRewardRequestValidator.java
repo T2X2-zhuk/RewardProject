@@ -2,6 +2,7 @@ package rewardCalculation.validations.validators.reward;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import rewardCalculation.validations.MethodsValidatorClasses.ValidatorClassWithMethodsForEmployee;
 import rewardCalculation.validations.MethodsValidatorClasses.ValidatorClassWithMethodsForReward;
 import rewardCalculation.validations.MethodsValidatorClasses.ValidatorClassWithMethodsForTariff;
 import rewardCalculation.requests.CommonRequestForRewardParameters;
@@ -18,6 +19,7 @@ public class CreateRewardRequestValidator {
 
     private final ValidatorClassWithMethodsForReward validator;
     private final ValidatorClassWithMethodsForTariff tariffValidator;
+    private final ValidatorClassWithMethodsForEmployee employee;
 
     public List<ValidationError> validate(CommonRequestForRewardParameters request){
         log.info("{} start!", this.getClass().getSimpleName());
@@ -25,6 +27,7 @@ public class CreateRewardRequestValidator {
         validator.employeeIdMustNotBeEmpty(request.getRewardDTO().getEmployeeId()).ifPresent(errors ::add);
         tariffValidator.jobTypeIsEmpty(request.getRewardDTO().getJobType()).ifPresent(errors ::add);
         if (errors.isEmpty()){
+            employee.employeeIsNotDatabase(request.getRewardDTO().getEmployeeId()).ifPresent(errors::add);
             tariffValidator.suchJobTypesIsNotInDatabase(request.getRewardDTO().getJobType()).ifPresent(errors::add);
             validator.suchRewardIsDatabase(request.getRewardDTO().getEmployeeId(), request.getRewardDTO().getJobType()).ifPresent(errors::add);
         }

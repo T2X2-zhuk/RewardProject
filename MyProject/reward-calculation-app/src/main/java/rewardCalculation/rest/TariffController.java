@@ -1,14 +1,12 @@
 package rewardCalculation.rest;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.dto.TariffDTO;
 import rewardCalculation.requests.CommonRequestForTariffParameters;
 import rewardCalculation.responses.CommonResponseForTariffParameters;
+import org.springframework.web.bind.annotation.*;
 import rewardCalculation.servises.tariff.CreateTariffService;
 import rewardCalculation.servises.tariff.GetTariffService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/test/tariff")

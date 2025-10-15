@@ -2,6 +2,8 @@ package RewardPayment.rest.cleandb;
 
 import RewardPayment.JPA.repositories.PaymentRepository;
 import RewardPayment.configCache.GetAllPaymentsUsingCache;
+import RewardPayment.services.CleanDbService;
+import RewardPayment.util.forServices.TransactionalClassWithMethodsForPayment;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -17,19 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class CleanPaymentDbController {
 
-    private final PaymentRepository paymentRepository;
-    private final GetAllPaymentsUsingCache getAllPaymentsUsingCache;
+    private final CleanDbService cleanDbService;
+
     @PostMapping(path = "/clean",
             consumes = "application/json",
             produces = "application/json")
     public CleanPaymentDbResponse cleanDb(@RequestBody CleanPaymentDbRequest request) {
         log.info("{} is start!",this.getClass().getSimpleName());
-        CleanPaymentDbResponse response = new CleanPaymentDbResponse();
-        if (request.isCleanPayment()) {
-            paymentRepository.deleteAll();
-            response.setPaymentDeleted(true);
-            getAllPaymentsUsingCache.clearPAYMENTSCache();
-        }
+        CleanPaymentDbResponse response = cleanDbService.execute(request);
         log.info("{} is execute!",this.getClass().getSimpleName());
         return response;
     }

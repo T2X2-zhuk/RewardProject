@@ -1,4 +1,4 @@
-package RewardPayment.util;
+package RewardPayment.util.forErrors;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;

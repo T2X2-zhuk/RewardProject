@@ -1,13 +1,12 @@
 package RewardPayment.responses;
 
 import RewardPayment.dto.PaymentDTO;
-import RewardPayment.util.CoreResponse;
-import RewardPayment.util.ValidationError;
+import RewardPayment.util.forErrors.CoreResponse;
+import RewardPayment.util.forErrors.ValidationError;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.util.List;
 

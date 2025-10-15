@@ -1,8 +1,7 @@
-package RewardPayment.util;
+package RewardPayment.util.forErrors;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
 @AllArgsConstructor

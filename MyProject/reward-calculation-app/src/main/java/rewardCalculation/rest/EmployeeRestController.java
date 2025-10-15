@@ -1,15 +1,13 @@
 package rewardCalculation.rest;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.requests.CommonRequestForEmployeeParameters;
 import rewardCalculation.dto.EmployeeDTO;
 
 import rewardCalculation.responses.CommonResponseForEmployeeParameters;
 import rewardCalculation.servises.employee.CreateEmployeeService;
-import rewardCalculation.servises.employee.GetEmployeeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import rewardCalculation.servises.employee.GetEmployeeService;
 
 @RestController
 @RequestMapping("/api/test/employee")

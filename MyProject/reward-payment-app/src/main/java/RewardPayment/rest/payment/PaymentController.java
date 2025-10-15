@@ -5,12 +5,9 @@ import RewardPayment.responses.CommonResponseForPaymentParameters;
 import RewardPayment.services.RewardPaymentService;
 import RewardPayment.services.SearchPaymentService;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 @RestController
@@ -22,13 +19,13 @@ public class PaymentController {
      private final SearchPaymentService service;
      private final RewardPaymentService rewardPaymentService;
 
-    @GetMapping(path = "/searchPayment",
+    @GetMapping(path = "/searchPayment/{employeeId}",
             produces = "application/json")
-    public CommonResponseForPaymentParameters searchPayment(@RequestParam Long employeeId, @RequestParam BigDecimal amount) {
+    public CommonResponseForPaymentParameters searchPaymentByEmployeeId(@PathVariable Long employeeId) {
         log.info("{} is start!",this.getClass().getSimpleName());
         CommonRequestForPaymentParameters request = CommonRequestForPaymentParameters.builder()
                 .paymentDTO(PaymentDTO.builder()
-                        .employeeId(employeeId).amount(amount.setScale(2, RoundingMode.HALF_UP)).build()).build();
+                        .employeeId(employeeId).build()).build();
         CommonResponseForPaymentParameters response =  service.execute(request);
         log.info("{} is execute!",this.getClass().getSimpleName());
         return response;

@@ -1,8 +1,8 @@
 package RewardPayment.validations.MethodsValidatorClasses;
 
-import RewardPayment.util.ErrorCodeUtil;
-import RewardPayment.util.Placeholder;
-import RewardPayment.util.ValidationError;
+import RewardPayment.util.forErrors.ErrorCodeUtil;
+import RewardPayment.util.forErrors.Placeholder;
+import RewardPayment.util.forErrors.ValidationError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
