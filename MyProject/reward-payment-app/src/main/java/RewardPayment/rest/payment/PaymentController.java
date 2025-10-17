@@ -1,9 +1,11 @@
 package RewardPayment.rest.payment;
+import RewardPayment.configCache.GetAllPaymentsUsingCache;
 import RewardPayment.dto.PaymentDTO;
 import RewardPayment.requests.CommonRequestForPaymentParameters;
 import RewardPayment.responses.CommonResponseForPaymentParameters;
 import RewardPayment.services.RewardPaymentService;
 import RewardPayment.services.SearchPaymentService;
+import RewardPayment.util.forServices.RewardExecutionLock;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,8 @@ public class PaymentController {
 
      private final SearchPaymentService service;
      private final RewardPaymentService rewardPaymentService;
+     private final GetAllPaymentsUsingCache getAllPaymentsUsingCache;
+     private final RewardExecutionLock rewardExecutionLock;
 
     @GetMapping(path = "/searchPayment/{employeeId}",
             produces = "application/json")
@@ -35,9 +39,10 @@ public class PaymentController {
             consumes = "application/json",
             produces = "application/json")
     public CommonResponseForPaymentParameters payReward(@RequestBody CommonRequestForPaymentParameters request) {
-        log.info("PaymentController is start!");
+        return rewardExecutionLock.runWithLock(() -> {log.info("PaymentController is start!");
         CommonResponseForPaymentParameters response = rewardPaymentService.pay(request);
+        getAllPaymentsUsingCache.clearPAYMENTSCache();
         log.info("PaymentController is execute!");
-        return response;
+        return response;});
     }
 }

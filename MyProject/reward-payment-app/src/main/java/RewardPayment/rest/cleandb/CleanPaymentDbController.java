@@ -1,13 +1,9 @@
 package RewardPayment.rest.cleandb;
 
-import RewardPayment.JPA.repositories.PaymentRepository;
-import RewardPayment.configCache.GetAllPaymentsUsingCache;
 import RewardPayment.services.CleanDbService;
-import RewardPayment.util.forServices.TransactionalClassWithMethodsForPayment;
+import RewardPayment.util.forServices.RewardExecutionLock;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,15 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class CleanPaymentDbController {
 
     private final CleanDbService cleanDbService;
+    private final RewardExecutionLock rewardExecutionLock;
 
     @PostMapping(path = "/clean",
             consumes = "application/json",
             produces = "application/json")
     public CleanPaymentDbResponse cleanDb(@RequestBody CleanPaymentDbRequest request) {
-        log.info("{} is start!",this.getClass().getSimpleName());
-        CleanPaymentDbResponse response = cleanDbService.execute(request);
-        log.info("{} is execute!",this.getClass().getSimpleName());
-        return response;
+        return rewardExecutionLock.runWithLock(()-> {
+            log.info("{} is start!",this.getClass().getSimpleName());
+            CleanPaymentDbResponse response = cleanDbService.execute(request);
+            log.info("{} is execute!",this.getClass().getSimpleName());
+            return response;
+        });
     }
-
 }

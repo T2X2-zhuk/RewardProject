@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import rewardCalculation.JPA.repositories.EmployeeRepository;
+import rewardCalculation.JPA.repositories.OutboxPaymentEventRepository;
 import rewardCalculation.JPA.repositories.RewardRepository;
 import rewardCalculation.JPA.repositories.TariffRepository;
 import rewardCalculation.cacheConfig.GetEmployeeUsingCache;
@@ -20,7 +21,7 @@ public class CleanDBService {
     private final EmployeeRepository employeeRepository;
     private final RewardRepository rewardRepository;
     private final TariffRepository tariffRepository;
-
+    private final OutboxPaymentEventRepository repository;
     private final GetTariffUsingCache getTariffUsingCache;
     private final GetEmployeeUsingCache getEmployeeUsingCache;
 
@@ -44,6 +45,11 @@ public class CleanDBService {
             response.setEmployeeDeleted(true);
             getEmployeeUsingCache.clearEMPLOYEESCache();
             log.debug("Clean db employee and cache");
+        }
+        if (request.isCleanOutboxPaymentEvent()){
+            repository.deleteAll();
+            response.setOutboxPaymentEventDeleted(true);
+            log.debug("Clean db OutboxPaymentEvent");
         }
         log.info("{} is execute!",this.getClass().getSimpleName());
         return response;

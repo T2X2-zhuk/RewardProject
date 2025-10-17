@@ -1,7 +1,6 @@
 package rewardCalculation.restClientRewardPayment;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -23,7 +22,6 @@ public class RewardPaymentClient {
     }
 
     @CircuitBreaker(name = "rewardPaymentCb", fallbackMethod = "payRewardFallback")
-    @Retry(name = "rewardPaymentRetry")
     public RewardPaymentResponse payReward(List<PaymentDTO> payments) {
         log.info("Calling reward-payment-app at {}", baseUrl);
         RewardPaymentRequest request = new RewardPaymentRequest(payments);

@@ -39,7 +39,6 @@ public class CalculatePayment {
         log.debug("Successful create all paymentDTOS : {}", paymentDTOList);
         log.info("{} execute!",this.getClass().getSimpleName());
         return  paymentDTOList;
-
     }
     private PaymentDTO createPaymentDto(Employee employee , Reward reward,  Map<String, Tariff> tariffByJobType){
         log.debug("Create paymentDTO!");

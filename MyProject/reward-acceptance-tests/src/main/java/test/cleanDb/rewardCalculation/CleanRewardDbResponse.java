@@ -12,5 +12,5 @@ public class CleanRewardDbResponse {
     private boolean employeeDeleted;
     private boolean rewardDeleted;
     private boolean tariffDeleted;
-
+    private boolean outboxPaymentEventDeleted;
 }

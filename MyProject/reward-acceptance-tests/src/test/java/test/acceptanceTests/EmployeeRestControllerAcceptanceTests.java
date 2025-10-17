@@ -1,6 +1,9 @@
 package test.acceptanceTests;
 
 import io.restassured.response.Response;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import test.classesWithRestTestsMethod.paymentApp.CleanPaymentDbForTest;
 import test.classesWithRestTestsMethod.rewardCalculationApp.CleanRewardDbForTest;
 import test.classesWithRestTestsMethod.rewardCalculationApp.EmployeeClassWithRestMethodsForAcceptanceTests;
 
@@ -11,7 +14,8 @@ public class EmployeeRestControllerAcceptanceTests {
 
     //@BeforeEach
     public void cleanDB(){
-        CleanRewardDbForTest.rewardCalculationCleanDb(true,true,true);
+        CleanPaymentDbForTest.rewardPaymentCleanDb(true);
+        CleanRewardDbForTest.rewardCalculationCleanDb(true,true,true,true);
     }
     //Test PASSED!
     //@Test

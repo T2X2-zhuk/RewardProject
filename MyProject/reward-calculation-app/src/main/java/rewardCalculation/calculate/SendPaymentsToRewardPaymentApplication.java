@@ -20,10 +20,8 @@ public class SendPaymentsToRewardPaymentApplication {
     public RewardPaymentResponse send(List<PaymentDTO> paymentDTOS) {
         log.info("{} start!",this.getClass().getSimpleName());
         RewardPaymentRequest request = new RewardPaymentRequest(paymentDTOS);
-        log.debug("PaymentDTOS sent!");
-        RewardPaymentResponse response = paymentClient.payReward(request.getPaymentDTOS());
-        log.debug("Response : {}",response);
+        RewardPaymentResponse paymentResponse = paymentClient.payReward(request.getPaymentDTOS());
         log.info("{} execute!",this.getClass().getSimpleName());
-        return response;
+        return paymentResponse;
     }
 }

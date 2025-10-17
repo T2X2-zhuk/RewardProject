@@ -6,7 +6,6 @@ import RewardPayment.configCache.GetAllPaymentsUsingCache;
 import RewardPayment.dto.PaymentDTO;
 import RewardPayment.requests.CommonRequestForPaymentParameters;
 import RewardPayment.responses.CommonResponseForPaymentParameters;
-import RewardPayment.util.forServices.TransactionalClassWithMethodsForPayment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -21,7 +20,6 @@ import java.util.List;
 public class RewardPaymentService {
 
     private final PaymentRepository paymentRepository;
-    private final GetAllPaymentsUsingCache getAllPaymentsUsingCache;
 
     @Transactional
     public CommonResponseForPaymentParameters pay(CommonRequestForPaymentParameters request) {
@@ -34,7 +32,6 @@ public class RewardPaymentService {
                     .amount(paymentDTO.getAmount()).build());
         }
         paymentRepository.saveAll(payments);
-        getAllPaymentsUsingCache.clearPAYMENTSCache();
         log.debug("Successful saving all payments!");
         response.setSuccessfulSaving(true);
         log.info("{} is execute!",this.getClass().getSimpleName());

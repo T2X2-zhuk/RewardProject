@@ -4,6 +4,7 @@ import RewardPayment.JPA.repositories.PaymentRepository;
 import RewardPayment.configCache.GetAllPaymentsUsingCache;
 import RewardPayment.rest.cleandb.CleanPaymentDbRequest;
 import RewardPayment.rest.cleandb.CleanPaymentDbResponse;
+import RewardPayment.util.forServices.RewardExecutionLock;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

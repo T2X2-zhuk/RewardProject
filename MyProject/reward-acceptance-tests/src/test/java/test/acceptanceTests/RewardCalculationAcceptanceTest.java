@@ -1,7 +1,6 @@
 package test.acceptanceTests;
 
 import io.restassured.response.Response;
-
 import test.classesWithRestTestsMethod.paymentApp.CleanPaymentDbForTest;
 import test.classesWithRestTestsMethod.paymentApp.PaymentClassWithMethodsForAcceptanceTests;
 import test.classesWithRestTestsMethod.rewardCalculationApp.CleanRewardDbForTest;
@@ -18,7 +17,7 @@ public class RewardCalculationAcceptanceTest {
 
     //@BeforeEach
     public void cleanDB(){
-        CleanRewardDbForTest.rewardCalculationCleanDb(true,true,true);
+        CleanRewardDbForTest.rewardCalculationCleanDb(true,true,true,true);
         CleanPaymentDbForTest.rewardPaymentCleanDb(true);
     }
     //Test PASSED!
@@ -37,16 +36,10 @@ public class RewardCalculationAcceptanceTest {
         // 3. Делаем расчет
         Response paymentResponse = RewardClassWithMethodsForAcceptanceTests.calculate();
         paymentResponse.then().statusCode(200).body("successfulSaving",equalTo(true));
-
-       // 4. Проверяем полученный результат
-        PaymentClassWithMethodsForAcceptanceTests.getPayments(employeeId).then()
-                .statusCode(200)
-                .body("paymentDTOS[0].employeeId", equalTo(employeeId.intValue()))
-                .body("paymentDTOS[0].amount", equalTo(51.13F));
     }
 
     //Test PASSED!
-    //@Test
+   // @Test
     public void acceptanceTest2(){
         TariffClassWithMethodsForAcceptanceTests.createTariff("speech",new BigDecimal("23.24")).then().statusCode(200);
 

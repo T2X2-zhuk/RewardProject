@@ -18,29 +18,22 @@ spring:
       port: 6379
 
 resilience4j:
-  retry:
-    instances:
-      rewardPaymentRetry:
-        maxAttempts: 3                       # всего 3 попытки
-        waitDuration: 60s                    # 1 минута между первой и второй попыткой
-        enable-exponential-backoff: true    # включаем экспоненциальное увеличение
-        exponential-backoff-multiplier: 2.0 # каждый следующий интервал в 2 раза больше
-        exponential-max-wait-duration: 5m   # максимум 5 минут
-        retry-exceptions:
-          - java.io.IOException
-          - org.springframework.web.client.ResourceAccessException
   circuitbreaker:
     instances:
       rewardPaymentCb:
-        registerHealthIndicator: true
-        sliding-window-type: COUNT_BASED        # или TIME_BASED
-        sliding-window-size: 10                 # анализируем последние 10 вызовов
-        minimum-number-of-calls: 5              # минимум вызовов до вычисления failure rate
-        failure-rate-threshold: 50              # % ошибок для открытия цепи
-        wait-duration-in-open-state: 60s        # время в Open перед переходом в Half-Open
-        permitted-number-of-calls-in-half-open-state: 3
-        slow-call-duration-threshold: 2s        # считать "медленным" вызов >2s (опционально)
-        slow-call-rate-threshold: 100           # если 100% медленных, считать ошибкой (опционально)
+        sliding-window-type: COUNT_BASED          # считаем по последним вызовам
+        sliding-window-size: 5                    # анализируем последние 5 вызовов
+        minimum-number-of-calls: 3                # нужно минимум 3 вызова для статистики
+        failure-rate-threshold: 50                # если 50% вызовов неудачные — открыть цепь
+        wait-duration-in-open-state: 60s          # ждём 60 сек перед попыткой Half-Open
+        permitted-number-of-calls-in-half-open-state: 1  # пробуем 1 вызов при Half-Open
+        automatic-transition-from-open-to-half-open-enabled: true  # авто переход через 60 сек
+        record-exceptions:
+          - java.io.IOException
+          - org.springframework.web.client.ResourceAccessException
+          - org.springframework.web.client.HttpServerErrorException
+        ignore-exceptions:
+          - org.springframework.web.client.HttpClientErrorException   # если 100% медленных, считать ошибкой (опционально)
 
 management:
   endpoints:

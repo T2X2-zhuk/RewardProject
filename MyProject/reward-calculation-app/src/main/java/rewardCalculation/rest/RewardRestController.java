@@ -12,6 +12,7 @@ import rewardCalculation.requests.CommonRequestForRewardParameters;
 import rewardCalculation.responses.CommonResponseForRewardParameters;
 
 import rewardCalculation.restClientRewardPayment.RewardPaymentResponse;
+import rewardCalculation.util.forServices.RewardExecutionLock;
 import rewardCalculation.servises.reward.CreateRewardService;
 import rewardCalculation.servises.reward.GetRewardService;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,7 @@ public class RewardRestController {
     private final RewardCalculationService rewardCalculationService;
     private final GetRewardService getRewardService;
     private final GetEmployeeUsingCache getEmployeeUsingCache;
+    private final RewardExecutionLock rewardExecutionLock;
 
     @PostMapping(path = "/createReward",
             consumes = "application/json",
@@ -52,17 +54,17 @@ public class RewardRestController {
         return response;
     }
 
-    @PostMapping(path = "/rewardCalculationExecute",
-            produces = "application/json")
+    @PostMapping(path = "/rewardCalculationExecute", produces = "application/json")
     public RewardPaymentResponse rewardCalculationExecute() {
-        log.info("{} is start!",this.getClass().getSimpleName());
-        List<Employee> employeeList = getEmployeeUsingCache.getAllEmployeesWithCache();
-        log.debug("Get all Employees - {}" , employeeList);
-        List<Reward> rewardList = rewardRepository.findTop15ByStatusNot(RewardStatus.PAID);
-        log.debug("Get all Rewards which is not paid - {}" , rewardList);
-        RewardPaymentResponse response = rewardCalculationService.execute(employeeList,rewardList);
-        log.debug("Response -> {} and his boolean -> {}", response.getClass().getSimpleName(),response.isSuccessfulSaving());
-        log.info("{} is execute!",this.getClass().getSimpleName());
-        return response;
+        return rewardExecutionLock.runWithLock(() -> {
+            log.info("▶️ RewardCalculationController: запуск расчёта наград");
+            List<Employee> employeeList = getEmployeeUsingCache.getAllEmployeesWithCache();
+            log.debug("Get all Employees - {}" , employeeList);
+            List<Reward> rewardList = rewardRepository.findTop15ByStatus(RewardStatus.UNPAID);
+            log.debug("Get all Rewards which is not paid - {}" , rewardList);
+            RewardPaymentResponse response = rewardCalculationService.execute(employeeList, rewardList);
+            log.info("✅ RewardCalculationController: завершено");
+            return response;
+        });
     }
 }

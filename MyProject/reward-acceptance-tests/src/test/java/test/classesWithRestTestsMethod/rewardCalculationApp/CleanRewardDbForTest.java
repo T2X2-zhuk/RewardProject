@@ -10,9 +10,9 @@ public class CleanRewardDbForTest {
     private static final String BASE_URL_REWARD_CALCULATION_APP = "http://localhost:8080";
 
 
-    public static void rewardCalculationCleanDb(boolean cleanEmployee, boolean cleanReward, boolean cleanTariff) {
+    public static void rewardCalculationCleanDb(boolean cleanEmployee, boolean cleanReward, boolean cleanTariff,boolean cleanOutboxPaymentEvent) {
         CleanRewardDbRequest request = CleanRewardDbRequest.builder().cleanEmployee(cleanEmployee)
-                .cleanReward(cleanReward).cleanTariff(cleanTariff).build();
+                .cleanReward(cleanReward).cleanTariff(cleanTariff).cleanOutboxPaymentEvent(cleanOutboxPaymentEvent).build();
         given()
                 .baseUri(BASE_URL_REWARD_CALCULATION_APP)
                 .contentType("application/json")

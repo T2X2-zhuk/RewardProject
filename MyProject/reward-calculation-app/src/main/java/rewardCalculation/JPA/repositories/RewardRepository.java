@@ -19,7 +19,7 @@ public interface RewardRepository extends JpaRepository<Reward, Long> {
 
     Optional<Reward> findByEmployeeIdAndJobTypeAndStatus(Long employeeId, String jobType,RewardStatus status);
 
-    List<Reward> findTop15ByStatusNot(RewardStatus status);
+    List<Reward> findTop15ByStatus(RewardStatus status);
 
     @Transactional
     @Modifying

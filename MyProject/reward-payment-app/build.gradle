@@ -2,7 +2,7 @@ plugins {
 	id 'java'
 	id 'idea'
 	id 'org.springframework.boot' version "3.4.5"
-	id 'com.palantir.docker' version '0.35.0'
+    id 'com.palantir.docker' version '0.36.0'
 }
 
 java {

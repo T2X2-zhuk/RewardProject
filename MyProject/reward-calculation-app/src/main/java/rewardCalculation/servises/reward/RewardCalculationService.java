@@ -3,7 +3,9 @@ package rewardCalculation.servises.reward;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.JPA.domain.Reward;
-import rewardCalculation.util.forServices.AppealAndResponseToRewardPayment;
+import rewardCalculation.calculate.CalculatePayment;
+import rewardCalculation.dto.PaymentDTO;
+import rewardCalculation.util.forServices.RewardOutboxService;
 import rewardCalculation.validations.validators.reward.RewardCalculationValidator;
 import rewardCalculation.JPA.domain.Employee;
 import rewardCalculation.restClientRewardPayment.RewardPaymentResponse;
@@ -17,8 +19,8 @@ import java.util.List;
 public class RewardCalculationService {
     
     private final RewardCalculationValidator validator;
-    private final AppealAndResponseToRewardPayment appealAndResponseToRewardPayment;
-
+    private final CalculatePayment calculatePayment;
+    private final RewardOutboxService rewardOutboxService;
 
     public RewardPaymentResponse execute(List<Employee> employees,List<Reward> rewardList) {
         log.info("{} is start!", this.getClass().getSimpleName());
@@ -29,8 +31,12 @@ public class RewardCalculationService {
             coreResponse.setErrors(validationErrors);
             return coreResponse;
         }
-        RewardPaymentResponse paymentResponse = appealAndResponseToRewardPayment.successful(employees,rewardList);
+        List<PaymentDTO> paymentDTOS = calculatePayment.calculate(employees, rewardList);
+        // платежи рассчитаны и записаны в Outbox
+        rewardOutboxService.schedulePayments(paymentDTOS,rewardList);
+        log.info("Payments scheduled to Outbox and Rewards set to PROCESSING");
+        coreResponse.setSuccessfulSaving(true);
         log.info("{} is execute!", this.getClass().getSimpleName());
-        return paymentResponse;
+        return coreResponse;
     }
 }

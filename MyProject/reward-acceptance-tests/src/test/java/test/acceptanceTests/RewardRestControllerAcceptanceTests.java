@@ -3,6 +3,7 @@ package test.acceptanceTests;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import test.classesWithRestTestsMethod.paymentApp.CleanPaymentDbForTest;
 import test.classesWithRestTestsMethod.rewardCalculationApp.CleanRewardDbForTest;
 import test.classesWithRestTestsMethod.rewardCalculationApp.EmployeeClassWithRestMethodsForAcceptanceTests;
 import test.classesWithRestTestsMethod.rewardCalculationApp.RewardClassWithMethodsForAcceptanceTests;
@@ -17,7 +18,8 @@ public class RewardRestControllerAcceptanceTests {
 
     //@BeforeEach
     public void cleanDB(){
-        CleanRewardDbForTest.rewardCalculationCleanDb(true,true,true);
+        CleanRewardDbForTest.rewardCalculationCleanDb(true,true,true,true);
+        CleanPaymentDbForTest.rewardPaymentCleanDb(true);
     }
     //Test PASSED!
     //@Test
@@ -32,7 +34,8 @@ public class RewardRestControllerAcceptanceTests {
                 .body("errors[1].errorCode",equalTo("ERROR_CODE_FOR_TARIFF_1"));
         RewardClassWithMethodsForAcceptanceTests.createReward(1L,"null")
                 .then().statusCode(200)
-                .body("errors[0].errorCode",equalTo("ERROR_CODE_FOR_TARIFF_4"));
+                .body("errors[0].errorCode",equalTo("ERROR_CODE_FOR_EMPLOYEE_5"))
+                .body("errors[1].errorCode",equalTo("ERROR_CODE_FOR_TARIFF_4"));
         //Successful
 
         Response response =  EmployeeClassWithRestMethodsForAcceptanceTests.createEmployee
@@ -51,7 +54,7 @@ public class RewardRestControllerAcceptanceTests {
     }
 
     //Test PASSED!
-    //@Test
+    // @Test
     public void acceptanceTest2(){
         TariffClassWithMethodsForAcceptanceTests.createTariff("speech",new BigDecimal("23.24")).then().statusCode(200);
 
@@ -59,17 +62,14 @@ public class RewardRestControllerAcceptanceTests {
         Response employeeResponse = EmployeeClassWithRestMethodsForAcceptanceTests.createEmployee("Иван","Иванов",new BigDecimal("1.2"));
         employeeResponse.then().statusCode(200);
         Long employeeId = employeeResponse.jsonPath().getLong("employeeDTO.id");
-       // 2.Создаём награду с несуществующем employeeId
-        RewardClassWithMethodsForAcceptanceTests.createReward(2L,"speech").then().statusCode(200)
-                .body("errors[0].errorCode", equalTo("ERROR_CODE_FOR_EMPLOYEE_5"));
-        // 3. Создаём награду
+        // 2. Создаём награду
         RewardClassWithMethodsForAcceptanceTests.createReward(employeeId,"speech");
         // 3. Дубляж
         RewardClassWithMethodsForAcceptanceTests.createReward(employeeId, "speech")
                 .then().statusCode(200).body("errors[0].errorCode", equalTo("ERROR_CODE_FOR_REWARD_3"));
     }
     //Test PASSED!
-    //@Test
+   // @Test
     public void acceptanceTest3(){
         // 1. Создаём сотрудника
         Response employeeResponse = EmployeeClassWithRestMethodsForAcceptanceTests.createEmployee("Иван","Иванов",new BigDecimal("1.2"));
