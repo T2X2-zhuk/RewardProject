@@ -21,20 +21,19 @@ resilience4j:
   circuitbreaker:
     instances:
       rewardPaymentCb:
-        sliding-window-type: COUNT_BASED          # считаем по последним вызовам
-        sliding-window-size: 5                    # анализируем последние 5 вызовов
-        minimum-number-of-calls: 3                # нужно минимум 3 вызова для статистики
-        failure-rate-threshold: 50                # если 50% вызовов неудачные — открыть цепь
-        wait-duration-in-open-state: 60s          # ждём 60 сек перед попыткой Half-Open
-        permitted-number-of-calls-in-half-open-state: 1  # пробуем 1 вызов при Half-Open
-        automatic-transition-from-open-to-half-open-enabled: true  # авто переход через 60 сек
+        sliding-window-type: COUNT_BASED       # считаем последние вызовы
+        sliding-window-size: 2                  # анализируем последние 2 вызова
+        minimum-number-of-calls: 2              # минимальное количество вызовов для статистики
+        failure-rate-threshold: 100             # 100% неудач → открыть цепь
+        wait-duration-in-open-state: 60s        # 60 sec блокировка (время OPEN)
+        permitted-number-of-calls-in-half-open-state: 1
+        automatic-transition-from-open-to-half-open-enabled: true
         record-exceptions:
           - java.io.IOException
           - org.springframework.web.client.ResourceAccessException
           - org.springframework.web.client.HttpServerErrorException
         ignore-exceptions:
-          - org.springframework.web.client.HttpClientErrorException   # если 100% медленных, считать ошибкой (опционально)
-
+          - org.springframework.web.client.HttpClientErrorException
 management:
   endpoints:
     web:

@@ -23,12 +23,7 @@
             <column name="created_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-
-            <column name="retry_count" type="INT" defaultValueNumeric="0">
-            <constraints nullable="false"/>
-            </column>
             <column name="sent_at" type="TIMESTAMP"/>
-            <column name="next_attempt_at" type="TIMESTAMP"/>
         </createTable>
         <!-- Таблица для @ElementCollection rewardIds -->
         <createTable tableName="outbox_payment_reward_ids">
@@ -46,6 +41,13 @@
                 referencedTableName="outbox_payment_event"
                 referencedColumnNames="id"
                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="Danil" id="9">
+        <createIndex tableName="outbox_payment_event" indexName="idx_outbox_status_created">
+            <column name="status"/>
+            <column name="created_at"/>
+        </createIndex>
     </changeSet>
 
 </databaseChangeLog>

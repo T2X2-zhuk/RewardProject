@@ -23,28 +23,22 @@ public interface OutboxPaymentEventRepository extends JpaRepository<OutboxPaymen
        """)
     int updateStatusIfPendingOrFailed(@Param("id") Long id, @Param("newStatus") String newStatus);
 
-    @Query("SELECT o FROM OutboxPaymentEvent o WHERE o.status = :status ORDER BY o.createdAt ASC")
-    List<OutboxPaymentEvent> findTopNByStatus(@Param("status") String status, Pageable pageable);
-
-    @Query("SELECT o FROM OutboxPaymentEvent o WHERE o.status IN :statuses ORDER BY o.createdAt ASC")
-    List<OutboxPaymentEvent> findTopNByStatuses(@Param("statuses") List<String> statuses, Pageable pageable);
-
-    default List<OutboxPaymentEvent> findTopNByStatus(String status, int n) {
-        return findTopNByStatus(status, PageRequest.of(0, n));
-    }
-
-    @Modifying
-    @Query("DELETE FROM OutboxPaymentEvent o WHERE o.status = :status AND o.sentAt < :before")
-    int deleteByStatusAndSentBefore(@Param("status") String status, @Param("before") LocalDateTime before);
-
     @Query("""
     SELECT o FROM OutboxPaymentEvent o
-    WHERE o.status IN :statuses AND (o.nextAttemptAt IS NULL OR o.nextAttemptAt <= :now)
+    WHERE o.status IN :statuses
     ORDER BY o.createdAt ASC
 """)
     List<OutboxPaymentEvent> findTopNByStatusesReadyForProcessing(
             @Param("statuses") List<String> statuses,
-            @Param("now") LocalDateTime now,
             Pageable pageable
     );
+
+    @Modifying
+    @Transactional
+    @Query("""
+   UPDATE OutboxPaymentEvent o
+   SET o.status = 'FAILED'
+   WHERE o.id = :id
+""")
+    int markAsFailed(@Param("id") Long id);
 }

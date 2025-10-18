@@ -27,10 +27,6 @@ public class OutboxPaymentEvent {
     )
     @Column(name = "reward_id")
     private List<Long> rewardIds;
-
-    @Builder.Default
-    @Column(name = "retry_count", nullable = false)
-    private int retryCount = 0;
     @Lob
     @Column(name = "payload",nullable = false, columnDefinition = "LONGTEXT")
     private String payload; // JSON с данными платежа
@@ -43,8 +39,5 @@ public class OutboxPaymentEvent {
 
     @Column(name = "sent_at")
     private LocalDateTime sentAt;
-
-    @Column(name = "next_attempt_at")
-    private LocalDateTime nextAttemptAt; // для отложенных повторов
 
 }
