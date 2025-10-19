@@ -66,6 +66,7 @@
     <logger name="rewardCalculation.restClientRewardPayment" level="DEBUG"/>
     <logger name="rewardCalculation.JPA.repository" level="INFO"/>
     <logger name="rewardCalculation.validations" level="DEBUG"/>
+    <logger name="rewardCalculation.util" level="DEBUG"/>
 
     <logger name="io.github.resilience4j" level="DEBUG"/>
     <logger name="org.springframework.retry" level="DEBUG"/>

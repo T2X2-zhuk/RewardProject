@@ -46,3 +46,6 @@ management:
 
 server:
   port: 8080
+
+app:
+  transactionalOutBox: true

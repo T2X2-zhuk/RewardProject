@@ -12,11 +12,11 @@ import rewardCalculation.requests.CommonRequestForRewardParameters;
 import rewardCalculation.responses.CommonResponseForRewardParameters;
 
 import rewardCalculation.restClientRewardPayment.RewardPaymentResponse;
+import rewardCalculation.servises.reward.RewardCalculationService;
 import rewardCalculation.util.forServices.RewardExecutionLock;
 import rewardCalculation.servises.reward.CreateRewardService;
 import rewardCalculation.servises.reward.GetRewardService;
 import org.springframework.web.bind.annotation.*;
-import rewardCalculation.servises.reward.RewardCalculationService;
 
 import java.util.List;
 
