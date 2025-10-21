@@ -2,6 +2,7 @@ package rewardCalculation.transactionalOutBox.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import rewardCalculation.EnumObject.OutboxPaymentStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,8 +32,9 @@ public class OutboxPaymentEvent {
     @Column(name = "payload",nullable = false, columnDefinition = "LONGTEXT")
     private String payload; // JSON с данными платежа
 
+    @Enumerated(EnumType.STRING)
     @Column(length = 20, nullable = false)
-    private String status; // PENDING, SENT, FAILED
+    private OutboxPaymentStatus status; // PENDING, FAILED
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

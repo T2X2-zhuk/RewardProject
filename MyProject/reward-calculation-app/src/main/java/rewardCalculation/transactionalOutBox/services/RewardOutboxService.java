@@ -6,7 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
-import rewardCalculation.JPA.domain.EnumObject.RewardStatus;
+import rewardCalculation.EnumObject.OutboxPaymentStatus;
+import rewardCalculation.EnumObject.RewardStatus;
 import rewardCalculation.transactionalOutBox.domain.OutboxPaymentEvent;
 import rewardCalculation.JPA.domain.Reward;
 import rewardCalculation.transactionalOutBox.JPA.OutboxPaymentEventRepository;
@@ -40,7 +41,7 @@ public class RewardOutboxService {
             OutboxPaymentEvent event = OutboxPaymentEvent.builder()
                     .rewardIds(rewardIds)
                     .payload(payload)
-                    .status("PENDING")
+                    .status(OutboxPaymentStatus.PENDING)
                     .createdAt(LocalDateTime.now())
                     .build();
 

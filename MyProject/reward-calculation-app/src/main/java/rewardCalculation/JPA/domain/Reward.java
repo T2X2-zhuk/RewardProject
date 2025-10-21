@@ -2,7 +2,7 @@ package rewardCalculation.JPA.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import rewardCalculation.JPA.domain.EnumObject.RewardStatus;
+import rewardCalculation.EnumObject.RewardStatus;
 
 @Entity
 @Table(name = "rewards")

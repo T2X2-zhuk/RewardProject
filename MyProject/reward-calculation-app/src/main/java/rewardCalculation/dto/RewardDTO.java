@@ -1,7 +1,7 @@
 package rewardCalculation.dto;
 
 import lombok.*;
-import rewardCalculation.JPA.domain.EnumObject.RewardStatus;
+import rewardCalculation.EnumObject.RewardStatus;
 
 @Getter
 @Setter

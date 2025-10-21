@@ -1,6 +1,6 @@
 package rewardCalculation.JPA.repositories;
 
-import rewardCalculation.JPA.domain.EnumObject.RewardStatus;
+import rewardCalculation.EnumObject.RewardStatus;
 import rewardCalculation.JPA.domain.Reward;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import rewardCalculation.EnumObject.OutboxPaymentStatus;
 import rewardCalculation.transactionalOutBox.domain.OutboxPaymentEvent;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface OutboxPaymentEventRepository extends JpaRepository<OutboxPaymen
        SET o.status = :newStatus
        WHERE o.id = :id AND o.status IN ('PENDING', 'FAILED')
        """)
-    int updateStatusIfPendingOrFailed(@Param("id") Long id, @Param("newStatus") String newStatus);
+    int updateStatusIfPendingOrFailed(@Param("id") Long id, @Param("newStatus") OutboxPaymentStatus newStatus);
 
     @Query("""
     SELECT o FROM OutboxPaymentEvent o
@@ -27,7 +28,7 @@ public interface OutboxPaymentEventRepository extends JpaRepository<OutboxPaymen
     ORDER BY o.createdAt ASC
 """)
     List<OutboxPaymentEvent> findTopNByStatusesReadyForProcessing(
-            @Param("statuses") List<String> statuses,
+            @Param("statuses") List<OutboxPaymentStatus> statuses,
             Pageable pageable
     );
 

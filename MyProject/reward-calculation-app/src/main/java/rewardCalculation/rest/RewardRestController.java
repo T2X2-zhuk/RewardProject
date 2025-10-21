@@ -2,8 +2,7 @@ package rewardCalculation.rest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import rewardCalculation.JPA.domain.Employee;
-import rewardCalculation.JPA.domain.EnumObject.RewardStatus;
+import rewardCalculation.EnumObject.RewardStatus;
 import rewardCalculation.JPA.domain.Reward;
 import rewardCalculation.JPA.repositories.RewardRepository;
 import rewardCalculation.cacheConfig.GetEmployeeUsingCache;

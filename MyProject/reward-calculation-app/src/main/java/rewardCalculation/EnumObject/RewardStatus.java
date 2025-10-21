@@ -1,4 +1,4 @@
-package rewardCalculation.JPA.domain.EnumObject;
+package rewardCalculation.EnumObject;
 
 public enum RewardStatus {
     PAID,

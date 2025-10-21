@@ -11,7 +11,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import rewardCalculation.JPA.domain.EnumObject.RewardStatus;
+import rewardCalculation.EnumObject.OutboxPaymentStatus;
+import rewardCalculation.EnumObject.RewardStatus;
 import rewardCalculation.transactionalOutBox.domain.OutboxPaymentEvent;
 import rewardCalculation.transactionalOutBox.JPA.OutboxPaymentEventRepository;
 import rewardCalculation.JPA.repositories.RewardRepository;
@@ -40,7 +41,7 @@ public class OutboxPaymentDispatcher {
     private static final int BATCH_SIZE = 20;
 
     @Transactional
-    @Scheduled(fixedDelay = 60000) // каждые 60 секунд
+    @Scheduled(fixedDelay = 300000) // 60000 каждые 60 секунд
     public void dispatchPendingPayments() {
         CircuitBreaker cb = circuitBreakerRegistry.circuitBreaker("rewardPaymentCb");
 
@@ -50,7 +51,7 @@ public class OutboxPaymentDispatcher {
         }
         // Берём все PENDING и FAILED события
         List<OutboxPaymentEvent> pendingEvents = outboxRepo.findTopNByStatusesReadyForProcessing(
-                List.of("PENDING", "FAILED"),
+                List.of(OutboxPaymentStatus.PENDING, OutboxPaymentStatus.FAILED),
                 Pageable.ofSize(BATCH_SIZE)
         );
 
@@ -66,7 +67,7 @@ public class OutboxPaymentDispatcher {
 
             try {
                 // Атомарное переводим в PROCESSING
-                int updated = outboxRepo.updateStatusIfPendingOrFailed(event.getId(), "PROCESSING");
+                int updated = outboxRepo.updateStatusIfPendingOrFailed(event.getId(), OutboxPaymentStatus.PROCESSING);
                 if (updated == 0) continue;
 
                 // Попытка отправки платежей
