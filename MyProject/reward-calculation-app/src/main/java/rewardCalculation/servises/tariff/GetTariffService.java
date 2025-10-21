@@ -42,6 +42,6 @@ public class GetTariffService {
 
     private TariffDTO createTariffDTO(Tariff tariff) {
         return TariffDTO.builder().id(tariff.getId())
-                .jobType(tariff.getJobType()).amount(tariff.getAmount()).build();
+                .jobType(tariff.getJobType().getJobType()).amount(tariff.getAmount()).build();
     }
 }

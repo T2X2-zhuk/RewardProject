@@ -19,11 +19,13 @@ public class Reward {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "employee_id", nullable = false)
-    private Long employeeId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id")
+    private Employee employeeId;
 
-    @Column(name = "job_type", nullable = false)
-    private String jobType;
+    @ManyToOne
+    @JoinColumn(name = "job_type_id", nullable = false)
+    private JobTypeEntity jobType;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "reward_status",nullable = false)

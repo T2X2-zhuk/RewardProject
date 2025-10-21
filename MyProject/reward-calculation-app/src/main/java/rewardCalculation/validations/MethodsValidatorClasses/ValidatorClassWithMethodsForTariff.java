@@ -1,4 +1,5 @@
 package rewardCalculation.validations.MethodsValidatorClasses;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.JPA.domain.Tariff;
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -39,22 +41,18 @@ public class ValidatorClassWithMethodsForTariff {
         }
         return Optional.empty();
     }
-    public Optional<ValidationError> jobTypeIsEmpty(String jobType){
-
-        if (isNullOrBlankOrEmpty(jobType)){
-            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_TARIFF_1"));
-            log.debug("Error : {}",error);
-            return error;
-        }
-        return Optional.empty();
-    }
-    public Optional<ValidationError> suchJobTypesIsNotInDatabase(String jobType){
+    public Optional<ValidationError> suchTariffWithSuchJobTypeIsNotInDatabase(String jobType){
         Map<String, Tariff> tariffsMap = getTariffUsingCache.getTariffsByJobType();
         if (!tariffsMap.containsKey(jobType.toUpperCase())) {
             Optional<ValidationError> error = tariffsMap.isEmpty()
                     ? Optional.of(errorFactory.buildError("ERROR_CODE_FOR_TARIFF_5"))
                     : Optional.of(errorFactory.buildError("ERROR_CODE_FOR_TARIFF_4",
-                    List.of(new Placeholder("JOB_TYPES", String.join(",", tariffsMap.keySet())))));
+                    List.of(new Placeholder("TARIFFS",
+                            tariffsMap.entrySet().stream()
+                                    .map(entry -> entry.getKey() + "=" + entry.getValue().getAmount())
+                                    .collect(Collectors.joining(","))
+                    ))
+            ));
             log.debug("Error : {}", error);
             return error;
         }
@@ -64,7 +62,6 @@ public class ValidatorClassWithMethodsForTariff {
     public Optional<ValidationError> suchTariffAlwaysIsInDatabase(String jobType){
         // Берём Map из кеша
         Map<String, Tariff> tariffsMap = getTariffUsingCache.getTariffsByJobType();
-
         if (tariffsMap.containsKey(jobType.toUpperCase())){
             Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_TARIFF_6"));
             log.debug("Error : {}",error);

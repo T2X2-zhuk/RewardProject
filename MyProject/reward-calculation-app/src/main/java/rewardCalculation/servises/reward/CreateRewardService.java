@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.JPA.domain.EnumObject.RewardStatus;
 import rewardCalculation.JPA.domain.Reward;
+import rewardCalculation.JPA.repositories.EmployeeRepository;
+import rewardCalculation.JPA.repositories.JobTypeEntityRepository;
 import rewardCalculation.JPA.repositories.RewardRepository;
 import rewardCalculation.dto.RewardDTO;
 import rewardCalculation.requests.CommonRequestForRewardParameters;
@@ -21,7 +23,10 @@ import java.util.List;
 public class CreateRewardService {
 
     private final RewardRepository rewardRepository;
+    private final EmployeeRepository employeeRepository;
     private final CreateRewardRequestValidator validator;
+    private final JobTypeEntityRepository jobTypeEntityRepository;
+
     @Transactional
     public CommonResponseForRewardParameters execute(CommonRequestForRewardParameters request) {
         log.info("{} is start!", this.getClass().getSimpleName());
@@ -39,15 +44,15 @@ public class CreateRewardService {
     }
     private void hearts(CommonRequestForRewardParameters request,CommonResponseForRewardParameters response){
         Reward reward = Reward.builder()
-                .employeeId(request.getRewardDTO().getEmployeeId())
-                .jobType(request.getRewardDTO().getJobType().toUpperCase())
+                .employeeId(employeeRepository.findById(request.getRewardDTO().getEmployeeId()).get())
+                .jobType(jobTypeEntityRepository.findByJobType(request.getRewardDTO().getJobType().toUpperCase()).get())
                 .status(RewardStatus.UNPAID).build();
         rewardRepository.save(reward);
         log.debug("Reward saved: {}", reward);
         response.setRewardDTO(RewardDTO.builder()
                 .id(reward.getId())
-                .employeeId(reward.getEmployeeId())
-                .jobType(reward.getJobType())
+                .employeeId(reward.getEmployeeId().getId())
+                .jobType(reward.getJobType().getJobType())
                 .status(reward.getStatus()).build());
     }
 }

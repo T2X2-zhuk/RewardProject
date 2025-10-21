@@ -32,8 +32,8 @@ public class GetRewardService {
         if (errors.isEmpty()){
             Optional<Reward> reward = rewardRepository.findById(request.getRewardDTO().getId());
             response.setRewardDTO(RewardDTO.builder().id(reward.get().getId())
-                    .employeeId(reward.get().getEmployeeId())
-                    .jobType(reward.get().getJobType())
+                    .employeeId(reward.get().getEmployeeId().getId())
+                    .jobType(reward.get().getJobType().getJobType())
                     .status(reward.get().getStatus()).build());
             log.debug("Reward found: {}", reward);
         }else {

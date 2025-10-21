@@ -21,34 +21,27 @@ public class CalculatePayment {
 
     private final GetTariffUsingCache getTariffsByJobType;
 
-    public List<PaymentDTO> calculate(List<Employee> employeeList,List<Reward> rewardList){
+    public List<PaymentDTO> calculate(List<Reward> rewardList){
         log.info("{} start!",this.getClass().getSimpleName());
         Map<String, Tariff> tariffByJobType = getTariffsByJobType.getTariffsByJobType();
         log.debug("Tariffs - {}",tariffByJobType);
         List<PaymentDTO> paymentDTOList = new ArrayList<>();
-        Map<Long, List<Reward>> rewardsByEmployee = rewardList.stream()
-                .collect(Collectors.groupingBy(Reward::getEmployeeId));
-        employeeList.forEach(employee -> {
-            List<Reward> rewards = rewardsByEmployee.get(employee.getId());
-            if (rewards != null) {
-                rewards.forEach(reward ->
-                        paymentDTOList.add(createPaymentDto(employee, reward, tariffByJobType))
-                );
-            }
-        });
+        for (Reward reward : rewardList){
+            paymentDTOList.add(createPaymentDto(reward,tariffByJobType));
+        }
         log.debug("Successful create all paymentDTOS : {}", paymentDTOList);
         log.info("{} execute!",this.getClass().getSimpleName());
         return  paymentDTOList;
     }
-    private PaymentDTO createPaymentDto(Employee employee , Reward reward,  Map<String, Tariff> tariffByJobType){
+    private PaymentDTO createPaymentDto(Reward reward,Map<String, Tariff> tariffByJobType){
         log.debug("Create paymentDTO!");
         log.debug("Get tariff by reward job type: {}",reward.getJobType());
-        Tariff tariff = tariffByJobType.get(reward.getJobType());
+        Tariff tariff = tariffByJobType.get(reward.getJobType().getJobType());
         log.debug("Tariff - {}", tariff);
         PaymentDTO paymentDTO =  PaymentDTO.builder()
-                .employeeId(employee.getId())
-                .amount(getAmount(employee.getBonusCoefficient(),tariff.getAmount())).build();
-        log.info("Отправлен платеж: amount = {}, recipient = {}",paymentDTO.getAmount(), employee.getFirstName() + " " + employee.getLastName());
+                .employeeId(reward.getEmployeeId().getId())
+                .amount(getAmount(reward.getEmployeeId().getBonusCoefficient(),tariff.getAmount())).build();
+        log.info("Отправлен платеж: amount = {}, recipient = {}",paymentDTO.getAmount(), reward.getEmployeeId().getFirstName() + " " + reward.getEmployeeId().getLastName());
         return paymentDTO;
     }
     private BigDecimal getAmount(BigDecimal bonusCoefficient , BigDecimal amount){

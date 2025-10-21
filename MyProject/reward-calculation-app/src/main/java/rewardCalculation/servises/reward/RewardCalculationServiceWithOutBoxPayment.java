@@ -28,16 +28,16 @@ class RewardCalculationServiceWithOutBoxPayment implements RewardCalculationServ
     private final CalculatePayment calculatePayment;
     private final RewardOutboxService rewardOutboxService;
 
-    public RewardPaymentResponse execute(List<Employee> employees,List<Reward> rewardList) {
+    public RewardPaymentResponse execute(List<Reward> rewardList) {
         log.info("{} is start!", this.getClass().getSimpleName());
         RewardPaymentResponse coreResponse = new RewardPaymentResponse();
-        List<ValidationError> validationErrors = validator.validate(employees,rewardList);
+        List<ValidationError> validationErrors = validator.validate(rewardList);
         if (!validationErrors.isEmpty()) {
             log.warn("Request validation failed : {}",validationErrors);
             coreResponse.setErrors(validationErrors);
             return coreResponse;
         }
-        List<PaymentDTO> paymentDTOS = calculatePayment.calculate(employees, rewardList);
+        List<PaymentDTO> paymentDTOS = calculatePayment.calculate(rewardList);
         // платежи рассчитаны и записаны в Outbox
         rewardOutboxService.schedulePayments(paymentDTOS,rewardList);
         log.info("Payments scheduled to Outbox and Rewards set to PROCESSING");

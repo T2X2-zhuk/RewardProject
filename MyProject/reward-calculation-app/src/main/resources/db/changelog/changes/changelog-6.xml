@@ -6,7 +6,7 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
 
 
-    <changeSet author="Danil" id="8">
+    <changeSet author="Danil" id="12">
         <createTable tableName="outbox_payment_event">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -43,7 +43,7 @@
                 onDelete="CASCADE"/>
     </changeSet>
 
-    <changeSet author="Danil" id="9">
+    <changeSet author="Danil" id="13">
         <createIndex tableName="outbox_payment_event" indexName="idx_outbox_status_created">
             <column name="status"/>
             <column name="created_at"/>

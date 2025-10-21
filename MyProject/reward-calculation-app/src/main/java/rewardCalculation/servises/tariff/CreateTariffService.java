@@ -2,6 +2,7 @@ package rewardCalculation.servises.tariff;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import rewardCalculation.JPA.repositories.JobTypeEntityRepository;
 import rewardCalculation.cacheConfig.GetTariffUsingCache;
 import rewardCalculation.util.forError.ValidationError;
 import rewardCalculation.validations.validators.tariff.CreateTariffRequestValidator;
@@ -24,6 +25,7 @@ public class CreateTariffService {
     private final TariffRepository tariffRepository;
     private final CreateTariffRequestValidator validator;
     private final GetTariffUsingCache getTariffUsingCache;
+    private final JobTypeEntityRepository jobTypeEntityRepository;
 
     @Transactional
     public CommonResponseForTariffParameters execute(CommonRequestForTariffParameters request) {
@@ -46,12 +48,12 @@ public class CreateTariffService {
     }
     private Tariff buildTariff(TariffDTO tariffDTO){
         return Tariff.builder().amount(tariffDTO.getAmount().setScale(2, RoundingMode.HALF_UP))
-                .jobType(tariffDTO.getJobType().toUpperCase()).build();
+                .jobType(jobTypeEntityRepository.findByJobType(tariffDTO.getJobType().toUpperCase()).get()).build();
     }
     private void setTariffDTO(CommonResponseForTariffParameters response,Tariff tariff){
         response.setTariffDTO(TariffDTO.builder()
                 .id(tariff.getId())
                 .amount(tariff.getAmount())
-                .jobType(tariff.getJobType().toUpperCase()).build());
+                .jobType(tariff.getJobType().getJobType()).build());
     }
 }

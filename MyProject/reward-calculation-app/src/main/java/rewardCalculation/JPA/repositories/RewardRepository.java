@@ -14,10 +14,8 @@ import java.util.Optional;
 
 public interface RewardRepository extends JpaRepository<Reward, Long> {
 
-    @Query("SELECT rd FROM Reward rd where rd.employeeId = :employeeId AND rd.status = :status")
-    List<Reward> findByEmployeeIdAndStatus(@Param("employeeId") Long employeeId, @Param("status") RewardStatus status);
-
-    Optional<Reward> findByEmployeeIdAndJobTypeAndStatus(Long employeeId, String jobType,RewardStatus status);
+    @Query("SELECT rd FROM Reward rd where rd.employeeId.id = :employeeId AND rd.jobType.jobType = :jobType AND rd.status = :status")
+    Optional<Reward> findByEmployeeIdAndJobTypeAndStatus(@Param("employeeId") Long employeeId, @Param("jobType") String jobType,@Param("status") RewardStatus status);
 
     List<Reward> findTop15ByStatus(RewardStatus status);
 

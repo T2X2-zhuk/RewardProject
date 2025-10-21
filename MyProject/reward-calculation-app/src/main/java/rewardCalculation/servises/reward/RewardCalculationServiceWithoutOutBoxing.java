@@ -32,16 +32,16 @@ class RewardCalculationServiceWithoutOutBoxing implements RewardCalculationServi
     private final UpdatingRewardsDependingOnTheResultReceivedFromAnExternalService updatingRewardsDependingOnTheResultReceivedFromAnExternalService;
 
     @Override
-    public RewardPaymentResponse execute(List<Employee> employees, List<Reward> rewardList) {
+    public RewardPaymentResponse execute(List<Reward> rewardList) {
         log.info("{} is start!", this.getClass().getSimpleName());
         RewardPaymentResponse coreResponse = new RewardPaymentResponse();
-        List<ValidationError> validationErrors = validator.validate(employees,rewardList);
+        List<ValidationError> validationErrors = validator.validate(rewardList);
         if (!validationErrors.isEmpty()) {
             log.warn("Request validation failed : {}",validationErrors);
             coreResponse.setErrors(validationErrors);
             return coreResponse;
         }
-        coreResponse = sendPaymentsToRewardPaymentApplication.send(calculatePayment.calculate(employees, rewardList));
+        coreResponse = sendPaymentsToRewardPaymentApplication.send(calculatePayment.calculate(rewardList));
         log.info("{} is execute!", this.getClass().getSimpleName());
         return updatingRewardsDependingOnTheResultReceivedFromAnExternalService.result(coreResponse,rewardList);
     }

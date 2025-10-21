@@ -9,6 +9,7 @@ import lombok.*;
 @ToString
 public class CleanRewardDbResponse {
 
+    private boolean jobTypeDelete;
     private boolean employeeDeleted;
     private boolean rewardDeleted;
     private boolean tariffDeleted;

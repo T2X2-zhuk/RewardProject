@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface RewardCalculationService {
 
-    RewardPaymentResponse execute(List<Employee> employees, List<Reward> rewardList);
+    RewardPaymentResponse execute(List<Reward> rewardList);
 }

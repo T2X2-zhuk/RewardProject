@@ -15,7 +15,7 @@ public class EmployeeRestControllerAcceptanceTests {
     //@BeforeEach
     public void cleanDB(){
         CleanPaymentDbForTest.rewardPaymentCleanDb(true);
-        CleanRewardDbForTest.rewardCalculationCleanDb(true,true,true,true);
+        CleanRewardDbForTest.rewardCalculationCleanDb(true,true,true,true,true);
     }
     //Test PASSED!
     //@Test

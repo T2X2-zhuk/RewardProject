@@ -5,16 +5,29 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
 
-    <changeSet author = "Danil" id = "5">
+    <changeSet author="Danil" id="8">
         <sql>
-            INSERT INTO tariffs(job_type, amount)
-            VALUES('SPEECH', 10.0);
+            INSERT INTO job_types(job_type)
+            VALUES('SPEECH');
 
-            INSERT INTO tariffs(job_type, amount)
-            VALUES('LESSON', 20.0);
+            INSERT INTO job_types(job_type)
+            VALUES('LESSON');
 
-            INSERT INTO tariffs(job_type, amount)
-            VALUES('HELP', 30.0);
+            INSERT INTO job_types(job_type)
+            VALUES('HELP');
+        </sql>
+    </changeSet>
+
+    <changeSet author="Danil" id="9">
+        <sql>
+            INSERT INTO tariffs(job_type_id, amount)
+            VALUES ((SELECT id FROM job_types WHERE job_type = 'SPEECH'), 10.0);
+
+            INSERT INTO tariffs(job_type_id, amount)
+            VALUES ((SELECT id FROM job_types WHERE job_type = 'LESSON'), 20.0);
+
+            INSERT INTO tariffs(job_type_id, amount)
+            VALUES ((SELECT id FROM job_types WHERE job_type = 'HELP'), 30.0);
         </sql>
     </changeSet>
 

@@ -57,14 +57,6 @@ public class ValidatorClassWithMethodsForEmployee {
         return Optional.empty();
     }
 
-    public Optional<ValidationError> listEmployeeIsEmpty(List<Employee> employees){
-        if (employees.isEmpty()){
-            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_EMPLOYEE_6"));
-            log.debug("Error : {}",error);
-            return error;
-        }
-        return Optional.empty();
-    }
     private boolean isNullOrBlankOrEmpty(String parameter) {
         return parameter == null || parameter.isBlank();
     }

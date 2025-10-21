@@ -1,4 +1,4 @@
-package rewardCalculation.rest.cleandb;
+package rewardCalculation.requests;
 
 import lombok.*;
 
@@ -9,6 +9,7 @@ import lombok.*;
 @Builder
 public class CleanRewardDbRequest {
 
+    private boolean cleanJobType;
     private boolean cleanEmployee;
     private boolean cleanReward;
     private boolean cleanTariff;

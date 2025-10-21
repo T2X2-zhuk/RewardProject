@@ -5,18 +5,27 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
 
-    <changeSet author = "Danil" id = "4">
+    <changeSet author="Danil" id="6">
         <createTable tableName="tariffs">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="job_type" type="VARCHAR(200)">
+            <column name="job_type_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="amount" type="DECIMAL(10,2)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
+
+    <changeSet author="Danil" id="7">
+        <addForeignKeyConstraint baseTableName="tariffs"
+                                 baseColumnNames="job_type_id"
+                                 constraintName="fk_tariffs_job_type_id"
+                                 referencedTableName="job_types"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
     </changeSet>
 
 </databaseChangeLog>

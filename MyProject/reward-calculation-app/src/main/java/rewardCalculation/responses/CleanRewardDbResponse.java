@@ -1,4 +1,4 @@
-package rewardCalculation.rest.cleandb;
+package rewardCalculation.responses;
 
 import lombok.*;
 
@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 public class CleanRewardDbResponse {
 
+    private boolean jobTypeDelete;
     private boolean employeeDeleted;
     private boolean rewardDeleted;
     private boolean tariffDeleted;

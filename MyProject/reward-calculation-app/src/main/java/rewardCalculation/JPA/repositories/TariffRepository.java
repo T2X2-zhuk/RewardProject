@@ -10,8 +10,5 @@ import java.util.Set;
 
 public interface TariffRepository extends JpaRepository<Tariff, Long> {
 
-    Optional<Tariff> findByJobType(String jobType);
 
-    @Query("SELECT tr.jobType FROM Tariff tr")
-    Set<String> findAllJobTypes();
 }
