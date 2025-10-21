@@ -41,7 +41,7 @@ public class OutboxPaymentDispatcher {
     private static final int BATCH_SIZE = 20;
 
     @Transactional
-    @Scheduled(fixedDelay = 300000) // 60000 каждые 60 секунд
+    @Scheduled(fixedDelay = 60000) // каждые 60 секунд
     public void dispatchPendingPayments() {
         CircuitBreaker cb = circuitBreakerRegistry.circuitBreaker("rewardPaymentCb");
 
