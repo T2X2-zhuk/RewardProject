@@ -1,4 +1,4 @@
-package rewardCalculation.util.forServices;
+package rewardCalculation.transactionalOutBox.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
@@ -7,9 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import rewardCalculation.JPA.domain.EnumObject.RewardStatus;
-import rewardCalculation.JPA.domain.OutboxPaymentEvent;
+import rewardCalculation.transactionalOutBox.domain.OutboxPaymentEvent;
 import rewardCalculation.JPA.domain.Reward;
-import rewardCalculation.JPA.repositories.OutboxPaymentEventRepository;
+import rewardCalculation.transactionalOutBox.JPA.OutboxPaymentEventRepository;
 import rewardCalculation.JPA.repositories.RewardRepository;
 import rewardCalculation.dto.PaymentDTO;
 

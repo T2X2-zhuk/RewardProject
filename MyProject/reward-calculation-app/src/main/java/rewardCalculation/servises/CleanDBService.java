@@ -9,6 +9,7 @@ import rewardCalculation.cacheConfig.GetEmployeeUsingCache;
 import rewardCalculation.cacheConfig.GetTariffUsingCache;
 import rewardCalculation.requests.CleanRewardDbRequest;
 import rewardCalculation.responses.CleanRewardDbResponse;
+import rewardCalculation.transactionalOutBox.JPA.OutboxPaymentEventRepository;
 
 
 @Component

@@ -1,4 +1,4 @@
-package rewardCalculation.util.forServices;
+package rewardCalculation.transactionalOutBox.dispatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
@@ -6,17 +6,20 @@ import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import rewardCalculation.JPA.domain.EnumObject.RewardStatus;
-import rewardCalculation.JPA.domain.OutboxPaymentEvent;
-import rewardCalculation.JPA.repositories.OutboxPaymentEventRepository;
+import rewardCalculation.transactionalOutBox.domain.OutboxPaymentEvent;
+import rewardCalculation.transactionalOutBox.JPA.OutboxPaymentEventRepository;
 import rewardCalculation.JPA.repositories.RewardRepository;
 import rewardCalculation.calculate.SendPaymentsToRewardPaymentApplication;
 import rewardCalculation.dto.PaymentDTO;
 import rewardCalculation.restClientRewardPayment.RewardPaymentResponse;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -40,6 +43,11 @@ public class OutboxPaymentDispatcher {
     @Scheduled(fixedDelay = 60000) // каждые 60 секунд
     public void dispatchPendingPayments() {
         CircuitBreaker cb = circuitBreakerRegistry.circuitBreaker("rewardPaymentCb");
+
+        if (cb.getState() == CircuitBreaker.State.OPEN) {
+            log.warn("CircuitBreaker is OPEN. Skipping dispatch cycle.");
+            return;
+        }
         // Берём все PENDING и FAILED события
         List<OutboxPaymentEvent> pendingEvents = outboxRepo.findTopNByStatusesReadyForProcessing(
                 List.of("PENDING", "FAILED"),
@@ -48,9 +56,14 @@ public class OutboxPaymentDispatcher {
 
         for (OutboxPaymentEvent event : pendingEvents) {
             if (cb.getState() == CircuitBreaker.State.OPEN) {
-                log.warn("CB OPEN, пропускаем отправку события {}", event.getId());
-                continue; // оставляем событие в Outbox
+                List<Long> remainingIds = getLongs(event, pendingEvents);
+
+                if (!remainingIds.isEmpty()) {
+                    outboxRepo.markEventsAsFailed(remainingIds);
+                }
+                break;
             }
+
             try {
                 // Атомарное переводим в PROCESSING
                 int updated = outboxRepo.updateStatusIfPendingOrFailed(event.getId(), "PROCESSING");
@@ -61,8 +74,11 @@ public class OutboxPaymentDispatcher {
                 RewardPaymentResponse response = rewardPaymentClient.send(List.of(payments));
 
                 if (!response.isSuccessfulSaving()) {
-                    markEventFailed(event); // сразу в FAILED
-                    continue;
+                    List<Long> remainingIds = getLongs(event, pendingEvents);
+                    if (!remainingIds.isEmpty()) {
+                        outboxRepo.markEventsAsFailed(remainingIds);
+                    }
+                    break;
                 }
 
                 // Успешная отправка
@@ -78,6 +94,23 @@ public class OutboxPaymentDispatcher {
                 markEventFailed(event);
             }
         }
+    }
+
+    @NotNull
+    private static List<Long> getLongs(OutboxPaymentEvent event, List<OutboxPaymentEvent> pendingEvents) {
+        List<Long> remainingIds = new ArrayList<>();
+        boolean startCollecting = false;
+
+        for (OutboxPaymentEvent e : pendingEvents) {
+            if (startCollecting) {
+                remainingIds.add(e.getId());
+            }
+            if (e.equals(event)) { // текущий элемент — точка остановки
+                startCollecting = true;
+                remainingIds.add(e.getId());
+            }
+        }
+        return remainingIds;
     }
 
     private void markEventFailed(OutboxPaymentEvent event) {

@@ -1,4 +1,4 @@
-package rewardCalculation.JPA.domain;
+package rewardCalculation.transactionalOutBox.domain;
 
 import jakarta.persistence.*;
 import lombok.*;

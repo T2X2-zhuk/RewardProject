@@ -1,15 +1,13 @@
-package rewardCalculation.JPA.repositories;
+package rewardCalculation.transactionalOutBox.JPA;
 
 import io.lettuce.core.dynamic.annotation.Param;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import rewardCalculation.JPA.domain.OutboxPaymentEvent;
+import rewardCalculation.transactionalOutBox.domain.OutboxPaymentEvent;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface OutboxPaymentEventRepository extends JpaRepository<OutboxPaymentEvent, Long> {
@@ -39,6 +37,13 @@ public interface OutboxPaymentEventRepository extends JpaRepository<OutboxPaymen
    UPDATE OutboxPaymentEvent o
    SET o.status = 'FAILED'
    WHERE o.id = :id
-""")
-    int markAsFailed(@Param("id") Long id);
+   """)
+    void markAsFailed(@Param("id") Long id);
+
+    @Modifying
+    @Transactional
+    @Query("""
+           UPDATE OutboxPaymentEvent o SET o.status = 'FAILED' WHERE o.id IN :ids\s
+          \s""")
+    int markEventsAsFailed(@Param("ids") List<Long> ids);
 }

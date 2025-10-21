@@ -69,6 +69,7 @@ services:
     environment:
       SPRING_REDIS_HOST: redis-cache
       SPRING_REDIS_PORT: 6379
+      SPRING_APP_TRANSACTIONALOUTBOX: true
     depends_on:
       reward-calculation-db:
         condition: service_healthy
