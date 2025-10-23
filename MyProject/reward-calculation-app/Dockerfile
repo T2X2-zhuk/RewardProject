@@ -3,9 +3,6 @@ FROM eclipse-temurin:21
 # Install bash
 # RUN apk add --no-cache bash
 
-# Set the working directory inside the container
-#WORKDIR /app
-
 COPY wait-for-it.sh wait-for-it.sh
 RUN chmod +x /wait-for-it.sh
 

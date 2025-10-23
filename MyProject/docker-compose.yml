@@ -58,6 +58,18 @@ services:
     command: ["redis-server", "--appendonly", "yes"]
 
   # =============================
+  # Контейнер Liquibase
+  # =============================
+  liquibase-container-app:
+    networks: [danil-reward-project]
+    container_name: liquibase-container-app
+    image: liquibase-container-app:1.0.1
+    depends_on:
+      - reward-calculation-db
+      - reward-payment-db
+    restart: "no"
+    pull_policy: never
+  # =============================
   # Приложение для расчётов
   # =============================
   reward-calculation-app:
@@ -69,13 +81,26 @@ services:
     environment:
       SPRING_REDIS_HOST: redis-cache
       SPRING_REDIS_PORT: 6379
-      SPRING_APP_TRANSACTIONALOUTBOX: true
     depends_on:
       reward-calculation-db:
         condition: service_healthy
       redis:
         condition: service_started
 
+  reward-calculation-app-server2:
+    networks: [ danil-reward-project ]
+    container_name: reward-calculation-app-server2
+    image: reward-calculation-app:1.0.1
+    ports:
+      - "8081:8080"
+    environment:
+      SPRING_REDIS_HOST: redis-cache
+      SPRING_REDIS_PORT: 6379
+    depends_on:
+      reward-calculation-db:
+        condition: service_healthy
+      redis:
+        condition: service_started
   # =============================
   # Приложение для выплат
   # =============================
@@ -96,5 +121,37 @@ services:
       redis:
         condition: service_started
 
+  reward-payment-app-server2:
+    networks: [ danil-reward-project ]
+    container_name: reward-payment-app-server2
+    image: reward-payment-app:1.0.1
+    ports:
+      - "8096:8095"
+    environment:
+      SPRING_REDIS_HOST: redis-cache
+      SPRING_REDIS_PORT: 6379
+    depends_on:
+      reward-payment-db:
+        condition: service_healthy
+      reward-calculation-app:
+        condition: service_started
+      redis:
+        condition: service_started
+  # =============================
+  # Load balancer -> NGINX
+  # =============================
+  nginx:
+    image: nginx:latest
+    container_name: nginx-lb
+    networks: [ danil-reward-project ]
+    ports:
+      - "80:80"
+    volumes:
+      - ./load-balancer.conf:/etc/nginx/conf.d/load-balancer.conf:ro
+    depends_on:
+      - reward-calculation-app
+      - reward-calculation-app-server2
+      - reward-payment-app
+      - reward-payment-app-server2
 volumes:
   redis-data:

@@ -13,12 +13,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import rewardCalculation.EnumObject.OutboxPaymentStatus;
 import rewardCalculation.EnumObject.RewardStatus;
+import rewardCalculation.restClientRewardPayment.RewardPaymentClient;
 import rewardCalculation.transactionalOutBox.domain.OutboxPaymentEvent;
 import rewardCalculation.transactionalOutBox.JPA.OutboxPaymentEventRepository;
 import rewardCalculation.JPA.repositories.RewardRepository;
-import rewardCalculation.calculate.SendPaymentsToRewardPaymentApplication;
 import rewardCalculation.dto.PaymentDTO;
 import rewardCalculation.restClientRewardPayment.RewardPaymentResponse;
+import rewardCalculation.lock.RewardExecutionLock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,66 +36,72 @@ public class OutboxPaymentDispatcher {
 
     private final OutboxPaymentEventRepository outboxRepo;
     private final RewardRepository rewardRepository;
-    private final SendPaymentsToRewardPaymentApplication rewardPaymentClient;
+    private final RewardPaymentClient rewardPaymentClient;
     private final ObjectMapper objectMapper;
     private final CircuitBreakerRegistry circuitBreakerRegistry;
+    private final RewardExecutionLock rewardExecutionLock;
+
     private static final int BATCH_SIZE = 20;
 
     @Transactional
     @Scheduled(fixedDelay = 60000) // каждые 60 секунд
     public void dispatchPendingPayments() {
-        CircuitBreaker cb = circuitBreakerRegistry.circuitBreaker("rewardPaymentCb");
+        rewardExecutionLock.<Void>runWithLock("rewardCalculation", () -> {
+            CircuitBreaker cb = circuitBreakerRegistry.circuitBreaker("rewardPaymentCb");
 
-        if (cb.getState() == CircuitBreaker.State.OPEN) {
-            log.warn("CircuitBreaker is OPEN. Skipping dispatch cycle.");
-            return;
-        }
-        // Берём все PENDING и FAILED события
-        List<OutboxPaymentEvent> pendingEvents = outboxRepo.findTopNByStatusesReadyForProcessing(
-                List.of(OutboxPaymentStatus.PENDING, OutboxPaymentStatus.FAILED),
-                Pageable.ofSize(BATCH_SIZE)
-        );
-
-        for (OutboxPaymentEvent event : pendingEvents) {
             if (cb.getState() == CircuitBreaker.State.OPEN) {
-                List<Long> remainingIds = getLongs(event, pendingEvents);
-
-                if (!remainingIds.isEmpty()) {
-                    outboxRepo.markEventsAsFailed(remainingIds);
-                }
-                break;
+                log.warn("CircuitBreaker is OPEN. Skipping dispatch cycle.");
+                return null;
             }
+            // Берём все PENDING и FAILED события
+            List<OutboxPaymentEvent> pendingEvents = outboxRepo.findTopNByStatusesReadyForProcessing(
+                    List.of(OutboxPaymentStatus.PENDING, OutboxPaymentStatus.FAILED),
+                    Pageable.ofSize(BATCH_SIZE)
+            );
 
-            try {
-                // Атомарное переводим в PROCESSING
-                int updated = outboxRepo.updateStatusIfPendingOrFailed(event.getId(), OutboxPaymentStatus.PROCESSING);
-                if (updated == 0) continue;
-
-                // Попытка отправки платежей
-                PaymentDTO[] payments = objectMapper.readValue(event.getPayload(), PaymentDTO[].class);
-                RewardPaymentResponse response = rewardPaymentClient.send(List.of(payments));
-
-                if (!response.isSuccessfulSaving()) {
+            for (OutboxPaymentEvent event : pendingEvents) {
+                if (cb.getState() == CircuitBreaker.State.OPEN) {
                     List<Long> remainingIds = getLongs(event, pendingEvents);
+
                     if (!remainingIds.isEmpty()) {
                         outboxRepo.markEventsAsFailed(remainingIds);
                     }
                     break;
                 }
 
-                // Успешная отправка
-                if (event.getRewardIds() != null && !event.getRewardIds().isEmpty()) {
-                    rewardRepository.rewardSetStatusForList(RewardStatus.PAID, event.getRewardIds());
+                try {
+                    // Атомарное переводим в PROCESSING
+                    int updated = outboxRepo.updateStatusIfPendingOrFailed(event.getId(), OutboxPaymentStatus.PROCESSING);
+                    if (updated == 0) continue;
+
+                    // Попытка отправки платежей
+                    PaymentDTO[] payments = objectMapper.readValue(event.getPayload(), PaymentDTO[].class);
+                    RewardPaymentResponse response = rewardPaymentClient.payReward(List.of(payments));
+
+                    if (!response.isSuccessfulSaving()) {
+                        List<Long> remainingIds = getLongs(event, pendingEvents);
+                        if (!remainingIds.isEmpty()) {
+                            outboxRepo.markEventsAsFailed(remainingIds);
+                        }
+                        break;
+                    }
+
+                    // Успешная отправка
+                    if (event.getRewardIds() != null && !event.getRewardIds().isEmpty()) {
+                        rewardRepository.rewardSetStatusForList(RewardStatus.PAID, event.getRewardIds());
+                    }
+
+                    // Удаляем событие из Outbox
+                    outboxRepo.delete(event);
+
+                } catch (Exception e) {
+                    // Любая ошибка → сразу в FAILED
+                    markEventFailed(event);
                 }
+             }
 
-                // Удаляем событие из Outbox
-                outboxRepo.delete(event);
-
-            } catch (Exception e) {
-                // Любая ошибка → сразу в FAILED
-                markEventFailed(event);
-            }
-        }
+            return null;
+        });
     }
 
     @NotNull

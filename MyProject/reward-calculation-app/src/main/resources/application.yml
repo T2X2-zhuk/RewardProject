@@ -4,7 +4,7 @@ spring:
     default: h2
 
   liquibase:
-    enabled: true
+    enabled: false
     change-log: classpath:db/changelog/changelog-master.xml
 
   cache:
@@ -44,8 +44,11 @@ management:
       prometheus:
         enabled: true
 
-server:
-  port: 8080
-
 app:
   transactionalOutBox: true
+  locks:
+    rewardCalculation: reward-execution-lock
+    cleanDb: reward-clean-db-lock
+
+server:
+  port: 8080

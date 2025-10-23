@@ -1,0 +1,14 @@
+liquibase:
+  calculation:
+    url: jdbc:mysql://reward-calculation-db:3306/reward_calculation_db
+    user: root
+    password: fkmdbyjdbx383
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    change-log: classpath:changelog/calculation/changelog-master.xml
+
+  payment:
+    url: jdbc:mysql://reward-payment-db:3306/reward_payment_db
+    user: root
+    password: fkmdbyjdbx383
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    change-log: classpath:changelog/payment/changelog-master.xml

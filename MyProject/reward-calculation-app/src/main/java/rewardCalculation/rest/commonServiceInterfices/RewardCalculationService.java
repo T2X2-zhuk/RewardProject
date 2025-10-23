@@ -1,6 +1,5 @@
-package rewardCalculation.servises.reward;
+package rewardCalculation.rest.commonServiceInterfices;
 
-import rewardCalculation.JPA.domain.Employee;
 import rewardCalculation.JPA.domain.Reward;
 import rewardCalculation.restClientRewardPayment.RewardPaymentResponse;
 

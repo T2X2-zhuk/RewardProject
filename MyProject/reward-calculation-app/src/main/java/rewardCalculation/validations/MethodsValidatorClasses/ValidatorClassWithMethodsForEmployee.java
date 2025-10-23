@@ -2,13 +2,11 @@ package rewardCalculation.validations.MethodsValidatorClasses;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import rewardCalculation.JPA.domain.Employee;
-import rewardCalculation.cacheConfig.GetEmployeeUsingCache;
+import rewardCalculation.cache.get.GetEmployeeUsingCache;
 import rewardCalculation.util.forError.ValidationError;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 
 @Component

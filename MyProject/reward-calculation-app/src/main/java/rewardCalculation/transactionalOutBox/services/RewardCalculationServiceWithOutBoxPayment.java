@@ -1,12 +1,12 @@
-package rewardCalculation.servises.reward;
+package rewardCalculation.transactionalOutBox.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import rewardCalculation.JPA.domain.Reward;
-import rewardCalculation.calculate.CalculatePayment;
+import rewardCalculation.util.forServices.CalculatePayment;
 import rewardCalculation.dto.PaymentDTO;
-import rewardCalculation.transactionalOutBox.services.RewardOutboxService;
+import rewardCalculation.rest.commonServiceInterfices.RewardCalculationService;
 import rewardCalculation.validations.validators.reward.RewardCalculationValidator;
 import rewardCalculation.restClientRewardPayment.RewardPaymentResponse;
 import rewardCalculation.util.forError.ValidationError;

@@ -3,7 +3,7 @@ package rewardCalculation.servises.tariff;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.JPA.repositories.JobTypeEntityRepository;
-import rewardCalculation.cacheConfig.GetTariffUsingCache;
+import rewardCalculation.cache.get.GetTariffUsingCache;
 import rewardCalculation.util.forError.ValidationError;
 import rewardCalculation.validations.validators.tariff.CreateTariffRequestValidator;
 import rewardCalculation.JPA.domain.Tariff;

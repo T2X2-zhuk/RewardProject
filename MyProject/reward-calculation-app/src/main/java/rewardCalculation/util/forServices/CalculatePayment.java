@@ -1,18 +1,16 @@
-package rewardCalculation.calculate;
+package rewardCalculation.util.forServices;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import rewardCalculation.JPA.domain.Employee;
 import rewardCalculation.JPA.domain.Reward;
 import rewardCalculation.JPA.domain.Tariff;
-import rewardCalculation.cacheConfig.GetTariffUsingCache;
+import rewardCalculation.cache.get.GetTariffUsingCache;
 import rewardCalculation.dto.PaymentDTO;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor

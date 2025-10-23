@@ -1,4 +1,4 @@
-package rewardCalculation.cacheConfig;
+package rewardCalculation.cache.get;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -6,6 +6,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import rewardCalculation.JPA.domain.Tariff;
 import rewardCalculation.JPA.repositories.TariffRepository;
+import rewardCalculation.cache.config.RedisCacheConfig;
 
 import java.util.List;
 import java.util.Map;

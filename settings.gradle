@@ -1,5 +1,6 @@
 rootProject.name = 'RewardProject'
 
+include('MyProject:liquibase-container-app')
 include('MyProject:reward-acceptance-tests')
 include('MyProject:reward-calculation-app')
 include('MyProject:reward-payment-app')

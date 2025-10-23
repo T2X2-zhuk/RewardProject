@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.JPA.domain.Tariff;
 import rewardCalculation.JPA.repositories.TariffRepository;
-import rewardCalculation.cacheConfig.GetTariffUsingCache;
+import rewardCalculation.cache.get.GetTariffUsingCache;
 import rewardCalculation.util.forError.Placeholder;
 import rewardCalculation.util.forError.ValidationError;
 import org.springframework.stereotype.Component;

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
+
+
+    <changeSet author="Danil" id="12">
+        <createTable tableName="outbox_payment_event">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="payload" type="LONGTEXT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sent_at" type="TIMESTAMP"/>
+        </createTable>
+        <!-- Таблица для @ElementCollection rewardIds -->
+        <createTable tableName="outbox_payment_reward_ids">
+            <column name="outbox_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reward_id" type="BIGINT"/>
+        </createTable>
+
+        <!-- Внешний ключ на основную таблицу -->
+        <addForeignKeyConstraint
+                baseTableName="outbox_payment_reward_ids"
+                baseColumnNames="outbox_id"
+                constraintName="fk_outbox_reward"
+                referencedTableName="outbox_payment_event"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="Danil" id="13">
+        <createIndex tableName="outbox_payment_event" indexName="idx_outbox_status_created">
+            <column name="status"/>
+            <column name="created_at"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

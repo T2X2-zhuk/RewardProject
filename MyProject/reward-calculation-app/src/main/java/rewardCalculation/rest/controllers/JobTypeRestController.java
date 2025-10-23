@@ -1,14 +1,11 @@
-package rewardCalculation.rest;
+package rewardCalculation.rest.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import rewardCalculation.dto.JobTypeDTO;
-import rewardCalculation.dto.RewardDTO;
 import rewardCalculation.requests.CommonRequestForJobTypeParameters;
-import rewardCalculation.requests.CommonRequestForRewardParameters;
 import rewardCalculation.responses.CommonResponseForJobTypeParameters;
-import rewardCalculation.responses.CommonResponseForRewardParameters;
 import rewardCalculation.servises.jobType.CreateJobTypeService;
 import rewardCalculation.servises.jobType.GetJobTypeService;
 

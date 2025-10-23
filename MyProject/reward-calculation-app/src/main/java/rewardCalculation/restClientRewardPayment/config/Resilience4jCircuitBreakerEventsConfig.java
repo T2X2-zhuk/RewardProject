@@ -1,4 +1,4 @@
-package rewardCalculation.restClientRewardPayment;
+package rewardCalculation.restClientRewardPayment.config;
 
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;

@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
-import rewardCalculation.JPA.domain.Employee;
 import rewardCalculation.JPA.domain.Reward;
-import rewardCalculation.calculate.CalculatePayment;
-import rewardCalculation.calculate.SendPaymentsToRewardPaymentApplication;
+import rewardCalculation.util.forServices.CalculatePayment;
+import rewardCalculation.rest.commonServiceInterfices.RewardCalculationService;
+import rewardCalculation.restClientRewardPayment.RewardPaymentClient;
 import rewardCalculation.restClientRewardPayment.RewardPaymentResponse;
 import rewardCalculation.util.forError.ValidationError;
 import rewardCalculation.util.forServices.UpdatingRewardsDependingOnTheResultReceivedFromAnExternalService;
@@ -24,11 +24,11 @@ import java.util.List;
         havingValue = "false",
         matchIfMissing = true
 )
-class RewardCalculationServiceWithoutOutBoxing implements RewardCalculationService{
+class RewardCalculationServiceWithoutOutBoxing implements RewardCalculationService {
 
     private final RewardCalculationValidator validator;
     private final CalculatePayment calculatePayment;
-    private final SendPaymentsToRewardPaymentApplication sendPaymentsToRewardPaymentApplication;
+    private final RewardPaymentClient client;
     private final UpdatingRewardsDependingOnTheResultReceivedFromAnExternalService updatingRewardsDependingOnTheResultReceivedFromAnExternalService;
 
     @Override
@@ -41,7 +41,7 @@ class RewardCalculationServiceWithoutOutBoxing implements RewardCalculationServi
             coreResponse.setErrors(validationErrors);
             return coreResponse;
         }
-        coreResponse = sendPaymentsToRewardPaymentApplication.send(calculatePayment.calculate(rewardList));
+        coreResponse = client.payReward(calculatePayment.calculate(rewardList));
         log.info("{} is execute!", this.getClass().getSimpleName());
         return updatingRewardsDependingOnTheResultReceivedFromAnExternalService.result(coreResponse,rewardList);
     }

@@ -1,18 +1,18 @@
-package rewardCalculation.rest;
+package rewardCalculation.rest.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.EnumObject.RewardStatus;
 import rewardCalculation.JPA.domain.Reward;
 import rewardCalculation.JPA.repositories.RewardRepository;
-import rewardCalculation.cacheConfig.GetEmployeeUsingCache;
+import rewardCalculation.cache.get.GetEmployeeUsingCache;
 import rewardCalculation.dto.RewardDTO;
 import rewardCalculation.requests.CommonRequestForRewardParameters;
 import rewardCalculation.responses.CommonResponseForRewardParameters;
 
 import rewardCalculation.restClientRewardPayment.RewardPaymentResponse;
-import rewardCalculation.servises.reward.RewardCalculationService;
-import rewardCalculation.util.forServices.RewardExecutionLock;
+import rewardCalculation.rest.commonServiceInterfices.RewardCalculationService;
+import rewardCalculation.lock.RewardExecutionLock;
 import rewardCalculation.servises.reward.CreateRewardService;
 import rewardCalculation.servises.reward.GetRewardService;
 import org.springframework.web.bind.annotation.*;
@@ -55,7 +55,7 @@ public class RewardRestController {
 
     @PostMapping(path = "/rewardCalculationExecute", produces = "application/json")
     public RewardPaymentResponse rewardCalculationExecute() {
-        return rewardExecutionLock.runWithLock(() -> {
+        return rewardExecutionLock.runWithLock("rewardCalculation",() -> {
             log.info("▶️ RewardCalculationController: запуск расчёта наград");
             List<Reward> rewardList = rewardRepository.findTop15ByStatus(RewardStatus.UNPAID);
             log.debug("Get all Rewards which is not paid - {}" , rewardList);

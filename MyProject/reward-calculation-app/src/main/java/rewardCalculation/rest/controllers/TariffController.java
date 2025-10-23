@@ -1,4 +1,4 @@
-package rewardCalculation.rest;
+package rewardCalculation.rest.controllers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.dto.TariffDTO;

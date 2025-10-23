@@ -2,7 +2,7 @@ package rewardCalculation.servises.employee;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import rewardCalculation.cacheConfig.GetEmployeeUsingCache;
+import rewardCalculation.cache.get.GetEmployeeUsingCache;
 import rewardCalculation.requests.CommonRequestForEmployeeParameters;
 import rewardCalculation.responses.CommonResponseForEmployeeParameters;
 import rewardCalculation.util.forError.ValidationError;
