@@ -29,7 +29,7 @@ public class RewardExecutionLock {
         try {
             acquired = lock.tryLock(0, 5, TimeUnit.MINUTES);
             if (!acquired) {
-                log.warn("❌ Lock {} уже выполняется!", lockKey);
+                log.warn("❌Lock {} уже выполняется!", lockKey);
                 throw new IllegalStateException("Операция уже выполняется: " + lockKey);
             }
 

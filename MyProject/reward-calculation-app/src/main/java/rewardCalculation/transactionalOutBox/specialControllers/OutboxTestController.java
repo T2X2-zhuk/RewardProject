@@ -1,6 +1,7 @@
 package rewardCalculation.transactionalOutBox.specialControllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,11 @@ import rewardCalculation.transactionalOutBox.dispatchers.OutboxPaymentDispatcher
 @RestController
 @RequestMapping("/api/test")
 @RequiredArgsConstructor
+@ConditionalOnProperty(
+        prefix = "app",
+        name = "transactionalOutBox",
+        havingValue = "true"
+)
 public class OutboxTestController {
 
     private final OutboxPaymentDispatcher dispatcher;

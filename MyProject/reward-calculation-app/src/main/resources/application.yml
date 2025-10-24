@@ -1,10 +1,9 @@
-
 spring:
   profiles:
     default: h2
 
   liquibase:
-    enabled: false
+    enabled: true
     change-log: classpath:db/changelog/changelog-master.xml
 
   cache:
@@ -46,9 +45,13 @@ management:
 
 app:
   transactionalOutBox: true
+  useAsyncOutboxDispatcher: true # true используется асинхронная реализация false - синхронная
   locks:
     rewardCalculation: reward-execution-lock
-    cleanDb: reward-clean-db-lock
+  reward_size : 15
+  batch_size : 20 # лучше не больше 30 чтобы не перегружать
+# rewardSize  это количество сколько за раз можно обработать неоплаченных наград
+# batch_size количество ивентов сколько за раз transactionalOutBox может обработать
 
 server:
   port: 8080

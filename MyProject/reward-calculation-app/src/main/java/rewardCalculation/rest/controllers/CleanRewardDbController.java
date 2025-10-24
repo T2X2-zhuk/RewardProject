@@ -23,7 +23,7 @@ public class CleanRewardDbController {
             consumes = "application/json",
             produces = "application/json")
     public CleanRewardDbResponse cleanDb(@RequestBody CleanRewardDbRequest request) {
-        return rewardExecutionLock.runWithLock("cleanDb",()->{
+        return rewardExecutionLock.runWithLock("rewardCalculation",()->{
             log.info("{} is start!",this.getClass().getSimpleName());
             CleanRewardDbResponse response = cleanDBService.execute(request);
             log.info("{} is execute!",this.getClass().getSimpleName());

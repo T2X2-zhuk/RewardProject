@@ -1,5 +1,6 @@
 package rewardCalculation.JPA.repositories;
 
+import org.springframework.data.domain.Pageable;
 import rewardCalculation.EnumObject.RewardStatus;
 import rewardCalculation.JPA.domain.Reward;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,7 +18,7 @@ public interface RewardRepository extends JpaRepository<Reward, Long> {
     @Query("SELECT rd FROM Reward rd where rd.employeeId.id = :employeeId AND rd.jobType.jobType = :jobType AND rd.status = :status")
     Optional<Reward> findByEmployeeIdAndJobTypeAndStatus(@Param("employeeId") Long employeeId, @Param("jobType") String jobType,@Param("status") RewardStatus status);
 
-    List<Reward> findTop15ByStatus(RewardStatus status);
+    List<Reward> findByStatus(RewardStatus status , Pageable pageable);
 
     @Transactional
     @Modifying

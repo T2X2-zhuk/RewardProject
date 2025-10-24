@@ -27,10 +27,17 @@ public interface OutboxPaymentEventRepository extends JpaRepository<OutboxPaymen
     WHERE o.status IN :statuses
     ORDER BY o.createdAt ASC
 """)
-    List<OutboxPaymentEvent> findTopNByStatusesReadyForProcessing(
+    List<OutboxPaymentEvent> findByStatusesReadyForProcessing(
             @Param("statuses") List<OutboxPaymentStatus> statuses,
             Pageable pageable
     );
+    @Query("select e from OutboxPaymentEvent e " +
+            "where e.status in :statuses order by e.createdAt")
+    List<OutboxPaymentEvent> findPendingEvents(
+            @Param("statuses") List<OutboxPaymentStatus> statuses,
+            Pageable pageable
+    );
+
 
     @Modifying
     @Transactional

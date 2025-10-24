@@ -12,7 +12,7 @@ public class RedissonConfig {
     @Bean(destroyMethod = "shutdown")
     public RedissonClient redissonClient() {
         Config config = new Config();
-        // ⚠️ redis-cache — это имя контейнера из docker-compose.yml
+        //redis-cache — это имя контейнера из docker-compose.yml
         config.useSingleServer()
                 .setAddress("redis://redis-cache:6379")
                 .setConnectionMinimumIdleSize(1)

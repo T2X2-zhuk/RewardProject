@@ -4,12 +4,16 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import rewardCalculation.EnumObject.RewardStatus;
+import rewardCalculation.JPA.domain.Reward;
 import rewardCalculation.JPA.repositories.*;
 import rewardCalculation.cache.get.GetEmployeeUsingCache;
 import rewardCalculation.cache.get.GetTariffUsingCache;
 import rewardCalculation.requests.CleanRewardDbRequest;
 import rewardCalculation.responses.CleanRewardDbResponse;
 import rewardCalculation.transactionalOutBox.JPA.OutboxPaymentEventRepository;
+
+import java.util.List;
 
 
 @Component
@@ -35,7 +39,6 @@ public class CleanDBService {
             response.setRewardDeleted(true);
             log.debug("Clean db reward");
         }
-
         if (request.isCleanTariff()) {
             tariffRepository.deleteAll();
             response.setTariffDeleted(true);

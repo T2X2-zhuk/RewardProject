@@ -2,14 +2,14 @@ package rewardCalculation.rest.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import rewardCalculation.EnumObject.RewardStatus;
 import rewardCalculation.JPA.domain.Reward;
 import rewardCalculation.JPA.repositories.RewardRepository;
-import rewardCalculation.cache.get.GetEmployeeUsingCache;
 import rewardCalculation.dto.RewardDTO;
 import rewardCalculation.requests.CommonRequestForRewardParameters;
 import rewardCalculation.responses.CommonResponseForRewardParameters;
-
+import org.springframework.data.domain.Pageable;
 import rewardCalculation.restClientRewardPayment.RewardPaymentResponse;
 import rewardCalculation.rest.commonServiceInterfices.RewardCalculationService;
 import rewardCalculation.lock.RewardExecutionLock;
@@ -29,8 +29,10 @@ public class RewardRestController {
     private final RewardRepository rewardRepository;
     private final RewardCalculationService rewardCalculationService;
     private final GetRewardService getRewardService;
-    private final GetEmployeeUsingCache getEmployeeUsingCache;
     private final RewardExecutionLock rewardExecutionLock;
+
+    @Value( "${app.reward_size}" )
+    private int rewardSize;
 
     @PostMapping(path = "/createReward",
             consumes = "application/json",
@@ -57,7 +59,7 @@ public class RewardRestController {
     public RewardPaymentResponse rewardCalculationExecute() {
         return rewardExecutionLock.runWithLock("rewardCalculation",() -> {
             log.info("▶️ RewardCalculationController: запуск расчёта наград");
-            List<Reward> rewardList = rewardRepository.findTop15ByStatus(RewardStatus.UNPAID);
+            List<Reward> rewardList = rewardRepository.findByStatus(RewardStatus.UNPAID, Pageable.ofSize(rewardSize));
             log.debug("Get all Rewards which is not paid - {}" , rewardList);
             RewardPaymentResponse response = rewardCalculationService.execute(rewardList);
             log.info("✅ RewardCalculationController: завершено");
