@@ -22,6 +22,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+      start_period: 30s
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
   # =============================
@@ -41,6 +42,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+      start_period: 30s
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
   # =============================
@@ -50,12 +52,17 @@ services:
     networks: [danil-reward-project]
     container_name: redis-cache
     image: redis:7.2
-    restart: always
     ports:
       - "6379:6379"
     volumes:
       - redis-data:/data
     command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 30s
 
   # =============================
   # Контейнер Liquibase
@@ -65,8 +72,10 @@ services:
 #    container_name: liquibase-container-app
 #    image: liquibase-container-app:1.0.1
 #    depends_on:
-#      - reward-calculation-db
-#      - reward-payment-db
+#      reward-calculation-db:
+#        condition: service_healthy
+#      reward-payment-db:
+#        condition: service_healthy
 #    restart: "no"
 #    pull_policy: never
   # =============================
@@ -85,7 +94,13 @@ services:
       reward-calculation-db:
         condition: service_healthy
       redis:
-        condition: service_started
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1" ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
 #  reward-calculation-app-server2:
 #    networks: [ danil-reward-project ]
@@ -100,7 +115,13 @@ services:
 #      reward-calculation-db:
 #        condition: service_healthy
 #      redis:
-#        condition: service_started
+#        condition: service_healthy
+#    healthcheck:
+#      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+#      interval: 15s
+#      timeout: 5s
+#      retries: 5
+#      start_period: 30s
   # =============================
   # Приложение для выплат
   # =============================
@@ -117,9 +138,15 @@ services:
       reward-payment-db:
         condition: service_healthy
       reward-calculation-app:
-        condition: service_started
+        condition: service_healthy
       redis:
-        condition: service_started
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:8095/actuator/health || exit 1" ]
+      interval: 15s # How often to perform the health check ()
+      timeout: 5s # Maximum time to wait for the health check to respond
+      retries: 5 # Number of retries before marking the container as unhealthy
+      start_period: 30s # Initial delay before starting health checks (useful for slow-starting services)
 
 #  reward-payment-app-server2:
 #    networks: [ danil-reward-project ]
@@ -133,10 +160,16 @@ services:
 #    depends_on:
 #      reward-payment-db:
 #        condition: service_healthy
-#      reward-calculation-app:
-#        condition: service_started
+#      reward-calculation-app-server2:
+#        condition: service_healthy
 #      redis:
-#        condition: service_started
+#        condition: service_healthy
+#    healthcheck:
+#      test: [ "CMD-SHELL", "curl -f http://localhost:8095/actuator/health || exit 1" ]
+#      interval: 15s
+#      timeout: 5s
+#      retries: 5
+#      start_period: 30s
   # =============================
   # Load balancer -> NGINX
   # =============================
@@ -149,9 +182,14 @@ services:
 #    volumes:
 #      - ./load-balancer.conf:/etc/nginx/conf.d/load-balancer.conf:ro
 #    depends_on:
-#      - reward-calculation-app
-#      - reward-calculation-app-server2
-#      - reward-payment-app
-#      - reward-payment-app-server2
+#      reward-calculation-app:
+#        condition: service_healthy
+#      reward-calculation-app-server2:
+#        condition: service_healthy
+#      reward-payment-app:
+#        condition: service_healthy
+#      reward-payment-app-server2:
+#        condition: service_healthy
+
 volumes:
   redis-data:

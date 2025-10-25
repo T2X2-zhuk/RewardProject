@@ -2,7 +2,7 @@ package rewardCalculation.transactionalOutBox.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -13,11 +13,7 @@ import java.util.concurrent.Executor;
 @Configuration
 @EnableAsync
 @Slf4j
-@ConditionalOnProperty(
-        prefix = "app",
-        name = ("useAsyncOutboxDispatcher"),
-        havingValue = "true"
-)
+@ConditionalOnExpression("${app.transactionalOutBox:true} == true and ${app.useAsyncOutboxDispatcher:true} == true")
 public class AsyncConfig {
 
     @Value("${app.batch_size}")

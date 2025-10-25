@@ -21,8 +21,7 @@ import java.util.List;
 @ConditionalOnProperty(
         prefix = "app",
         name = "transactionalOutBox",
-        havingValue = "false",
-        matchIfMissing = true
+        havingValue = "false"
 )
 class RewardCalculationServiceWithoutOutBoxing implements RewardCalculationService {
 

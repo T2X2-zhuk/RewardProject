@@ -4,11 +4,10 @@ package rewardCalculation.transactionalOutBox.dispatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
-import io.micrometer.core.annotation.Counted;
-import io.micrometer.core.annotation.Timed;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.ApplicationContext;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,11 +44,7 @@ import java.util.concurrent.Executor;
 @RequiredArgsConstructor
 @Slf4j
 @EnableScheduling
-@ConditionalOnProperty(
-        prefix = "app",
-        name = {"transactionalOutBox", "useAsyncOutboxDispatcher"},
-        havingValue = "true"
-)
+@ConditionalOnExpression("${app.transactionalOutBox:true} == true and ${app.useAsyncOutboxDispatcher:true} == true")
  class OutboxPaymentAsyncDispatcher implements OutboxPaymentDispatcher{
 
     private final OutboxPaymentEventRepository outboxRepo;

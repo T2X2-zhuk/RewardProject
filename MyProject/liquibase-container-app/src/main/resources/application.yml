@@ -12,3 +12,12 @@ liquibase:
     password: fkmdbyjdbx383
     driver-class-name: com.mysql.cj.jdbc.Driver
     change-log: classpath:changelog/payment/changelog-master.xml
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -38,11 +39,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @EnableScheduling
-@ConditionalOnProperty(
-        prefix = "app",
-        name = {"transactionalOutBox", "useAsyncOutboxDispatcher"},
-        havingValue = "false"
-)
+@ConditionalOnExpression("${app.transactionalOutBox:true} == true and ${app.useAsyncOutboxDispatcher:false} == false")
 class OutboxPaymentSyncDispatcher implements OutboxPaymentDispatcher{
 
     private final OutboxPaymentEventRepository outboxRepo;

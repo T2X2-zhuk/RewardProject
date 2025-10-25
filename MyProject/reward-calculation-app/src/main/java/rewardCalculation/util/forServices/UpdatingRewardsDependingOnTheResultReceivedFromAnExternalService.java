@@ -19,8 +19,7 @@ import java.util.stream.Collectors;
 @ConditionalOnProperty(
         prefix = "app",
         name = "transactionalOutBox",
-        havingValue = "false",
-        matchIfMissing = true
+        havingValue = "false"
 )
 public class UpdatingRewardsDependingOnTheResultReceivedFromAnExternalService {
 

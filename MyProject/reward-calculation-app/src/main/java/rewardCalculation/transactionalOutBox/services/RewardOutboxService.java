@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import rewardCalculation.EnumObject.OutboxPaymentStatus;
@@ -21,11 +22,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@ConditionalOnProperty(
-        prefix = "app",
-        name = "transactionalOutBox",
-        havingValue = "true"
-)
+@ConditionalOnExpression("${app.transactionalOutBox:true} == true")
 public class RewardOutboxService {
 
     private final OutboxPaymentEventRepository outboxRepo;

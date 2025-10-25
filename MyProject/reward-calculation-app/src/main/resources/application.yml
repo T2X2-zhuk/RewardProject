@@ -42,10 +42,18 @@ management:
     export:
       prometheus:
         enabled: true
-
+  endpoint:
+    health:
+      show-details: always
+  health:
+    redis:
+      enabled: true
+    db:
+     enabled: true
 app:
-  transactionalOutBox: true
-  useAsyncOutboxDispatcher: true # true используется асинхронная реализация false - синхронная
+  transactionalOutBox: false # Если вы используете false то будет использоваться дефолтная , без outBox обычня реализация если true
+  #то синхронизированная версия outBox однако в том случаи если useAsyncOutboxDispatcher false
+  useAsyncOutboxDispatcher: false #Не ставте в скобки false или true""!
   locks:
     rewardCalculation: reward-execution-lock
   reward_size : 15

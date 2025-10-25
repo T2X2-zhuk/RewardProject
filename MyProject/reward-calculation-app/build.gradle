@@ -105,6 +105,5 @@ docker {
 	dependsOn bootJar
 	name "reward-calculation-app:1.0.1"
 	files "build/libs/reward-calculation-app-1.0.1.jar"
-	files 'wait-for-it.sh'
 	buildArgs(['JAR_FILE': "reward-calculation-app-1.0.1.jar"])
 }

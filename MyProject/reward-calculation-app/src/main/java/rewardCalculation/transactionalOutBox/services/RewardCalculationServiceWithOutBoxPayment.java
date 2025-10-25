@@ -2,6 +2,7 @@ package rewardCalculation.transactionalOutBox.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import rewardCalculation.JPA.domain.Reward;
 import rewardCalculation.util.forServices.CalculatePayment;
@@ -16,11 +17,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@ConditionalOnProperty(
-        prefix = "app",
-        name = "transactionalOutBox",
-        havingValue = "true"
-)
+@ConditionalOnExpression("${app.transactionalOutBox:true} == true")
 class RewardCalculationServiceWithOutBoxPayment implements RewardCalculationService {
     
     private final RewardCalculationValidator validator;
