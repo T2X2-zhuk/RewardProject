@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import rewardCalculation.requests.CommonRequestForJobTypeParameters;
-import rewardCalculation.util.forError.ValidationError;
+import rewardCalculation.util.forErrors.ValidationError;
 import rewardCalculation.validations.MethodsValidatorClasses.ValidatorClassWithMethodsForJobTypesEntity;
 
 import java.util.ArrayList;

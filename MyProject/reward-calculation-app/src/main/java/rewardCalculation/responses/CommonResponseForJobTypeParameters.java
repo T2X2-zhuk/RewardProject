@@ -3,8 +3,8 @@ package rewardCalculation.responses;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import rewardCalculation.dto.JobTypeDTO;
-import rewardCalculation.util.forError.CoreResponse;
-import rewardCalculation.util.forError.ValidationError;
+import rewardCalculation.util.forErrors.CoreResponse;
+import rewardCalculation.util.forErrors.ValidationError;
 
 import java.util.List;
 

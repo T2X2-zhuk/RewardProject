@@ -9,7 +9,7 @@ import rewardCalculation.cache.get.GetEmployeeUsingCache;
 import rewardCalculation.dto.EmployeeDTO;
 import rewardCalculation.requests.CommonRequestForEmployeeParameters;
 import rewardCalculation.responses.CommonResponseForEmployeeParameters;
-import rewardCalculation.util.forError.ValidationError;
+import rewardCalculation.util.forErrors.ValidationError;
 import rewardCalculation.validations.validators.employee.GetEmployeeValidator;
 
 import java.util.List;

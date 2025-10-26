@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.JPA.repositories.JobTypeEntityRepository;
 import rewardCalculation.cache.get.GetTariffUsingCache;
-import rewardCalculation.util.forError.ValidationError;
+import rewardCalculation.util.forErrors.ValidationError;
 import rewardCalculation.validations.validators.tariff.CreateTariffRequestValidator;
 import rewardCalculation.JPA.domain.Tariff;
 import rewardCalculation.JPA.repositories.TariffRepository;
@@ -14,7 +14,6 @@ import rewardCalculation.responses.CommonResponseForTariffParameters;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.RoundingMode;
 import java.util.List;
 
 @Service

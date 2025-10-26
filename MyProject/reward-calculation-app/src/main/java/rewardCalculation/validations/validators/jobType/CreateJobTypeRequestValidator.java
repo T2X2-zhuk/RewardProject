@@ -3,10 +3,8 @@ package rewardCalculation.validations.validators.jobType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import rewardCalculation.requests.CommonRequestForEmployeeParameters;
 import rewardCalculation.requests.CommonRequestForJobTypeParameters;
-import rewardCalculation.util.forError.ValidationError;
-import rewardCalculation.validations.MethodsValidatorClasses.ValidatorClassWithMethodsForEmployee;
+import rewardCalculation.util.forErrors.ValidationError;
 import rewardCalculation.validations.MethodsValidatorClasses.ValidatorClassWithMethodsForJobTypesEntity;
 
 import java.util.ArrayList;

@@ -9,7 +9,7 @@ import rewardCalculation.validations.validators.reward.GetRewardRequestValidator
 import rewardCalculation.JPA.domain.Reward;
 import rewardCalculation.JPA.repositories.RewardRepository;
 import rewardCalculation.requests.CommonRequestForRewardParameters;
-import rewardCalculation.util.forError.ValidationError;
+import rewardCalculation.util.forErrors.ValidationError;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

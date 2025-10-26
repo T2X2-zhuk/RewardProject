@@ -9,7 +9,7 @@ import rewardCalculation.util.forServices.CalculatePayment;
 import rewardCalculation.rest.commonServiceInterfices.RewardCalculationService;
 import rewardCalculation.restClientRewardPayment.RewardPaymentClient;
 import rewardCalculation.restClientRewardPayment.RewardPaymentResponse;
-import rewardCalculation.util.forError.ValidationError;
+import rewardCalculation.util.forErrors.ValidationError;
 import rewardCalculation.util.forServices.UpdatingRewardsDependingOnTheResultReceivedFromAnExternalService;
 import rewardCalculation.validations.validators.reward.RewardCalculationValidator;
 

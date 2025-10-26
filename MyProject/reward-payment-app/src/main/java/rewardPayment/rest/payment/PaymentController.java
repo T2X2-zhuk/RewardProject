@@ -19,7 +19,6 @@ public class PaymentController {
      private final SearchPaymentService service;
      private final RewardPaymentService rewardPaymentService;
      private final GetAllPaymentsUsingCache getAllPaymentsUsingCache;
-     private final RewardExecutionLock rewardExecutionLock;
 
     @GetMapping(path = "/searchPayment/{employeeId}",
             produces = "application/json")
@@ -37,10 +36,10 @@ public class PaymentController {
             consumes = "application/json",
             produces = "application/json")
     public CommonResponseForPaymentParameters payReward(@RequestBody CommonRequestForPaymentParameters request) {
-        return rewardExecutionLock.runWithLock("rewardPayment",() -> {log.info("PaymentController is start!");
+        log.info("PaymentController is start!");
         CommonResponseForPaymentParameters response = rewardPaymentService.pay(request);
         getAllPaymentsUsingCache.clearPAYMENTSCache();
         log.info("PaymentController is execute!");
-        return response;});
+        return response;
     }
 }

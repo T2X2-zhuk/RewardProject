@@ -7,7 +7,7 @@ import rewardCalculation.validations.MethodsValidatorClasses.ValidatorClassWithM
 import rewardCalculation.validations.MethodsValidatorClasses.ValidatorClassWithMethodsForReward;
 import rewardCalculation.validations.MethodsValidatorClasses.ValidatorClassWithMethodsForTariff;
 import rewardCalculation.requests.CommonRequestForRewardParameters;
-import rewardCalculation.util.forError.ValidationError;
+import rewardCalculation.util.forErrors.ValidationError;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

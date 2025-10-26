@@ -7,7 +7,7 @@ import rewardCalculation.JPA.repositories.TariffRepository;
 import rewardCalculation.dto.TariffDTO;
 import rewardCalculation.requests.CommonRequestForTariffParameters;
 import rewardCalculation.responses.CommonResponseForTariffParameters;
-import rewardCalculation.util.forError.ValidationError;
+import rewardCalculation.util.forErrors.ValidationError;
 import rewardCalculation.validations.validators.tariff.GetTariffValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

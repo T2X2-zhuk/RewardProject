@@ -1,4 +1,4 @@
-package rewardCalculation.util.forError;
+package rewardCalculation.util.forErrors;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;

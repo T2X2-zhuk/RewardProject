@@ -9,7 +9,7 @@ import rewardCalculation.JPA.repositories.JobTypeEntityRepository;
 import rewardCalculation.dto.JobTypeDTO;
 import rewardCalculation.requests.CommonRequestForJobTypeParameters;
 import rewardCalculation.responses.CommonResponseForJobTypeParameters;
-import rewardCalculation.util.forError.ValidationError;
+import rewardCalculation.util.forErrors.ValidationError;
 import rewardCalculation.validations.validators.jobType.GetJobTypeRequestValidator;
 
 import java.util.List;

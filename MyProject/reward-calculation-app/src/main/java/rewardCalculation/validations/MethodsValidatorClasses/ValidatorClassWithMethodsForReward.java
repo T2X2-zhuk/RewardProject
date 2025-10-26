@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.EnumObject.RewardStatus;
 import rewardCalculation.JPA.domain.Reward;
 import rewardCalculation.JPA.repositories.RewardRepository;
-import rewardCalculation.util.forError.ValidationError;
+import rewardCalculation.util.forErrors.ValidationError;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

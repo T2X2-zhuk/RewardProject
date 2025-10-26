@@ -1,10 +1,8 @@
 package rewardCalculation.validations.validators.reward;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import rewardCalculation.JPA.domain.Employee;
 import rewardCalculation.JPA.domain.Reward;
-import rewardCalculation.util.forError.ValidationError;
-import rewardCalculation.validations.MethodsValidatorClasses.ValidatorClassWithMethodsForEmployee;
+import rewardCalculation.util.forErrors.ValidationError;
 import rewardCalculation.validations.MethodsValidatorClasses.ValidatorClassWithMethodsForReward;
 import org.springframework.stereotype.Component;
 

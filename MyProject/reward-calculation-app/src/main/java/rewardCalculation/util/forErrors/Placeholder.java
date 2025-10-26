@@ -1,4 +1,4 @@
-package rewardCalculation.util.forError;
+package rewardCalculation.util.forErrors;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,6 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class Placeholder {
+
     private String placeholderName;
     private String placeholderValue;
+
 }

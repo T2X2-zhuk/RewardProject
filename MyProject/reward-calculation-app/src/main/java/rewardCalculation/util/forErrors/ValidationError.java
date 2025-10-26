@@ -1,4 +1,4 @@
-package rewardCalculation.util.forError;
+package rewardCalculation.util.forErrors;
 
 import lombok.*;
 

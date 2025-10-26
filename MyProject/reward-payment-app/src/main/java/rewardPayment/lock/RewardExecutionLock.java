@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
+import rewardPayment.util.forErrors.Exceptions.LockInterruptedException;
+import rewardPayment.util.forErrors.Exceptions.OperationInProgressException;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -29,19 +31,23 @@ public class RewardExecutionLock {
         try {
             acquired = lock.tryLock(0, 5, TimeUnit.MINUTES);
             if (!acquired) {
-                log.warn("❌Lock {} уже выполняется!", lockKey);
-                throw new IllegalStateException("Операция уже выполняется: " + lockKey);
+                log.warn("❌ Lock {} уже выполняется!", lockKey);
+                throw new OperationInProgressException(lockKey);
             }
 
             log.info("🔒 Lock {} установлен Redis", lockKey);
             return action.get();
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new RuntimeException("Ошибка при захвате Redis-блокировки: " + lockKey, e);
+            Thread.currentThread().interrupt(); // сохраняем флаг прерывания
+            throw new LockInterruptedException("⏳ Поток прерван при захвате lock: " + lockKey, e);
         } finally {
             if (acquired && lock.isHeldByCurrentThread()) {
-                lock.unlock();
-                log.info("🔓 Lock {} снят", lockKey);
+                try {
+                    lock.unlock();
+                    log.info("🔓 Lock {} снят", lockKey);
+                } catch (Exception e) {
+                    log.error("⚠️ Не удалось снять lock {}: {}", lockKey, e.getMessage());
+                }
             }
         }
     }

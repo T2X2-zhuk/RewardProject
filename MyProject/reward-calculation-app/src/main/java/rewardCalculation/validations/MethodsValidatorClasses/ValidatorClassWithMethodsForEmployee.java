@@ -3,7 +3,7 @@ package rewardCalculation.validations.MethodsValidatorClasses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import rewardCalculation.cache.get.GetEmployeeUsingCache;
-import rewardCalculation.util.forError.ValidationError;
+import rewardCalculation.util.forErrors.ValidationError;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
