@@ -67,17 +67,17 @@ services:
   # =============================
   # Контейнер Liquibase
   # =============================
-#  liquibase-container-app:
-#    networks: [danil-reward-project]
-#    container_name: liquibase-container-app
-#    image: liquibase-container-app:1.0.1
-#    depends_on:
-#      reward-calculation-db:
-#        condition: service_healthy
-#      reward-payment-db:
-#        condition: service_healthy
-#    restart: "no"
-#    pull_policy: never
+  liquibase-container-app:
+    networks: [danil-reward-project]
+    container_name: liquibase-container-app
+    image: liquibase-container-app:1.0.1
+    depends_on:
+      reward-calculation-db:
+        condition: service_healthy
+      reward-payment-db:
+        condition: service_healthy
+    restart: "no"
+    pull_policy: never
   # =============================
   # Приложение для расчётов
   # =============================
@@ -85,8 +85,8 @@ services:
     networks: [danil-reward-project]
     container_name: reward-calculation-app
     image: reward-calculation-app:1.0.1
-    ports:
-      - "8080:8080"
+#    ports:
+#      - "8080:8080"
     environment:
       SPRING_REDIS_HOST: redis-cache
       SPRING_REDIS_PORT: 6379
@@ -99,29 +99,29 @@ services:
       test: [ "CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1" ]
       interval: 15s
       timeout: 5s
-      retries: 5
-      start_period: 30s
+      retries: 10
+      start_period: 120s
 
-#  reward-calculation-app-server2:
-#    networks: [ danil-reward-project ]
-#    container_name: reward-calculation-app-server2
-#    image: reward-calculation-app:1.0.1
+  reward-calculation-app-server2:
+    networks: [ danil-reward-project ]
+    container_name: reward-calculation-app-server2
+    image: reward-calculation-app:1.0.1
 #    ports:
 #      - "8081:8080"
-#    environment:
-#      SPRING_REDIS_HOST: redis-cache
-#      SPRING_REDIS_PORT: 6379
-#    depends_on:
-#      reward-calculation-db:
-#        condition: service_healthy
-#      redis:
-#        condition: service_healthy
-#    healthcheck:
-#      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
-#      interval: 15s
-#      timeout: 5s
-#      retries: 5
-#      start_period: 30s
+    environment:
+      SPRING_REDIS_HOST: redis-cache
+      SPRING_REDIS_PORT: 6379
+    depends_on:
+      reward-calculation-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 120s
   # =============================
   # Приложение для выплат
   # =============================
@@ -129,8 +129,8 @@ services:
     networks: [danil-reward-project]
     container_name: reward-payment-app
     image: reward-payment-app:1.0.1
-    ports:
-      - "8095:8095"
+#    ports:
+#      - "8095:8095"
     environment:
       SPRING_REDIS_HOST: redis-cache
       SPRING_REDIS_PORT: 6379
@@ -145,51 +145,57 @@ services:
       test: [ "CMD-SHELL", "curl -f http://localhost:8095/actuator/health || exit 1" ]
       interval: 15s # How often to perform the health check ()
       timeout: 5s # Maximum time to wait for the health check to respond
-      retries: 5 # Number of retries before marking the container as unhealthy
-      start_period: 30s # Initial delay before starting health checks (useful for slow-starting services)
+      retries: 10 # Number of retries before marking the container as unhealthy
+      start_period: 120s # Initial delay before starting health checks (useful for slow-starting services)
 
-#  reward-payment-app-server2:
-#    networks: [ danil-reward-project ]
-#    container_name: reward-payment-app-server2
-#    image: reward-payment-app:1.0.1
+  reward-payment-app-server2:
+    networks: [ danil-reward-project ]
+    container_name: reward-payment-app-server2
+    image: reward-payment-app:1.0.1
 #    ports:
 #      - "8096:8095"
-#    environment:
-#      SPRING_REDIS_HOST: redis-cache
-#      SPRING_REDIS_PORT: 6379
-#    depends_on:
-#      reward-payment-db:
-#        condition: service_healthy
-#      reward-calculation-app-server2:
-#        condition: service_healthy
-#      redis:
-#        condition: service_healthy
-#    healthcheck:
-#      test: [ "CMD-SHELL", "curl -f http://localhost:8095/actuator/health || exit 1" ]
-#      interval: 15s
-#      timeout: 5s
-#      retries: 5
-#      start_period: 30s
+    environment:
+      SPRING_REDIS_HOST: redis-cache
+      SPRING_REDIS_PORT: 6379
+    depends_on:
+      reward-payment-db:
+        condition: service_healthy
+      reward-calculation-app-server2:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:8095/actuator/health || exit 1" ]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 120s
   # =============================
   # Load balancer -> NGINX
   # =============================
-#  nginx:
-#    image: nginx:latest
-#    container_name: nginx-lb
-#    networks: [ danil-reward-project ]
-#    ports:
-#      - "80:80"
-#    volumes:
-#      - ./load-balancer.conf:/etc/nginx/conf.d/load-balancer.conf:ro
-#    depends_on:
-#      reward-calculation-app:
-#        condition: service_healthy
-#      reward-calculation-app-server2:
-#        condition: service_healthy
-#      reward-payment-app:
-#        condition: service_healthy
-#      reward-payment-app-server2:
-#        condition: service_healthy
+  reward-calculation-lb:
+    networks: [ danil-reward-project ]
+    image: nginx:latest
+    container_name: reward-calculation-lb
+    ports:
+      - "8080:8080" # Балансировщик будет слушать порт 8080
+    volumes:
+      - ./reward-calculation-app-nginx.conf:/etc/nginx/nginx.conf:ro # Передаем конфиг NGINX внутрь контейнера
+    depends_on:
+      reward-calculation-app:
+        condition: service_healthy
+
+  reward-payment-lb:
+    networks: [ danil-reward-project ]
+    image: nginx:latest
+    container_name: reward-payment-lb
+    ports:
+      - "8095:8095" # Балансировщик будет слушать порт 8095
+    volumes:
+      - ./reward-payment-app-nginx.conf:/etc/nginx/nginx.conf:ro # Передаем конфиг NGINX внутрь контейнера
+    depends_on:
+      reward-payment-app:
+        condition: service_healthy
 
 volumes:
   redis-data:

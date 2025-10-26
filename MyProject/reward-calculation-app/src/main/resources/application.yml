@@ -3,7 +3,7 @@ spring:
     default: h2
 
   liquibase:
-    enabled: true
+    enabled: false
     change-log: classpath:db/changelog/changelog-master.xml
 
   cache:
@@ -51,9 +51,9 @@ management:
     db:
      enabled: true
 app:
-  transactionalOutBox: false # Если вы используете false то будет использоваться дефолтная , без outBox обычня реализация если true
+  transactionalOutBox: true # Если вы используете false то будет использоваться дефолтная , без outBox обычня реализация если true
   #то синхронизированная версия outBox однако в том случаи если useAsyncOutboxDispatcher false
-  useAsyncOutboxDispatcher: false #Не ставте в скобки false или true""!
+  useAsyncOutboxDispatcher: true #Не ставте в скобки false или true""!
   locks:
     rewardCalculation: reward-execution-lock
   reward_size : 15
