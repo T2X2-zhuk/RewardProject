@@ -47,7 +47,7 @@ public class CreateTariffService {
         return response;
     }
     private Tariff buildTariff(TariffDTO tariffDTO){
-        return Tariff.builder().amount(tariffDTO.getAmount().setScale(2, RoundingMode.HALF_UP))
+        return Tariff.builder().amount(tariffDTO.getAmount())
                 .jobType(jobTypeEntityRepository.findByJobType(tariffDTO.getJobType().toUpperCase()).get()).build();
     }
     private void setTariffDTO(CommonResponseForTariffParameters response,Tariff tariff){

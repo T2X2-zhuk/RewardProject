@@ -43,7 +43,7 @@ public class CalculatePayment {
         return paymentDTO;
     }
     private BigDecimal getAmount(BigDecimal bonusCoefficient , BigDecimal amount){
-        BigDecimal result = BigDecimal.ONE.add(bonusCoefficient).multiply(amount);
-        return result.setScale(2, RoundingMode.HALF_UP);
+
+        return BigDecimal.ONE.add(bonusCoefficient).multiply(amount);
     }
 }

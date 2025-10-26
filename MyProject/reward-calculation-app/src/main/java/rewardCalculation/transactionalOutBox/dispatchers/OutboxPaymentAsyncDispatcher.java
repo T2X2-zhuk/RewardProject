@@ -56,6 +56,7 @@ import java.util.concurrent.Executor;
     private final Executor outboxTaskExecutor;
     private final ApplicationContext applicationContext; // для вызова @Transactional метода через Spring
     private final TransactionTemplate transactionTemplate;
+
     @Value("${app.batch_size}")
     private int batch_size;
 

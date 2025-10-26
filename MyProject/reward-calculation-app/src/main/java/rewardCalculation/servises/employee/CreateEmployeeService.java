@@ -48,7 +48,7 @@ public class CreateEmployeeService {
         return Employee.builder()
                 .firstName(employeeDTO.getFirstName())
                 .lastName(employeeDTO.getLastName())
-                .bonusCoefficient(employeeDTO.getBonusCoefficient().setScale(2, RoundingMode.HALF_UP)).build();
+                .bonusCoefficient(employeeDTO.getBonusCoefficient()).build();
     }
     private void setEmployeeDTO(CommonResponseForEmployeeParameters response, Employee employee){
         response.setEmployeeDTO(EmployeeDTO.builder().id(employee.getId())

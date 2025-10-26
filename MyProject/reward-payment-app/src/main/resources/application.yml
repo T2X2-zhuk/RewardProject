@@ -3,7 +3,7 @@ spring:
     default: h2
 
   liquibase:
-    enabled: false
+    enabled: true
     change-log: classpath:db/changelog/changelog-master.xml
 
 
@@ -26,6 +26,8 @@ management:
       enabled: true
     db:
       enabled: true
-
+app:
+  locks:
+    rewardPayment: payment-execution-lock
 server:
   port: 8095

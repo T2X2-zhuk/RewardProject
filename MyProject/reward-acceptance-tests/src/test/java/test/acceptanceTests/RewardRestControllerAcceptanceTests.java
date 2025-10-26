@@ -4,7 +4,6 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import test.DTOS.JobTypeDTO;
-import test.classesWithRestTestsMethod.paymentApp.CleanPaymentDbForTest;
 import test.classesWithRestTestsMethod.rewardCalculationApp.*;
 import java.math.BigDecimal;
 import static org.hamcrest.Matchers.equalTo;

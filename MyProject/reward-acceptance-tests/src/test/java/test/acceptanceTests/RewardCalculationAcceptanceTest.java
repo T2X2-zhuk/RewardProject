@@ -47,7 +47,7 @@ public class RewardCalculationAcceptanceTest {
     }
 
     //Test validation working OutBoxPaymentDispatcher PASSED!
-   // @Test
+    //@Test
     public void acceptanceTestOutBoxDispatcher(){
         // 1. Делаем тип работы , тариф и сотрудника
         JobTypeClassWithRestMethodsForAcceptanceTests.createJobType(JobTypeDTO.builder().jobType("Speech").build());

@@ -59,9 +59,9 @@
     <logger name="org.hibernate" level="WARN"/>
 
     <!-- Твой код -->
-    <logger name="RewardPayment.rest" level="DEBUG"/>
-    <logger name="RewardPayment.services" level="DEBUG"/>
-    <logger name="RewardPayment.JPA.repository" level="INFO"/>
-    <logger name="RewardPayment.validations" level="DEBUG"/>
+    <logger name="rewardPayment.rest" level="DEBUG"/>
+    <logger name="rewardPayment.services" level="DEBUG"/>
+    <logger name="rewardPayment.JPA.repository" level="INFO"/>
+    <logger name="rewardPayment.validations" level="DEBUG"/>
 
 </configuration>
