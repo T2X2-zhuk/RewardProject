@@ -19,7 +19,7 @@ public class RewardCalculationAcceptanceTest {
         CleanRewardDbForTest.rewardCalculationCleanDb(true,true,true,true,true);
         CleanPaymentDbForTest.rewardPaymentCleanDb(true);
     }
-    //Test PASSED!
+    //Test PASSED Work when OutBox is false!
     //@Test
     public void successfulTest(){
         JobTypeClassWithRestMethodsForAcceptanceTests.createJobType(JobTypeDTO.builder().jobType("Speech").build());
@@ -40,13 +40,13 @@ public class RewardCalculationAcceptanceTest {
     }
 
     //Test PASSED!
-    //@Test
+   // @Test
     public void acceptanceTest2(){
         RewardClassWithMethodsForAcceptanceTests.calculate().then().statusCode(200)
                 .body("errors[0].errorCode", equalTo("ERROR_CODE_FOR_REWARD_1"));
     }
 
-    //Test validation working OutBoxPaymentDispatcher PASSED!
+    //Test validation working OutBoxPaymentDispatcher when OutBox is true PASSED!
     //@Test
     public void acceptanceTestOutBoxDispatcher(){
         // 1. Делаем тип работы , тариф и сотрудника

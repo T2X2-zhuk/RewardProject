@@ -51,9 +51,9 @@ management:
     db:
      enabled: true
 app:
-  transactionalOutBox: true # Если вы используете false то будет использоваться дефолтная , без outBox обычня реализация если true
+  transactionalOutBox: false # Если вы используете false то будет использоваться дефолтная , без outBox обычня реализация если true
   #то синхронизированная версия outBox однако в том случаи если useAsyncOutboxDispatcher false
-  useAsyncOutboxDispatcher: true #Не ставте в скобки false или true""!
+  useAsyncOutboxDispatcher: false #Не ставте в скобки false или true""!
   locks:
     rewardCalculation: reward-execution-lock
   reward_size : 15

@@ -39,5 +39,9 @@ public class EmployeeRestControllerAcceptanceTests {
         EmployeeClassWithRestMethodsForAcceptanceTests.getEmployee(employeeId).then().statusCode(200).body("employeeDTO.firstName",equalTo("Harbon"))
                 .body("employeeDTO.lastName",equalTo("Lasamanba"))
                 .body("employeeDTO.bonusCoefficient",equalTo(3.5F));
+
+        EmployeeClassWithRestMethodsForAcceptanceTests.createEmployee
+                ("Harbon","Lasamanba",new BigDecimal("3.5")).then().statusCode(200)
+                .body("errors[0].errorCode",equalTo("ERROR_CODE_FOR_EMPLOYEE_4"));
     }
 }

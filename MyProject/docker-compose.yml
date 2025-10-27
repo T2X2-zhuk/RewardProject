@@ -180,6 +180,8 @@ services:
     depends_on:
       reward-calculation-app:
         condition: service_healthy
+      reward-calculation-app-server2:
+        condition: service_healthy
 
   reward-payment-lb:
     networks: [ danil-reward-project ]
@@ -192,6 +194,7 @@ services:
     depends_on:
       reward-payment-app:
         condition: service_healthy
-
+      reward-payment-app-server2:
+        condition: service_healthy
 volumes:
   redis-data:
