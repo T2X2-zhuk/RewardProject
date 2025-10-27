@@ -1,0 +1,80 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  # =========================================================
+  # Логи всех Docker контейнеров (stdout/stderr)
+  # =========================================================
+  - job_name: docker
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: docker-logs
+          host: localhost
+          __path__: /var/lib/docker/containers/*/*.log
+    pipeline_stages:
+      - docker: {}
+
+  # =========================================================
+  # Логи приложения reward-calculation из файлов
+  # =========================================================
+  - job_name: reward-calculation-logs
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: reward-calculation
+          instance: server1
+          __path__: /logs/reward-calculation-app/server1/*.log
+      - targets:
+          - localhost
+        labels:
+          job: reward-calculation
+          instance: server2
+          __path__: /logs/reward-calculation-app/server2/*.log
+    pipeline_stages:
+      - match:
+          selector: '{job="reward-calculation"}'
+          stages:
+            - drop:
+                expression: '^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3} DEBUG .*'
+
+  # =========================================================
+  # Логи приложения reward-payment из файлов
+  # =========================================================
+  - job_name: reward-payment-logs
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: reward-payment
+          instance: server1
+          __path__: /logs/reward-payment-app/server1/*.log
+      - targets:
+          - localhost
+        labels:
+          job: reward-payment
+          instance: server2
+          __path__: /logs/reward-payment-app/server2/*.log
+
+    pipeline_stages:
+      - match:
+          selector: '{job="reward-payment"}'
+          stages:
+            - drop:
+                expression: '^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3} DEBUG .*'
+# Перейди в Grafana → Data sources → Loki и укажи URL: http://loki:3100
+# http://localhost:3000-->
+# В Grafana зайди в Connections → Data sources → Add data source-->
+# Выбери Loki-->
+# Укажи URL: http://loki:3100-->
+# Нажми Save & Test — должно показать Data source is working.-->
+# Перейди в Explore → выбери источник Loki → и смотри все логи-->

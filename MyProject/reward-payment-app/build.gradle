@@ -67,14 +67,21 @@ clean.doFirst {
 	println "${projectDir}/build/"
 }
 
-task createLogsDir {
-	doLast {
-		def logsDir = file("logs")
-		if (!logsDir.exists()) {
-			logsDir.mkdirs()
-			println "Created logs directory: ${logsDir}"
-		}
-	}
+task createLogsDirs {
+    doLast {
+        def baseDirs = [
+                "logs/server1",
+                "logs/server2"
+        ]
+
+        baseDirs.each { dirPath ->
+            def dir = file(dirPath)
+            if (!dir.exists()) {
+                dir.mkdirs()
+                println "Created directory: ${dir}"
+            }
+        }
+    }
 }
 
 jar {
@@ -85,11 +92,11 @@ bootJar {
 	enabled = true
 	archiveBaseName = 'reward-payment-app'
 	archiveVersion = '1.0.1'
-	dependsOn createLogsDir
+	dependsOn createLogsDirs
 }
 
 build {
-	dependsOn createLogsDir
+	dependsOn createLogsDirs
 }
 
 dockerPrepare {

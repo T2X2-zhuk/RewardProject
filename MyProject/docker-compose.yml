@@ -76,8 +76,6 @@ services:
         condition: service_healthy
       reward-payment-db:
         condition: service_healthy
-    restart: "no"
-    pull_policy: never
   # =============================
   # Приложение для расчётов
   # =============================
@@ -101,6 +99,8 @@ services:
       timeout: 5s
       retries: 10
       start_period: 120s
+    volumes:
+      - ./reward-calculation-app/logs/server1:/MyProject/reward-calculation-app/logs
 
   reward-calculation-app-server2:
     networks: [ danil-reward-project ]
@@ -120,6 +120,8 @@ services:
       timeout: 5s
       retries: 10
       start_period: 120s
+    volumes:
+      - ./reward-calculation-app/logs/server2:/MyProject/reward-calculation-app/logs
   # =============================
   # Приложение для выплат
   # =============================
@@ -145,6 +147,8 @@ services:
       timeout: 5s # Maximum time to wait for the health check to respond
       retries: 10 # Number of retries before marking the container as unhealthy
       start_period: 120s # Initial delay before starting health checks (useful for slow-starting services)
+    volumes:
+      - ./reward-payment-app/logs/server1:/MyProject/reward-payment-app/logs
 
   reward-payment-app-server2:
     networks: [ danil-reward-project ]
@@ -166,6 +170,9 @@ services:
       timeout: 5s
       retries: 10
       start_period: 120s
+    volumes:
+      - ./reward-payment-app/logs/server2:/MyProject/reward-payment-app/logs
+
   # =============================
   # Load balancer -> NGINX
   # =============================
@@ -196,5 +203,42 @@ services:
         condition: service_healthy
       reward-payment-app-server2:
         condition: service_healthy
+
+  loki:
+    networks: [ danil-reward-project ]
+    image: grafana/loki:2.9.3
+    container_name: loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/config.yaml
+    volumes:
+      - ./loki-config.yaml:/etc/loki/config.yaml
+
+  promtail:
+    networks: [ danil-reward-project ]
+    image: grafana/promtail:2.9.0
+    container_name: promtail
+    volumes:
+      - ./promtail-config.yaml:/etc/promtail/config.yml:ro
+      - ./reward-calculation-app/logs:/logs/reward-calculation-app:ro
+      - ./reward-payment-app/logs:/logs/reward-payment-app:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki
+
+  grafana:
+    networks: [ danil-reward-project ]
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - loki
+
 volumes:
   redis-data:
