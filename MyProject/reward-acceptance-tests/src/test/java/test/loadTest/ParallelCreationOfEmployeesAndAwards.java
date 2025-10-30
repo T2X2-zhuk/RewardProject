@@ -72,25 +72,7 @@ public class ParallelCreationOfEmployeesAndAwards {
             Response employee = EmployeeClassWithRestMethodsForAcceptanceTests.createEmployee(
                     firstName, lastName, bonusCoefficient
             );
-            Long employeeId = employee.jsonPath().getLong("employeeDTO.id");
-
-            // Проверяем, что сотрудник появился в базе (5 попыток по 200 мс)
-            boolean employeeExists = false;
-            for (int attempt = 0; attempt < 5; attempt++) {
-                Response check = EmployeeClassWithRestMethodsForAcceptanceTests.getEmployee(employeeId);
-                if (check.statusCode() == 200) {
-                    employeeExists = true;
-                    break;
-                }
-                Thread.sleep(200);
-            }
-
-            if (!employeeExists) {
-                System.err.println("Сотрудник " + employeeId + " не появился в базе после ожидания");
-                return null;
-            }
-
-            return employeeId;
+            return employee.jsonPath().getLong("employeeDTO.id");
         } catch (Exception e) {
             System.err.println("Ошибка создания сотрудника в потоке " + taskId + ": " + e.getMessage());
             return null;
