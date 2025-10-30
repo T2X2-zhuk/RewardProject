@@ -35,11 +35,4 @@ public class RewardClassWithMethodsForAcceptanceTests {
                 .contentType("application/json")
                 .post("/reward/calculation/rewardCalculationExecute");
     }
-
-    public static Response outBoxDispatcher(){
-        return  given()
-                .baseUri(BASE_URL_REWARD_CALCULATION_APP)
-                .contentType("application/json")
-                .post("/api/test/dispatch");
-    }
 }

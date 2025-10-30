@@ -18,10 +18,11 @@ public interface RewardRepository extends JpaRepository<Reward, Long> {
     @Query("SELECT rd FROM Reward rd where rd.employeeId.id = :employeeId AND rd.jobType.jobType = :jobType AND rd.status = :status")
     Optional<Reward> findByEmployeeIdAndJobTypeAndStatus(@Param("employeeId") Long employeeId, @Param("jobType") String jobType,@Param("status") RewardStatus status);
 
-    List<Reward> findByStatus(RewardStatus status , Pageable pageable);
+    @Query("SELECT r FROM Reward r JOIN FETCH r.employeeId WHERE r.status = :status")
+    List<Reward> findByStatusWithEmployee(@Param("status") RewardStatus status, Pageable pageable);
 
     @Transactional
     @Modifying
-    @Query("UPDATE Reward rв SET rв.status = :status WHERE rв.id IN :ids")
+    @Query("UPDATE Reward rd SET rd.status = :status WHERE rd.id IN :ids")
     void rewardSetStatusForList(@Param("status") RewardStatus status, @Param("ids") List<Long> ids);
 }

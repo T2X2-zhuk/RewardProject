@@ -27,7 +27,7 @@ public class RewardPaymentService {
         List<Payment> payments = new ArrayList<>();
         for (PaymentDTO paymentDTO : request.getPaymentDTOS()){
             log.debug("Save payment with - {} parameters", paymentDTO);
-            payments.add(Payment.builder().employeeId(paymentDTO.getEmployeeId())
+            payments.add(Payment.builder().employeeId(paymentDTO.getEmployeeId()).rewardId(paymentDTO.getRewardId())
                     .amount(paymentDTO.getAmount()).build());
         }
         paymentRepository.saveAll(payments);

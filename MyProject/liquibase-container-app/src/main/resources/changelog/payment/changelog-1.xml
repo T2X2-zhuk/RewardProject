@@ -13,10 +13,12 @@
             <column name="employee_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
+            <column name="reward_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
             <column name="amount" type="DECIMAL(10,2)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
-
 </databaseChangeLog>

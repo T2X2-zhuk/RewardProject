@@ -27,6 +27,9 @@ public class Payment {
     @Column(name = "employee_id")
     private Long employeeId;
 
+    @Column(name = "reward_id")
+    private Long rewardId;
+
     @Column(name = "amount", nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
 

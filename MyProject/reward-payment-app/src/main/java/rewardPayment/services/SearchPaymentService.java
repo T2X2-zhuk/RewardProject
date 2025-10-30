@@ -45,7 +45,7 @@ public class SearchPaymentService {
         List<PaymentDTO> paymentDTOS = new ArrayList<>();
         for(Payment payment : payments){
             paymentDTOS.add(PaymentDTO.builder().id(payment.getId())
-                    .employeeId(payment.getEmployeeId())
+                    .employeeId(payment.getEmployeeId()).rewardId(payment.getRewardId())
                     .amount(payment.getAmount()).build());
         }
         response.setPaymentDTOS(paymentDTOS);

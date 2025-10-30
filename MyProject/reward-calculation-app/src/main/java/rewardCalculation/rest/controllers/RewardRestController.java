@@ -59,7 +59,7 @@ public class RewardRestController {
     public RewardPaymentResponse rewardCalculationExecute() {
         return rewardExecutionLock.runWithLock("rewardCalculation",() -> {
             log.info("▶️ RewardCalculationController: запуск расчёта наград");
-            List<Reward> rewardList = rewardRepository.findByStatus(RewardStatus.UNPAID, Pageable.ofSize(rewardSize));
+            List<Reward> rewardList = rewardRepository.findByStatusWithEmployee(RewardStatus.UNPAID, Pageable.ofSize(rewardSize));
             log.debug("Get all Rewards which is not paid - {}" , rewardList);
             RewardPaymentResponse response = rewardCalculationService.execute(rewardList);
             log.info("✅ RewardCalculationController: завершено");

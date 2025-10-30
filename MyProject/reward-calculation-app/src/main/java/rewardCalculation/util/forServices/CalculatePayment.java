@@ -37,7 +37,7 @@ public class CalculatePayment {
         Tariff tariff = tariffByJobType.get(reward.getJobType().getJobType());
         log.debug("Tariff - {}", tariff);
         PaymentDTO paymentDTO =  PaymentDTO.builder()
-                .employeeId(reward.getEmployeeId().getId())
+                .employeeId(reward.getEmployeeId().getId()).rewardId(reward.getId())
                 .amount(getAmount(reward.getEmployeeId().getBonusCoefficient(),tariff.getAmount())).build();
         log.info("Отправлен платеж: amount = {}, recipient = {}",paymentDTO.getAmount(), reward.getEmployeeId().getFirstName() + " " + reward.getEmployeeId().getLastName());
         return paymentDTO;

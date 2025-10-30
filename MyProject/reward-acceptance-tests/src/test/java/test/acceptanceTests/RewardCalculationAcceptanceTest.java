@@ -1,8 +1,6 @@
 package test.acceptanceTests;
 
 import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import test.DTOS.JobTypeDTO;
 import test.classesWithRestTestsMethod.paymentApp.CleanPaymentDbForTest;
 import test.classesWithRestTestsMethod.paymentApp.PaymentClassWithMethodsForAcceptanceTests;
@@ -61,7 +59,7 @@ public class RewardCalculationAcceptanceTest {
         // 3. Делаем расчет
         Response paymentResponse = RewardClassWithMethodsForAcceptanceTests.calculate();
         paymentResponse.then().statusCode(200).body("successfulSaving",equalTo(true));
-        RewardClassWithMethodsForAcceptanceTests.outBoxDispatcher().then().statusCode(200);
+        ClassWithMethodsForOutBoxDispatchers.outBoxDispatcher().then().statusCode(200);
 
         RewardClassWithMethodsForAcceptanceTests.getReward(rewardId)
                 .then()
