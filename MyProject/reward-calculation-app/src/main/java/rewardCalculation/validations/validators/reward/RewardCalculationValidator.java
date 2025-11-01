@@ -20,7 +20,7 @@ public class RewardCalculationValidator {
         log.info("{} start!", this.getClass().getSimpleName());
         List<ValidationError> errors = new ArrayList<>();
         methodsForReward.isRewardsForThisEmployees(rewardList).ifPresent(errors::add);
-        log.info("{} execute!", this.getClass().getSimpleName());
+        log.info("{} execute! Errors {}", this.getClass().getSimpleName(),errors);
         return errors;
     }
 }

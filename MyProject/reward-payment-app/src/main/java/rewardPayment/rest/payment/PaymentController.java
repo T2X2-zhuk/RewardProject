@@ -1,7 +1,9 @@
 package rewardPayment.rest.payment;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
+import org.slf4j.MDC;
 import rewardPayment.configCache.GetAllPaymentsUsingCache;
 import rewardPayment.dto.PaymentDTO;
-import rewardPayment.lock.RewardExecutionLock;
 import rewardPayment.requests.CommonRequestForPaymentParameters;
 import rewardPayment.responses.CommonResponseForPaymentParameters;
 import rewardPayment.services.RewardPaymentService;
@@ -23,12 +25,14 @@ public class PaymentController {
     @GetMapping(path = "/searchPayment/{employeeId}",
             produces = "application/json")
     public CommonResponseForPaymentParameters searchPaymentByEmployeeId(@PathVariable Long employeeId) {
-        log.info("{} is start!",this.getClass().getSimpleName());
+        log.info("[{}] {} is start!", MDC.get("traceId"), this.getClass().getSimpleName());
+
         CommonRequestForPaymentParameters request = CommonRequestForPaymentParameters.builder()
                 .paymentDTO(PaymentDTO.builder()
                         .employeeId(employeeId).build()).build();
-        CommonResponseForPaymentParameters response =  service.execute(request);
-        log.info("{} is execute!",this.getClass().getSimpleName());
+        CommonResponseForPaymentParameters response = service.execute(request);
+
+        log.info("[{}] {} is execute!", MDC.get("traceId"), this.getClass().getSimpleName());
         return response;
     }
 
@@ -36,10 +40,12 @@ public class PaymentController {
             consumes = "application/json",
             produces = "application/json")
     public CommonResponseForPaymentParameters payReward(@RequestBody CommonRequestForPaymentParameters request) {
-        log.info("PaymentController is start!");
+        log.info("[{}] {} is start!", MDC.get("traceId"), this.getClass().getSimpleName());
+
         CommonResponseForPaymentParameters response = rewardPaymentService.pay(request);
         getAllPaymentsUsingCache.clearPAYMENTSCache();
-        log.info("PaymentController is execute!");
+
+        log.info("[{}] {} is execute!", MDC.get("traceId"), this.getClass().getSimpleName());
         return response;
     }
 }

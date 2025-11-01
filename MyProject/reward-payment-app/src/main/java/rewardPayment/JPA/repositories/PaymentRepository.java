@@ -7,5 +7,4 @@ import java.math.BigDecimal;
 import java.util.List;
 public interface PaymentRepository  extends JpaRepository<Payment, Long> {
 
-    List<Payment> findByEmployeeIdAndAmount(Long employeeId, BigDecimal amount);
 }

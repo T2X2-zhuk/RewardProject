@@ -22,7 +22,7 @@ public class GetPaymentValidator {
         log.info("{} start!",this.getClass().getSimpleName());
         List<ValidationError> errors = new ArrayList<>();
         validatorClassWithMethodsForPayment.isSuchPaymentInDatabase(request.getPaymentDTO().getEmployeeId()).ifPresent(errors::add);
-        log.info("{} execute!",this.getClass().getSimpleName());
+        log.info("{} execute! Errors : {}",this.getClass().getSimpleName(),errors);
         return errors;
     }
 }

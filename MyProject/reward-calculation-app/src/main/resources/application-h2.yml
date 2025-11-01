@@ -23,7 +23,7 @@ spring:
 reward:
   payment:
     api:
-      url: http://reward-payment-app
+      url: http://reward-payment-lb
       port: 8095
 
 # H2:

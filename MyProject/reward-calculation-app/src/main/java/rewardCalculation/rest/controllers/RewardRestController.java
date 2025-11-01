@@ -1,7 +1,10 @@
 package rewardCalculation.rest.controllers;
 
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import rewardCalculation.EnumObject.RewardStatus;
 import rewardCalculation.JPA.domain.Reward;
@@ -38,31 +41,46 @@ public class RewardRestController {
             consumes = "application/json",
             produces = "application/json")
     public CommonResponseForRewardParameters createReward(@RequestBody CommonRequestForRewardParameters request) {
-        log.info("{} is start!",this.getClass().getSimpleName());
+
+        log.info("[{}] {} is start!", MDC.get("traceId"), this.getClass().getSimpleName());
+
         CommonResponseForRewardParameters response = createRewardService.execute(request);
-        log.info("{} is execute!",this.getClass().getSimpleName());
+
+        log.info("[{}] {} is execute!", MDC.get("traceId"), this.getClass().getSimpleName());
+
         return response;
     }
 
     @GetMapping(path = "/getReward/{id}",
             produces = "application/json")
     public CommonResponseForRewardParameters getReward(@PathVariable Long id) {
-        log.info("{} is start!",this.getClass().getSimpleName());
+
+        log.info("[{}] {} is start!", MDC.get("traceId"), this.getClass().getSimpleName());
+
         CommonRequestForRewardParameters request = CommonRequestForRewardParameters.builder().rewardDTO(RewardDTO.builder()
                 .id(id).build()).build();
+
         CommonResponseForRewardParameters response = getRewardService.execute(request);
-        log.info("{} is execute!",this.getClass().getSimpleName());
+
+        log.info("[{}] {} is execute!", MDC.get("traceId"), this.getClass().getSimpleName());
+
         return response;
     }
 
     @PostMapping(path = "/rewardCalculationExecute", produces = "application/json")
     public RewardPaymentResponse rewardCalculationExecute() {
         return rewardExecutionLock.runWithLock("rewardCalculation",() -> {
+
             log.info("▶️ RewardCalculationController: запуск расчёта наград");
+
             List<Reward> rewardList = rewardRepository.findByStatusWithEmployee(RewardStatus.UNPAID, Pageable.ofSize(rewardSize));
+
             log.debug("Get all Rewards which is not paid - {}" , rewardList);
+
             RewardPaymentResponse response = rewardCalculationService.execute(rewardList);
+
             log.info("✅ RewardCalculationController: завершено");
+
             return response;
         });
     }

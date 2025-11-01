@@ -21,7 +21,7 @@ public class GetJobTypeRequestValidator {
         log.info("{} start!", this.getClass().getSimpleName());
         List<ValidationError> errors = new ArrayList<>();
         validator.jobTypeIdMustNotBeEmpty(request.getJobTypeDTO().getId()).ifPresent(errors ::add);
-        log.info("{} execute!" , this.getClass().getSimpleName());
+        log.info("{} execute! Errors : {}" , this.getClass().getSimpleName(),errors);
         return errors;
     }
 }

@@ -20,7 +20,7 @@ public class GetTariffValidator {
         log.info("{} start!", this.getClass().getSimpleName());
         List<ValidationError> errors = new ArrayList<>();
         validatorClassWithMethodsForTariff.isSuchTariffIsNull(id).ifPresent(errors::add);
-        log.info("{} execute!" , this.getClass().getSimpleName());
+        log.info("{} execute! Errors : {}" , this.getClass().getSimpleName(),errors);
         return errors;
     }
 }

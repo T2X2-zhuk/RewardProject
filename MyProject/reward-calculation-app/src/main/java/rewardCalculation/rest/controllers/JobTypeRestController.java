@@ -1,7 +1,10 @@
 package rewardCalculation.rest.controllers;
 
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.web.bind.annotation.*;
 import rewardCalculation.dto.JobTypeDTO;
 import rewardCalculation.requests.CommonRequestForJobTypeParameters;
@@ -17,23 +20,31 @@ public class JobTypeRestController {
 
     private final CreateJobTypeService createJobTypeService;
     private final GetJobTypeService getJobTypeService;
+
     @PostMapping(path = "/createJobType",
             consumes = "application/json",
             produces = "application/json")
     public CommonResponseForJobTypeParameters createJobType(@RequestBody CommonRequestForJobTypeParameters request) {
-        log.info("{} is start!",this.getClass().getSimpleName());
+        log.info("[{}] {} is start!", MDC.get("traceId"), this.getClass().getSimpleName());
+
         CommonResponseForJobTypeParameters response = createJobTypeService.execute(request);
-        log.info("{} is execute!",this.getClass().getSimpleName());
+
+        log.info("[{}] {} is execute!", MDC.get("traceId"), this.getClass().getSimpleName());
+
         return response;
     }
 
     @GetMapping(path = "/getJobType/{id}",
             produces = "application/json")
     public CommonResponseForJobTypeParameters getJobType(@PathVariable Long id) {
-        log.info("{} is start!",this.getClass().getSimpleName());
+        log.info("[{}] {} is start!", MDC.get("traceId"), this.getClass().getSimpleName());
+
         CommonRequestForJobTypeParameters request = CommonRequestForJobTypeParameters.builder().jobTypeDTO(JobTypeDTO.builder().id(id).build()).build();
+
         CommonResponseForJobTypeParameters response = getJobTypeService.execute(request);
-        log.info("{} is execute!",this.getClass().getSimpleName());
+
+        log.info("[{}] {} is execute!", MDC.get("traceId"), this.getClass().getSimpleName());
+
         return response;
     }
 }

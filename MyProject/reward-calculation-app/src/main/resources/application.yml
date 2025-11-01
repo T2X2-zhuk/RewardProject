@@ -2,6 +2,9 @@ spring:
   profiles:
     default: h2
 
+  application:
+    name: reward-calculation-app
+
   liquibase:
     enabled: false
     change-log: classpath:db/changelog/changelog-master.xml
@@ -50,14 +53,22 @@ management:
       enabled: true
     db:
      enabled: true
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+  otlp:
+    tracing:
+      endpoint: http://jaeger:4318/v1/traces
+
 app:
-  transactionalOutBox: false # Если вы используете false то будет использоваться дефолтная , без outBox обычня реализация если true
+  transactionalOutBox: true # Если вы используете false то будет использоваться дефолтная , без outBox обычня реализация если true
   #то синхронизированная версия outBox однако в том случаи если useAsyncOutboxDispatcher false
-  useAsyncOutboxDispatcher: false #Не ставте в скобки false или true""!
+  useAsyncOutboxDispatcher: true #Не ставте в скобки false или true""!
   locks:
     rewardCalculation: reward-execution-lock
-  reward_size : 15
-  batch_size : 20 # лучше не больше 30 чтобы не перегружать
+  reward_size: 15
+  batch_size: 20
 # rewardSize  это количество сколько за раз можно обработать неоплаченных наград
 # batch_size количество ивентов сколько за раз transactionalOutBox может обработать
 

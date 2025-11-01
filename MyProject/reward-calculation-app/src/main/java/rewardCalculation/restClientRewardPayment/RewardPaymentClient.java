@@ -1,6 +1,10 @@
 package rewardCalculation.restClientRewardPayment;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import rewardCalculation.dto.PaymentDTO;
@@ -10,7 +14,6 @@ import java.util.List;
 @Component
 @Slf4j
 public class RewardPaymentClient {
-
 
     private final RestTemplate restTemplate;
     private final String baseUrl;
@@ -35,7 +38,7 @@ public class RewardPaymentClient {
         return response;
     }
 
-    public RewardPaymentResponse payRewardFallback(Throwable throwable) {
+    public RewardPaymentResponse payRewardFallback(List<PaymentDTO> payments,Throwable throwable) {
         log.error("Fallback triggered for payReward due to: {}", throwable.toString());
         RewardPaymentResponse fallbackResponse = new RewardPaymentResponse();
         fallbackResponse.setSuccessfulSaving(false);

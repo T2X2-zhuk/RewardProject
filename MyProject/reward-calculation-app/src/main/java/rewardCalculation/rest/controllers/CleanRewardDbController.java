@@ -1,6 +1,9 @@
 package rewardCalculation.rest.controllers;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,12 +26,15 @@ public class CleanRewardDbController {
             consumes = "application/json",
             produces = "application/json")
     public CleanRewardDbResponse cleanDb(@RequestBody CleanRewardDbRequest request) {
-        return rewardExecutionLock.runWithLock("rewardCalculation",()->{
-            log.info("{} is start!",this.getClass().getSimpleName());
+        return rewardExecutionLock.runWithLock("rewardCalculation", () -> {
+
+            log.info("[{}] {} is start!", MDC.get("traceId"), this.getClass().getSimpleName());
+
             CleanRewardDbResponse response = cleanDBService.execute(request);
-            log.info("{} is execute!",this.getClass().getSimpleName());
+
+            log.info("[{}] {} is execute!", MDC.get("traceId"), this.getClass().getSimpleName());
+
             return response;
         });
     }
-
 }

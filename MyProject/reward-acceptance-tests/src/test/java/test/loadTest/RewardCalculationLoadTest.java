@@ -10,6 +10,11 @@ import test.classesWithRestTestsMethod.rewardCalculationApp.*;
 import java.math.BigDecimal;
 import java.util.List;
 import static org.hamcrest.Matchers.hasItem;
+// Latest test result
+//Создание сотрудников завершено. Успешно: 50 из 50
+//Создание наград завершено.
+//Список сотрудников : [115, 118, 112, 116, 114, 113, 111, 109, 117, 110, 121, 123, 127, 125, 120, 119, 128, 122, 124, 126, 129, 132, 136, 130, 138, 131, 137, 135, 133, 134, 139, 144, 142, 148, 143, 140, 146, 147, 149, 141, 145, 150, 151, 153, 154, 152, 156, 155, 157, 158]
+//Общее количество платежей в базе: 50
 
 public class RewardCalculationLoadTest {
 
@@ -24,29 +29,44 @@ public class RewardCalculationLoadTest {
         List<Long> employeeIds = ParallelCreationOfEmployeesAndAwards.execute();
         // 4️⃣ Выполнение расчёта наград (только один поток реально выполняет)
         PerformingTheCalculationOfRewards.execute();
+        System.out.println("Список сотрудников : " + employeeIds);
         // Проверка выплат для всех сотрудников
+        //Подождать немного перед проверкой выплат (например, 5 секунды)
+        Thread.sleep(5000);
+
         checkingPaymentsForAllEmployees(employeeIds);
         printTotalPayments(employeeIds);
         System.out.println("Тест завершён. Все проверки выполнены.");
     }
 
     private static void checkingPaymentsForAllEmployees(List<Long> employeeIds) {
+        final long timeoutMillis = 10000; // максимальное время ожидания 10 секунд
+        final long pollIntervalMillis = 500; // интервал между проверками
+
         for (Long employeeId : employeeIds) {
-            int attempts = 0;
+            long startTime = System.currentTimeMillis();
             boolean success = false;
-            while (attempts < 10 && !success) { // до 10 попыток
+
+            while (System.currentTimeMillis() - startTime < timeoutMillis) {
                 try {
                     PaymentClassWithMethodsForAcceptanceTests.getPayments(employeeId)
                             .then()
                             .statusCode(200)
                             .body("paymentDTOS.employeeId", hasItem(employeeId.intValue()));
                     success = true;
+                    break; // если проверки прошли — выходим из цикла
                 } catch (AssertionError e) {
-                    attempts++;
+                    try {
+                        Thread.sleep(pollIntervalMillis); // ждём перед следующей проверкой
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                        break;
+                    }
                 }
             }
+
             if (!success) {
-                System.err.println("Ошибка проверки выплат для сотрудника " + employeeId);
+                System.err.println("Ошибка проверки выплат для сотрудника " + employeeId + " — данные так и не пришли за " + timeoutMillis + " мс");
             }
         }
     }

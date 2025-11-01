@@ -31,7 +31,7 @@ public class CreateRewardRequestValidator {
         if (errors.isEmpty()){
             validationV2(request,errors);
         }
-        log.info("{} execute!" , this.getClass().getSimpleName());
+        log.info("{} execute! Errors : {}" , this.getClass().getSimpleName(),errors);
         return errors;
     }
 

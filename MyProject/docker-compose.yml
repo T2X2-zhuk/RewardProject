@@ -1,4 +1,4 @@
-version: '3.9'
+
 
 networks:
   danil-reward-project:
@@ -79,15 +79,16 @@ services:
   # =============================
   # Приложение для расчётов
   # =============================
-  reward-calculation-app:
+  reward-calculation-app-server-1:
     networks: [danil-reward-project]
-    container_name: reward-calculation-app
+    container_name: reward-calculation-app-server-1
     image: reward-calculation-app:1.0.1
 #    ports:
 #      - "8080:8080"
     environment:
       SPRING_REDIS_HOST: redis-cache
       SPRING_REDIS_PORT: 6379
+      OTEL_RESOURCE_ATTRIBUTES: service.name=reward-calculation-app,service.instance.id=server1
     depends_on:
       reward-calculation-db:
         condition: service_healthy
@@ -102,13 +103,14 @@ services:
     volumes:
       - ./reward-calculation-app/logs/server1:/MyProject/reward-calculation-app/logs
 
-  reward-calculation-app-server2:
+  reward-calculation-app-server-2:
     networks: [ danil-reward-project ]
     container_name: reward-calculation-app-server2
     image: reward-calculation-app:1.0.1
     environment:
       SPRING_REDIS_HOST: redis-cache
       SPRING_REDIS_PORT: 6379
+      OTEL_RESOURCE_ATTRIBUTES: service.name=reward-calculation-app,service.instance.id=server2
     depends_on:
       reward-calculation-db:
         condition: service_healthy
@@ -125,19 +127,20 @@ services:
   # =============================
   # Приложение для выплат
   # =============================
-  reward-payment-app:
+  reward-payment-app-server-1:
     networks: [danil-reward-project]
-    container_name: reward-payment-app
+    container_name: reward-payment-app-server-1
     image: reward-payment-app:1.0.1
 #    ports:
 #      - "8095:8095"
     environment:
       SPRING_REDIS_HOST: redis-cache
       SPRING_REDIS_PORT: 6379
+      OTEL_RESOURCE_ATTRIBUTES: service.name=reward-payment-app,service.instance.id=server1
     depends_on:
       reward-payment-db:
         condition: service_healthy
-      reward-calculation-app:
+      reward-calculation-app-server-1:
         condition: service_healthy
       redis:
         condition: service_healthy
@@ -150,17 +153,18 @@ services:
     volumes:
       - ./reward-payment-app/logs/server1:/MyProject/reward-payment-app/logs
 
-  reward-payment-app-server2:
+  reward-payment-app-server-2:
     networks: [ danil-reward-project ]
-    container_name: reward-payment-app-server2
+    container_name: reward-payment-app-server-2
     image: reward-payment-app:1.0.1
     environment:
       SPRING_REDIS_HOST: redis-cache
       SPRING_REDIS_PORT: 6379
+      OTEL_RESOURCE_ATTRIBUTES: service.name=reward-payment-app,service.instance.id=server2
     depends_on:
       reward-payment-db:
         condition: service_healthy
-      reward-calculation-app-server2:
+      reward-calculation-app-server-2:
         condition: service_healthy
       redis:
         condition: service_healthy
@@ -181,13 +185,13 @@ services:
     image: nginx:latest
     container_name: reward-calculation-lb
     ports:
-      - "8080:8080" # Балансировщик будет слушать порт 8080
+      - "8080:8080"
     volumes:
-      - ./reward-calculation-app-nginx.conf:/etc/nginx/nginx.conf:ro # Передаем конфиг NGINX внутрь контейнера
+      - ./reward-calculation-app-nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
-      reward-calculation-app:
+      reward-calculation-app-server-1:
         condition: service_healthy
-      reward-calculation-app-server2:
+      reward-calculation-app-server-2:
         condition: service_healthy
 
   reward-payment-lb:
@@ -195,13 +199,13 @@ services:
     image: nginx:latest
     container_name: reward-payment-lb
     ports:
-      - "8095:8095" # Балансировщик будет слушать порт 8095
+      - "8095:8095"
     volumes:
       - ./reward-payment-app-nginx.conf:/etc/nginx/nginx.conf:ro # Передаем конфиг NGINX внутрь контейнера
     depends_on:
-      reward-payment-app:
+      reward-payment-app-server-1:
         condition: service_healthy
-      reward-payment-app-server2:
+      reward-payment-app-server-2:
         condition: service_healthy
 
   loki:
@@ -240,5 +244,37 @@ services:
     depends_on:
       - loki
 
+  prometheus:
+    networks: [ danil-reward-project ]
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    depends_on:
+      reward-calculation-app-server-1:
+        condition: service_healthy
+      reward-calculation-app-server-2:
+        condition: service_healthy
+      reward-payment-app-server-1:
+        condition: service_healthy
+      reward-payment-app-server-2:
+        condition: service_healthy
+        #  http://prometheus:9090 это в graffa указать ссылку добавить data source и посмотреть
+        # http://loki:3100--> loki логирование глянуть
+  jaeger:
+    networks: [ danil-reward-project ]
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    ports:
+      - "16686:16686"  # Jaeger UI
+      - "4318:4318"  # OTLP HTTP receiver
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+      - LOG_LEVEL=debug
+#   http://localhost:16686 -> посмотреть веб-интерфейс Jaeger
 volumes:
   redis-data:

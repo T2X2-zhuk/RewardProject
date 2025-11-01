@@ -21,7 +21,7 @@ public class ParallelCreationOfEmployeesAndAwards {
         ExecutorService dataExecutor = Executors.newFixedThreadPool(THREAD_COUNT);
         List<Future<Long>> employeeFutures = new ArrayList<>();
 
-        // 1️⃣ Параллельное создание сотрудников
+        //Параллельное создание сотрудников
         for (int i = 0; i < TASK_COUNT; i++) {
             final int taskId = i;
             employeeFutures.add(dataExecutor.submit(() -> createEmployee(taskId)));
@@ -42,7 +42,7 @@ public class ParallelCreationOfEmployeesAndAwards {
 
         System.out.println("Создание сотрудников завершено. Успешно: " + employeeIds.size() + " из " + TASK_COUNT);
 
-        // 2️⃣ Параллельное создание наград для сотрудников
+        //Параллельное создание наград для сотрудников
         ExecutorService rewardExecutor = Executors.newFixedThreadPool(THREAD_COUNT);
         List<Future<Void>> rewardFutures = new ArrayList<>();
         for (Long employeeId : employeeIds) {

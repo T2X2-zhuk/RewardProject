@@ -24,7 +24,7 @@ public class CreateJobTypeRequestValidator {
         if (errors.isEmpty()){
             validator.suchJobTypesIsDatabase(request.getJobTypeDTO().getJobType()).ifPresent(errors ::add);
         }
-        log.info("{} execute!" , this.getClass().getSimpleName());
+        log.info("{} execute! Errors : {}" , this.getClass().getSimpleName(),errors);
         return errors;
     }
 }

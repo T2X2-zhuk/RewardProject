@@ -1,5 +1,8 @@
 package rewardPayment.rest.cleandb;
 
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
+import org.slf4j.MDC;
 import rewardPayment.lock.RewardExecutionLock;
 import rewardPayment.services.CleanDbService;
 import lombok.RequiredArgsConstructor;
@@ -22,11 +25,12 @@ public class CleanPaymentDbController {
             consumes = "application/json",
             produces = "application/json")
     public CleanPaymentDbResponse cleanDb(@RequestBody CleanPaymentDbRequest request) {
-        return rewardExecutionLock.runWithLock("rewardPayment",()-> {
-            log.info("{} is start!",this.getClass().getSimpleName());
-            CleanPaymentDbResponse response = cleanDbService.execute(request);
-            log.info("{} is execute!",this.getClass().getSimpleName());
-            return response;
+
+        return rewardExecutionLock.runWithLock("rewardPayment", () -> {
+            log.info("[{}] {} is start!", MDC.get("traceId"), this.getClass().getSimpleName());
+            CleanPaymentDbResponse innerResponse = cleanDbService.execute(request);
+            log.info("[{}] {} is execute!", MDC.get("traceId"), this.getClass().getSimpleName());
+            return innerResponse;
         });
     }
 }

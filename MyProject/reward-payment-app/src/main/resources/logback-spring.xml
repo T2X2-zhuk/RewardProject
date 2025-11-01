@@ -1,15 +1,13 @@
 <configuration>
 
-    <!-- Путь к папке логов -->
     <property name="LOGS"  value="/MyProject/reward-payment-app/logs"/>
 
     <!-- ================== Консоль ================== -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{traceId}:%X{spanId}] %-5level %logger{36}.%M - %msg%n</pattern>
         </encoder>
     </appender>
-
     <!-- ================== Файловый аппендер для INFO/DEBUG/WARN  ================== -->
     <appender name="FILE_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOGS}/app-info.log</file>
@@ -18,7 +16,7 @@
             <maxHistory>7</maxHistory>
         </rollingPolicy>
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{traceId}:%X{spanId}] %-5level %logger{36}.%M - %msg%n</pattern>
         </encoder>
         <!-- Всё, кроме ERROR -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -36,7 +34,7 @@
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{traceId}:%X{spanId}] %-5level %logger{36}.%M - %msg%n</pattern>
         </encoder>
         <!-- Только ERROR -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -46,22 +44,41 @@
         </filter>
     </appender>
 
+    <!-- ================== Асинхронный аппендер для INFO/DEBUG/WARN ================== -->
+    <appender name="ASYNC_FILE_INFO" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- Классический файловый аппендер -->
+        <appender-ref ref="FILE_INFO"/>
+        <queueSize>5000</queueSize>  <!-- Размер очереди -->
+        <discardingThreshold>0</discardingThreshold> <!-- Не терять логи -->
+        <neverBlock>true</neverBlock> <!-- Никогда не блокировать основной поток -->
+    </appender>
+
+    <!-- ================== Асинхронный аппендер для ERROR ================== -->
+    <appender name="ASYNC_FILE_ERROR" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE_ERROR"/>
+        <queueSize>5000</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <neverBlock>true</neverBlock>
+    </appender>
+
     <!-- ================== Root Logger ================== -->
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FILE_INFO"/>
-        <appender-ref ref="FILE_ERROR"/>
+        <appender-ref ref="ASYNC_FILE_INFO"/>
+        <appender-ref ref="ASYNC_FILE_ERROR"/>
     </root>
 
     <!-- ================== Пакеты и классы ================== -->
-    <!-- Минимизируем логи Spring и Hibernate -->
     <logger name="org.springframework" level="WARN"/>
     <logger name="org.hibernate" level="WARN"/>
+    <logger name="io.github.resilience4j.circuitbreaker" level="DEBUG"/>
+    <logger name="org.springframework.web.client.RestTemplate" level="DEBUG"/>
 
-    <!-- Твой код -->
     <logger name="rewardPayment.rest" level="DEBUG"/>
     <logger name="rewardPayment.services" level="DEBUG"/>
     <logger name="rewardPayment.JPA.repository" level="INFO"/>
     <logger name="rewardPayment.validations" level="DEBUG"/>
+    <logger name="rewardPayment.util" level="DEBUG"/>
+    <logger name="rewardPayment.lock" level="DEBUG"/>
 
 </configuration>

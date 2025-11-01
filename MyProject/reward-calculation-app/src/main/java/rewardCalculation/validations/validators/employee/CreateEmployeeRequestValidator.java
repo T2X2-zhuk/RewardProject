@@ -25,7 +25,7 @@ public class CreateEmployeeRequestValidator {
         if (errors.isEmpty()){
             validator.existInDatabase(request.getEmployeeDTO().getFirstName(),request.getEmployeeDTO().getLastName(),request.getEmployeeDTO().getBonusCoefficient()).ifPresent(errors ::add);
         }
-        log.info("{} execute!" , this.getClass().getSimpleName());
+        log.info("{} execute! Errors : {}" , this.getClass().getSimpleName(),errors);
         return errors;
     }
 }

@@ -19,7 +19,7 @@ public class GetEmployeeValidator {
         log.info("{} start!", this.getClass().getSimpleName());
         List<ValidationError> errors = new ArrayList<>();
         forEmployee.employeeIsNotDatabase(id).ifPresent(errors::add);
-        log.info("{} execute!" , this.getClass().getSimpleName());
+        log.info("{} execute! Errors : {}" , this.getClass().getSimpleName(),errors);
         return errors;
     }
 }
