@@ -5,14 +5,13 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
-import rewardCalculation.EnumObject.OutboxPaymentStatus;
-import rewardCalculation.EnumObject.RewardStatus;
-import rewardCalculation.transactionalOutBox.domain.OutboxPaymentEvent;
-import rewardCalculation.JPA.domain.Reward;
-import rewardCalculation.transactionalOutBox.JPA.OutboxPaymentEventRepository;
-import rewardCalculation.JPA.repositories.RewardRepository;
+import rewardCalculation.transactionalOutBox.jpa.enums.OutboxPaymentStatus;
+import rewardCalculation.jpa.enums.RewardStatus;
+import rewardCalculation.transactionalOutBox.jpa.domain.OutboxPaymentEvent;
+import rewardCalculation.jpa.domain.Reward;
+import rewardCalculation.transactionalOutBox.jpa.repositories.OutboxPaymentEventRepository;
+import rewardCalculation.jpa.repositories.RewardRepository;
 import rewardCalculation.dto.PaymentDTO;
 
 import java.time.LocalDateTime;
@@ -33,16 +32,13 @@ public class RewardOutboxService {
     public void schedulePayments(List<PaymentDTO> payments, List<Reward> rewards) {
         try {
             List<Long> rewardIds = rewards.stream().map(Reward::getId).collect(Collectors.toList());
-            String payload = objectMapper.writeValueAsString(payments);
 
-            OutboxPaymentEvent event = OutboxPaymentEvent.builder()
+            outboxRepo.save(OutboxPaymentEvent.builder()
                     .rewardIds(rewardIds)
-                    .payload(payload)
+                    .payload(objectMapper.writeValueAsString(payments))
                     .status(OutboxPaymentStatus.PENDING)
                     .createdAt(LocalDateTime.now())
-                    .build();
-
-            outboxRepo.save(event);
+                    .build());
 
             // Rewards переводим в PROCESSING
             rewardRepository.rewardSetStatusForList(RewardStatus.PROCESSING, rewardIds);
@@ -50,8 +46,10 @@ public class RewardOutboxService {
             log.info("✅ Created OutboxPaymentEvent for rewards {}", rewardIds);
 
         } catch (Exception e) {
+
             log.error("Failed to schedule payments: {}", e.getMessage());
             throw new RuntimeException("Failed to schedule payments", e);
+
         }
     }
 }

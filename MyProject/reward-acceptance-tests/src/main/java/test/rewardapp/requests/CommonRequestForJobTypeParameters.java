@@ -4,11 +4,10 @@ import lombok.*;
 import test.DTOS.JobTypeDTO;
 
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class CommonRequestForJobTypeParameters {
 
     private JobTypeDTO jobTypeDTO;

@@ -17,8 +17,11 @@ public class GetEmployeeValidator {
 
     public List<ValidationError> validate(Long id){
         log.info("{} start!", this.getClass().getSimpleName());
+
         List<ValidationError> errors = new ArrayList<>();
+
         forEmployee.employeeIsNotDatabase(id).ifPresent(errors::add);
+
         log.info("{} execute! Errors : {}" , this.getClass().getSimpleName(),errors);
         return errors;
     }

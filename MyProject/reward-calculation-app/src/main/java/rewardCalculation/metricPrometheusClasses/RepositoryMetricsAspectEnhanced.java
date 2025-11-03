@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 //Автоматически перехватывает все методы JPA репозиториев.
 //Классифицирует операцию как READ/WRITE/OTHER по названию метода.
 //Собирает метрики с понятными тегами:
-//traceId – для связи с логами.
 //repository – имя репозитория.
 //method – метод репозитория.
 //operation – READ или WRITE.
@@ -29,7 +28,6 @@ public class RepositoryMetricsAspectEnhanced {
     public Object recordRepositoryMetrics(ProceedingJoinPoint joinPoint) throws Throwable {
 
         Timer.Sample sample = Timer.start(meterRegistry);
-        String traceId = MDC.get("traceId");
         String status = "SUCCESS";
 
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
@@ -48,7 +46,6 @@ public class RepositoryMetricsAspectEnhanced {
             // Счётчик
             meterRegistry.counter(
                     "reward.calculation.repository.calls",
-                    "traceId", traceId == null ? "none" : traceId,
                     "repository", repositoryName,
                     "method", methodName,
                     "operation", operationType,
@@ -58,7 +55,6 @@ public class RepositoryMetricsAspectEnhanced {
             // Таймер
             sample.stop(Timer.builder("reward.calculation.repository.duration")
                     .tags(
-                            "traceId", traceId == null ? "none" : traceId,
                             "repository", repositoryName,
                             "method", methodName,
                             "operation", operationType,

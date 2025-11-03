@@ -1,14 +1,12 @@
 package rewardCalculation.dto;
 
 import lombok.*;
-import rewardCalculation.EnumObject.RewardStatus;
+import rewardCalculation.jpa.enums.RewardStatus;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@Builder
 public class RewardDTO {
 
     private Long id;

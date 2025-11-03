@@ -2,11 +2,9 @@ package rewardCalculation.util.forErrors;
 
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class ValidationError {
 
     private String errorCode;

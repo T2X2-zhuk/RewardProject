@@ -1,7 +1,5 @@
 package rewardCalculation.rest.controllers;
 
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Timer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -9,8 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import rewardCalculation.dto.JobTypeDTO;
 import rewardCalculation.requests.CommonRequestForJobTypeParameters;
 import rewardCalculation.responses.CommonResponseForJobTypeParameters;
-import rewardCalculation.servises.jobType.CreateJobTypeService;
-import rewardCalculation.servises.jobType.GetJobTypeService;
+import rewardCalculation.services.jobType.CreateJobTypeService;
+import rewardCalculation.services.jobType.GetJobTypeService;
 
 @RestController
 @RequestMapping("/api/test/job/type")
@@ -37,11 +35,10 @@ public class JobTypeRestController {
     @GetMapping(path = "/getJobType/{id}",
             produces = "application/json")
     public CommonResponseForJobTypeParameters getJobType(@PathVariable Long id) {
+
         log.info("[{}] {} is start!", MDC.get("traceId"), this.getClass().getSimpleName());
 
-        CommonRequestForJobTypeParameters request = CommonRequestForJobTypeParameters.builder().jobTypeDTO(JobTypeDTO.builder().id(id).build()).build();
-
-        CommonResponseForJobTypeParameters response = getJobTypeService.execute(request);
+        CommonResponseForJobTypeParameters response = getJobTypeService.execute(CommonRequestForJobTypeParameters.builder().jobTypeDTO(JobTypeDTO.builder().id(id).build()).build());
 
         log.info("[{}] {} is execute!", MDC.get("traceId"), this.getClass().getSimpleName());
 

@@ -1,10 +1,6 @@
 package rewardCalculation.restClientRewardPayment;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Timer;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import rewardCalculation.dto.PaymentDTO;
@@ -19,13 +15,17 @@ public class RewardPaymentClient {
     private final String baseUrl;
 
     public RewardPaymentClient(String baseUrl, RestTemplate restTemplate) {
+
         this.baseUrl = baseUrl;
         this.restTemplate = restTemplate;
+
     }
 
     @CircuitBreaker(name = "rewardPaymentCb", fallbackMethod = "payRewardFallback")
     public RewardPaymentResponse payReward(List<PaymentDTO> payments) {
+
         log.info("Calling reward-payment-app at {}", baseUrl);
+
         RewardPaymentRequest request = new RewardPaymentRequest(payments);
 
         RewardPaymentResponse response = restTemplate.postForObject(
@@ -35,14 +35,20 @@ public class RewardPaymentClient {
         );
 
         log.info("Reward-payment-app call succeeded!");
+
         return response;
     }
 
     public RewardPaymentResponse payRewardFallback(List<PaymentDTO> payments,Throwable throwable) {
+
         log.error("Fallback triggered for payReward due to: {}", throwable.toString());
+
         RewardPaymentResponse fallbackResponse = new RewardPaymentResponse();
+
         fallbackResponse.setSuccessfulSaving(false);
+
         log.error("Reward Payment service temporarily unavailable. Please try later.");
+
         return fallbackResponse;
     }
 }

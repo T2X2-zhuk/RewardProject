@@ -2,11 +2,10 @@ package rewardCalculation.requests;
 import rewardCalculation.dto.TariffDTO;
 import lombok.*;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class CommonRequestForTariffParameters {
 
     private TariffDTO tariffDTO;

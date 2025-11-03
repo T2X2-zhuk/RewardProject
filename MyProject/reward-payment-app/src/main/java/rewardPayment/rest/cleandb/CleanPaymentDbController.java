@@ -28,9 +28,12 @@ public class CleanPaymentDbController {
 
         return rewardExecutionLock.runWithLock("rewardPayment", () -> {
             log.info("[{}] {} is start!", MDC.get("traceId"), this.getClass().getSimpleName());
+
             CleanPaymentDbResponse innerResponse = cleanDbService.execute(request);
+
             log.info("[{}] {} is execute!", MDC.get("traceId"), this.getClass().getSimpleName());
             return innerResponse;
         });
+
     }
 }

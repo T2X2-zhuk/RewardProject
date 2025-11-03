@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 //Автоматически перехватывает все методы JPA репозиториев.
 //Классифицирует операцию как READ/WRITE/OTHER по названию метода.
 //Собирает метрики с понятными тегами:
-//traceId – для связи с логами.
 //repository – имя репозитория.
 //method – метод репозитория.
 //operation – READ или WRITE.
@@ -29,7 +28,6 @@ public class RepositoryMetricsAspectEnhanced {
     public Object recordRepositoryMetrics(ProceedingJoinPoint joinPoint) throws Throwable {
 
         Timer.Sample sample = Timer.start(meterRegistry);
-        String traceId = MDC.get("traceId");
         String status = "SUCCESS";
 
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
@@ -45,26 +43,28 @@ public class RepositoryMetricsAspectEnhanced {
             status = "FAIL";
             throw ex;
         } finally {
-            // Счётчик
-            meterRegistry.counter(
-                    "reward.payment.repository.calls",
-                    "traceId", traceId == null ? "none" : traceId,
-                    "repository", repositoryName,
-                    "method", methodName,
-                    "operation", operationType,
-                    "status", status
-            ).increment();
-
-            // Таймер
-            sample.stop(Timer.builder("reward.payment.repository.duration")
-                    .tags(
-                            "traceId", traceId == null ? "none" : traceId,
-                            "repository", repositoryName,
-                            "method", methodName,
-                            "operation", operationType,
-                            "status", status)
-                    .register(meterRegistry));
+            meterRegistration(repositoryName, methodName, operationType, status, sample);
         }
+    }
+
+    private void meterRegistration(String repositoryName, String methodName, String operationType, String status, Timer.Sample sample) {
+        // Счётчик
+        meterRegistry.counter(
+                "reward.payment.repository.calls",
+                "repository", repositoryName,
+                "method", methodName,
+                "operation", operationType,
+                "status", status
+        ).increment();
+
+        // Таймер
+        sample.stop(Timer.builder("reward.payment.repository.duration")
+                .tags(
+                        "repository", repositoryName,
+                        "method", methodName,
+                        "operation", operationType,
+                        "status", status)
+                .register(meterRegistry));
     }
 
     private String classifyOperation(String methodName) {

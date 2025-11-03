@@ -3,7 +3,7 @@ package rewardCalculation.validations.MethodsValidatorClasses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import rewardCalculation.JPA.repositories.JobTypeEntityRepository;
+import rewardCalculation.jpa.repositories.JobTypeEntityRepository;
 import rewardCalculation.util.forErrors.ValidationError;
 import java.util.Optional;
 
@@ -16,8 +16,11 @@ public class ValidatorClassWithMethodsForJobTypesEntity {
     private final ValidationErrorFactory errorFactory;
 
     public Optional<ValidationError> jobTypeIdMustNotBeEmpty(Long jobTypeId){
+
         if (repository.findById(jobTypeId).isEmpty()){
+
             Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_JOB_TYPE_2"));
+
             log.debug("Error : {}",error);
             return error;
         }
@@ -25,8 +28,11 @@ public class ValidatorClassWithMethodsForJobTypesEntity {
     }
 
     public Optional<ValidationError> suchJobTypesIsDatabase(String jobType){
+
         if (repository.findByJobType(jobType.toUpperCase()).isPresent()){
+
             Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_JOB_TYPE_4"));
+
             log.debug("Error : {}",error);
             return error;
         }
@@ -34,16 +40,22 @@ public class ValidatorClassWithMethodsForJobTypesEntity {
     }
 
     public Optional<ValidationError> isSuchJobTypeInDatabase(String jobType){
+
         if (repository.findByJobType(jobType).isEmpty()){
+
             Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_JOB_TYPE_3"));
+
             log.debug("Error : {}",error);
             return error;
         }
         return Optional.empty();
     }
     public Optional<ValidationError> jobTypeMustNotBeEmpty(String jobType){
+
         if (isNullOrBlankOrEmpty(jobType)){
+
             Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_JOB_TYPE_1"));
+
             log.debug("Error : {}",error);
             return error;
         }

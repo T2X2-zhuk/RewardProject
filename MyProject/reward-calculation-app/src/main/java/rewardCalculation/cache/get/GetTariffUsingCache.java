@@ -4,11 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
-import rewardCalculation.JPA.domain.Tariff;
-import rewardCalculation.JPA.repositories.TariffRepository;
+import rewardCalculation.jpa.domain.Tariff;
+import rewardCalculation.jpa.repositories.TariffRepository;
 import rewardCalculation.cache.config.RedisCacheConfig;
 
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -20,10 +19,10 @@ public class GetTariffUsingCache {
 
     @Cacheable(cacheNames = RedisCacheConfig.TARIFF_CACHE)
     public Map<String, Tariff> getTariffsByJobType() {
-        List<Tariff> tariffs = tariffRepository.findAll();
-        return tariffs.stream()
+
+        return tariffRepository.findAll().stream()
                 .collect(Collectors.toMap(
-                        t -> t.getJobType().getJobType(), // ключ = jobType строкой в верхнем регистре
+                        t -> t.getJobType().getJobType(),
                         t -> t
                 ));
     }

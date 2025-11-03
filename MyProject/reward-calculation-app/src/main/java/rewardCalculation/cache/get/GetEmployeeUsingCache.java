@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
-import rewardCalculation.JPA.domain.Employee;
-import rewardCalculation.JPA.repositories.EmployeeRepository;
+import rewardCalculation.jpa.domain.Employee;
+import rewardCalculation.jpa.repositories.EmployeeRepository;
 import rewardCalculation.cache.config.RedisCacheConfig;
 
 import java.util.List;
@@ -18,8 +18,10 @@ public class GetEmployeeUsingCache {
 
     @Cacheable(cacheNames = RedisCacheConfig.EMPLOYEES)
     public List<Employee> getAllEmployeesWithCache() {
+
         return employeeRepository.findAll();
     }
+
     @CacheEvict(value = RedisCacheConfig.EMPLOYEES,allEntries = true)
     public void clearEMPLOYEESCache(){
 

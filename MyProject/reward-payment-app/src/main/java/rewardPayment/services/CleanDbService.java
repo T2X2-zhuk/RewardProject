@@ -21,13 +21,19 @@ public class CleanDbService {
     @Transactional
     public CleanPaymentDbResponse execute(CleanPaymentDbRequest request) {
         log.info("{} is start!",this.getClass().getSimpleName());
+
         CleanPaymentDbResponse response = new CleanPaymentDbResponse();
+
         if (request.isCleanPayment()) {
+
             paymentRepository.deleteAll();
+
             response.setPaymentDeleted(true);
+
             getAllPaymentsUsingCache.clearPAYMENTSCache();
             log.debug("Payment database is clear!");
         }
+
         log.info("{} is execute!",this.getClass().getSimpleName());
         return response;
     }

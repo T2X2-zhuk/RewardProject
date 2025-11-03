@@ -3,12 +3,10 @@ package test.DTOS;
 import lombok.*;
 import test.DTOS.EnumObject.RewardStatus;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@Builder
 public class RewardDTO {
 
     private Long id;

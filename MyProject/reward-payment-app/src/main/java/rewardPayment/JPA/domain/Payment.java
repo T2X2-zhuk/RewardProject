@@ -12,11 +12,10 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "payments")
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Payment {
 
     @Id

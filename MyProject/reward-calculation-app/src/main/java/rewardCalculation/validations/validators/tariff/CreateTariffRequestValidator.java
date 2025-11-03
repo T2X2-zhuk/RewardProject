@@ -22,20 +22,27 @@ public class CreateTariffRequestValidator {
 
     public List<ValidationError> validate(CommonRequestForTariffParameters request){
         log.info("{} start!", this.getClass().getSimpleName());
+
         List<ValidationError> errors = new ArrayList<>();
+
         validatorClassWithMethodsForJobTypesEntity.jobTypeMustNotBeEmpty(request.getTariffDTO().getJobType()).ifPresent(errors::add);
         validatorTariff.amountMustNotBeEmpty(request.getTariffDTO().getAmount()).ifPresent(errors::add);
+
         if (errors.isEmpty()){
             validationV2(request,errors);
         }
+
         log.info("{} execute! Errors : {}" , this.getClass().getSimpleName(),errors);
         return errors;
     }
 
     private void validationV2(CommonRequestForTariffParameters request, List<ValidationError> errors){
+
         validatorClassWithMethodsForJobTypesEntity.isSuchJobTypeInDatabase(request.getTariffDTO().getJobType()).ifPresent(errors::add);
+
         boolean hasJOB_TYPE_3Error = errors.stream()
                 .anyMatch(err -> "ERROR_CODE_FOR_JOB_TYPE_3".equals(err.getErrorCode()));
+
         if (!hasJOB_TYPE_3Error) {
             validatorTariff.suchTariffAlwaysIsInDatabase(request.getTariffDTO().getJobType()).ifPresent(errors::add);
         }

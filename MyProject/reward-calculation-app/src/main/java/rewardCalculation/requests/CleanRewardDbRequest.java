@@ -2,11 +2,10 @@ package rewardCalculation.requests;
 
 import lombok.*;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class CleanRewardDbRequest {
 
     private boolean cleanJobType;

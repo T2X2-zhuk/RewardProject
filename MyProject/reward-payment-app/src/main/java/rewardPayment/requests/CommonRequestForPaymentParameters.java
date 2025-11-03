@@ -5,11 +5,10 @@ import lombok.*;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class CommonRequestForPaymentParameters {
 
     private PaymentDTO paymentDTO;

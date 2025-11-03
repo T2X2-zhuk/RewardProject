@@ -20,7 +20,9 @@ public class RewardExecutionLock {
     private final AppLockProperties appLockProperties;
 
     public <T> T runWithLock(String lockName, Supplier<T> action) {
+
         String lockKey = appLockProperties.getLocks().get(lockName);
+
         if (lockKey == null) {
             throw new IllegalArgumentException("Unknown lock name: " + lockName);
         }
@@ -30,6 +32,7 @@ public class RewardExecutionLock {
 
         try {
             acquired = lock.tryLock(0, 5, TimeUnit.MINUTES);
+
             if (!acquired) {
                 log.warn("❌ Lock {} уже выполняется!", lockKey);
                 throw new OperationInProgressException(lockKey);
@@ -37,9 +40,12 @@ public class RewardExecutionLock {
 
             log.info("🔒 Lock {} установлен Redis", lockKey);
             return action.get();
+
         } catch (InterruptedException e) {
+
             Thread.currentThread().interrupt(); // сохраняем флаг прерывания
             throw new LockInterruptedException("⏳ Поток прерван при захвате lock: " + lockKey, e);
+
         } finally {
             if (acquired && lock.isHeldByCurrentThread()) {
                 try {

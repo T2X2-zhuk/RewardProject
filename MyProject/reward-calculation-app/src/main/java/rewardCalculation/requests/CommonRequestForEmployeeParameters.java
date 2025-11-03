@@ -3,11 +3,10 @@ package rewardCalculation.requests;
 import rewardCalculation.dto.EmployeeDTO;
 import lombok.*;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class CommonRequestForEmployeeParameters {
 
     private EmployeeDTO employeeDTO;

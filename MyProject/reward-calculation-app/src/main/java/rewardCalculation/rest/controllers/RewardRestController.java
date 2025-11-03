@@ -1,14 +1,12 @@
 package rewardCalculation.rest.controllers;
 
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Timer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
-import rewardCalculation.EnumObject.RewardStatus;
-import rewardCalculation.JPA.domain.Reward;
-import rewardCalculation.JPA.repositories.RewardRepository;
+import rewardCalculation.jpa.enums.RewardStatus;
+import rewardCalculation.jpa.domain.Reward;
+import rewardCalculation.jpa.repositories.RewardRepository;
 import rewardCalculation.dto.RewardDTO;
 import rewardCalculation.requests.CommonRequestForRewardParameters;
 import rewardCalculation.responses.CommonResponseForRewardParameters;
@@ -16,8 +14,8 @@ import org.springframework.data.domain.Pageable;
 import rewardCalculation.restClientRewardPayment.RewardPaymentResponse;
 import rewardCalculation.rest.commonServiceInterfices.RewardCalculationService;
 import rewardCalculation.lock.RewardExecutionLock;
-import rewardCalculation.servises.reward.CreateRewardService;
-import rewardCalculation.servises.reward.GetRewardService;
+import rewardCalculation.services.reward.CreateRewardService;
+import rewardCalculation.services.reward.GetRewardService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -57,10 +55,8 @@ public class RewardRestController {
 
         log.info("[{}] {} is start!", MDC.get("traceId"), this.getClass().getSimpleName());
 
-        CommonRequestForRewardParameters request = CommonRequestForRewardParameters.builder().rewardDTO(RewardDTO.builder()
-                .id(id).build()).build();
-
-        CommonResponseForRewardParameters response = getRewardService.execute(request);
+        CommonResponseForRewardParameters response = getRewardService.execute(CommonRequestForRewardParameters.builder().rewardDTO(RewardDTO.builder()
+                .id(id).build()).build());
 
         log.info("[{}] {} is execute!", MDC.get("traceId"), this.getClass().getSimpleName());
 

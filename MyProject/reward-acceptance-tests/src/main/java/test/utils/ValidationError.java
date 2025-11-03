@@ -4,8 +4,7 @@ import lombok.*;
 
 import java.lang.annotation.Target;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ValidationError {

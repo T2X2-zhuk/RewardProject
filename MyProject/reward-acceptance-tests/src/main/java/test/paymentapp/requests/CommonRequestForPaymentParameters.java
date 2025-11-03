@@ -4,11 +4,10 @@ import test.DTOS.PaymentDTO;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class CommonRequestForPaymentParameters {
 
     private PaymentDTO paymentDTO;

@@ -1,7 +1,7 @@
 package rewardCalculation.validations.validators.reward;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import rewardCalculation.JPA.domain.Reward;
+import rewardCalculation.jpa.domain.Reward;
 import rewardCalculation.util.forErrors.ValidationError;
 import rewardCalculation.validations.MethodsValidatorClasses.ValidatorClassWithMethodsForReward;
 import org.springframework.stereotype.Component;
@@ -18,8 +18,11 @@ public class RewardCalculationValidator {
 
     public List<ValidationError> validate(List<Reward> rewardList){
         log.info("{} start!", this.getClass().getSimpleName());
+
         List<ValidationError> errors = new ArrayList<>();
+
         methodsForReward.isRewardsForThisEmployees(rewardList).ifPresent(errors::add);
+
         log.info("{} execute! Errors {}", this.getClass().getSimpleName(),errors);
         return errors;
     }

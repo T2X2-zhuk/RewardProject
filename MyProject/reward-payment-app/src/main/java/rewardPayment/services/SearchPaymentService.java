@@ -27,15 +27,21 @@ public class SearchPaymentService {
     @Transactional
     public CommonResponseForPaymentParameters execute(CommonRequestForPaymentParameters request) {
         log.info("{} is start!",this.getClass().getSimpleName());
+
         CommonResponseForPaymentParameters response = new CommonResponseForPaymentParameters();
+
         List<ValidationError> errors = validator.validate(request);
         log.debug("Validation is execute!");
+
         if (errors.isEmpty()){
+
             buildResponseWithoutErrors(response,request);
         }else {
+
             log.warn("Validation failed errors : {}" , errors);
             response.setErrors(errors);
         }
+
         log.info("{} is execute!",this.getClass().getSimpleName());
         return response;
     }

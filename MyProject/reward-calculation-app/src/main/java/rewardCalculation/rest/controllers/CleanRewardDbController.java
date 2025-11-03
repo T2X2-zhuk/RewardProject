@@ -1,6 +1,4 @@
 package rewardCalculation.rest.controllers;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Timer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -10,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import rewardCalculation.requests.CleanRewardDbRequest;
 import rewardCalculation.responses.CleanRewardDbResponse;
-import rewardCalculation.servises.CleanDBService;
+import rewardCalculation.services.CleanDBService;
 import rewardCalculation.lock.RewardExecutionLock;
 
 @RestController

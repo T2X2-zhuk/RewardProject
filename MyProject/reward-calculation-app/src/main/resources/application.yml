@@ -1,19 +1,15 @@
 spring:
   profiles:
     default: h2
-
   application:
     name: reward-calculation-app
-
   liquibase:
     enabled: false
     change-log: classpath:db/changelog/changelog-master.xml
-
   cache:
     type: redis
     redis:
       key-prefix: "calc::"
-
   data:
     redis:
       host: redis-cache
@@ -36,12 +32,18 @@ resilience4j:
           - org.springframework.web.client.HttpServerErrorException
         ignore-exceptions:
           - org.springframework.web.client.HttpClientErrorException
+
 management:
   endpoints:
     web:
       exposure:
         include: health,info,prometheus
   metrics:
+    enable:
+      all: true
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true  # Enable histograms for timing
     export:
       prometheus:
         enabled: true
@@ -61,10 +63,13 @@ management:
     tracing:
       endpoint: http://jaeger:4318/v1/traces
 
+server:
+  port: 8080
+
 app:
   transactionalOutBox: true # Если вы используете false то будет использоваться дефолтная , без outBox обычня реализация если true
   #то синхронизированная версия outBox однако в том случаи если useAsyncOutboxDispatcher false
-  useAsyncOutboxDispatcher: true #Не ставте в скобки false или true""!
+  useAsyncOutboxDispatcher: false #Не ставте в скобки false или true""!
   locks:
     rewardCalculation: reward-execution-lock
   reward_size: 15
@@ -72,5 +77,3 @@ app:
 # rewardSize  это количество сколько за раз можно обработать неоплаченных наград
 # batch_size количество ивентов сколько за раз transactionalOutBox может обработать
 
-server:
-  port: 8080

@@ -79,7 +79,7 @@
     <logger name="rewardCalculation.rest" level="DEBUG"/>
     <logger name="rewardCalculation.services" level="DEBUG"/>
     <logger name="rewardCalculation.restClientRewardPayment" level="DEBUG"/>
-    <logger name="rewardCalculation.JPA.repository" level="INFO"/>
+    <logger name="rewardCalculation.jpa.repository" level="INFO"/>
     <logger name="rewardCalculation.validations" level="DEBUG"/>
     <logger name="rewardCalculation.util" level="DEBUG"/>
 

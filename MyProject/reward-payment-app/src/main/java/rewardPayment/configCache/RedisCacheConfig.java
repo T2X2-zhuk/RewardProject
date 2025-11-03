@@ -18,9 +18,7 @@ import java.time.Duration;
 public class RedisCacheConfig {
 
     public static final String PAYMENTS = "payments";
-    /**
-     * Конфигурация кеша Redis
-     */
+
     @Bean
     public RedisCacheConfiguration redisCacheConfiguration() {
         return RedisCacheConfiguration.defaultCacheConfig()

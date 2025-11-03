@@ -20,8 +20,11 @@ public class GetPaymentValidator {
 
     public List<ValidationError> validate(CommonRequestForPaymentParameters request){
         log.info("{} start!",this.getClass().getSimpleName());
+
         List<ValidationError> errors = new ArrayList<>();
+
         validatorClassWithMethodsForPayment.isSuchPaymentInDatabase(request.getPaymentDTO().getEmployeeId()).ifPresent(errors::add);
+
         log.info("{} execute! Errors : {}",this.getClass().getSimpleName(),errors);
         return errors;
     }

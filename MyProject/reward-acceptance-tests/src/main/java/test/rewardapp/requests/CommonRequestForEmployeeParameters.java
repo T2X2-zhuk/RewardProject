@@ -3,11 +3,10 @@ package test.rewardapp.requests;
 import lombok.*;
 import test.DTOS.EmployeeDTO;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class CommonRequestForEmployeeParameters {
 
     private EmployeeDTO employeeDTO;

@@ -18,8 +18,11 @@ public class GetAllPaymentsUsingCache {
 
     @Cacheable(cacheNames = RedisCacheConfig.PAYMENTS)
     public List<Payment> getAllPaymentsWithCache() {
+
         return repository.findAll();
     }
+
+
     @CacheEvict(value = RedisCacheConfig.PAYMENTS,allEntries = true)
     public void clearPAYMENTSCache(){
 

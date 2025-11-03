@@ -27,48 +27,39 @@ public class Resilience4jCircuitBreakerEventsConfig {
 
         // 2️⃣ Подписка на события всех CircuitBreaker
         circuitBreakerRegistry.getAllCircuitBreakers()
-                .forEach(this::registerListenersToSingleCb);
+                .forEach(this::execute);
 
         // 3️⃣ Подписка на новые CircuitBreaker, которые могут быть добавлены позже
         circuitBreakerRegistry.getEventPublisher()
                 .onEntryAdded(event -> {
                     CircuitBreaker addedCb = event.getAddedEntry();
                     log.info("CircuitBreaker added to registry: {}", addedCb.getName());
-                    registerListenersToSingleCb(addedCb);
+                    execute(addedCb);
                 });
 
         log.info("Resilience4j CircuitBreaker event listeners registered.");
     }
 
-    private void registerListenersToSingleCb(CircuitBreaker cb) {
+    private void execute(CircuitBreaker cb) {
         String name = cb.getName();
 
         cb.getEventPublisher()
-                // Переход состояния (CLOSED ↔ OPEN ↔ HALF_OPEN)
-                .onStateTransition(evt -> {
-                    var t = evt.getStateTransition();
-                    log.warn("[CB:{}] StateTransition: {} -> {} (time={})",
-                            name, t.getFromState(), t.getToState(), evt.getCreationTime());
-                })
-                // Ошибки вызовов
-                .onError(evt -> {
-                    log.error("[CB:{}] Call failed: type={}, exception={}, durationMs={}",
-                            name,
-                            evt.getEventType(),
-                            evt.getThrowable() != null ? evt.getThrowable().toString() : "null",
-                            evt instanceof CircuitBreakerOnErrorEvent ?
-                                    ((CircuitBreakerOnErrorEvent) evt).getElapsedDuration().toMillis() : -1);
-                })
-                // Успешные вызовы
-                .onSuccess(evt -> {
-                    if (evt instanceof CircuitBreakerOnSuccessEvent successEvt) {
-                        log.info("[CB:{}] Call success: durationMs={}",
-                                name, successEvt.getElapsedDuration().toMillis());
-                    }
-                })
-                // Вызовы, запрещённые из-за открытой цепи
-                .onCallNotPermitted(evt -> {
-                    log.warn("[CB:{}] Call not permitted (OPEN). Time={}", name, evt.getCreationTime());
-                });
+                .onStateTransition(evt -> log.warn("[CB:{}] StateTransition: {} -> {} (time={})",
+                        name,
+                        evt.getStateTransition().getFromState(),
+                        evt.getStateTransition().getToState(),
+                        evt.getCreationTime()))
+                .onError(evt -> log.error("[CB:{}] Call failed: type={}, exception={}, durationMs={}",
+                        name,
+                        evt.getEventType(),
+                        evt.getThrowable() != null ? evt.getThrowable() : "null",
+                        evt.getElapsedDuration().toMillis()))
+                .onSuccess(evt -> log.info("[CB:{}] Call success: durationMs={}",
+                        name,
+                        evt.getElapsedDuration().toMillis()))
+                .onCallNotPermitted(evt -> log.warn("[CB:{}] Call not permitted (OPEN). Time={}",
+                        name,
+                        evt.getCreationTime()));
     }
+
 }

@@ -37,8 +37,10 @@ public class ValidatorClassWithMethodsForPayment {
     }
 
     public Optional<ValidationError> isSuchPaymentInDatabase(Long employeeId){
+
         boolean exists = getAllPaymentsUsingCache.getAllPaymentsWithCache().stream()
                 .anyMatch(p -> p.getEmployeeId().equals(employeeId));
+
         if (!exists){
             Optional<ValidationError> error =  Optional.of(errorFactory.buildError("ERROR_CODE_FOR_PAYMENT_3",
                     List.of(new Placeholder("id", String.valueOf(employeeId)))));

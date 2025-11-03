@@ -2,12 +2,11 @@ package rewardCalculation.transactionalOutBox.specialControllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import rewardCalculation.transactionalOutBox.dispatchers.OutboxPaymentDispatcher;
+import rewardCalculation.transactionalOutBox.commonclassesForDispatchers.OutboxPaymentDispatcher;
 
 @RestController
 @RequestMapping("/api/test")

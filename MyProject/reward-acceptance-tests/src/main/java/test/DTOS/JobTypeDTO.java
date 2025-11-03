@@ -2,12 +2,10 @@ package test.DTOS;
 
 import lombok.*;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@Builder
 public class JobTypeDTO {
 
     private Long id;

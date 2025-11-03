@@ -25,21 +25,28 @@ public class CreateRewardRequestValidator {
 
     public List<ValidationError> validate(CommonRequestForRewardParameters request){
         log.info("{} start!", this.getClass().getSimpleName());
+
         List<ValidationError> errors = new ArrayList<>();
+
         validator.employeeIdMustNotBeEmpty(request.getRewardDTO().getEmployeeId()).ifPresent(errors ::add);
         jobTypesEntity.jobTypeMustNotBeEmpty(request.getRewardDTO().getJobType()).ifPresent(errors ::add);
+
         if (errors.isEmpty()){
             validationV2(request,errors);
         }
+
         log.info("{} execute! Errors : {}" , this.getClass().getSimpleName(),errors);
         return errors;
     }
 
     private void validationV2(CommonRequestForRewardParameters request,List<ValidationError> errors){
+
         employee.employeeIsNotDatabase(request.getRewardDTO().getEmployeeId()).ifPresent(errors::add);
         tariffValidator.suchTariffWithSuchJobTypeIsNotInDatabase(request.getRewardDTO().getJobType()).ifPresent(errors::add);
+
         boolean hasTariff5Error = errors.stream()
                 .anyMatch(err -> "ERROR_CODE_FOR_TARIFF_5".equals(err.getErrorCode()));
+
         if (!hasTariff5Error) {
             validator.suchRewardIsDatabase(request.getRewardDTO().getEmployeeId(),
                             request.getRewardDTO().getJobType())

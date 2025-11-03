@@ -19,8 +19,11 @@ public class GetJobTypeRequestValidator {
 
     public List<ValidationError> validate(CommonRequestForJobTypeParameters request){
         log.info("{} start!", this.getClass().getSimpleName());
+
         List<ValidationError> errors = new ArrayList<>();
+
         validator.jobTypeIdMustNotBeEmpty(request.getJobTypeDTO().getId()).ifPresent(errors ::add);
+
         log.info("{} execute! Errors : {}" , this.getClass().getSimpleName(),errors);
         return errors;
     }

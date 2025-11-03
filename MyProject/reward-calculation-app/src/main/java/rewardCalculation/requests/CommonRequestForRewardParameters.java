@@ -3,11 +3,10 @@ package rewardCalculation.requests;
 import rewardCalculation.dto.RewardDTO;
 import lombok.*;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class CommonRequestForRewardParameters {
 
     private RewardDTO rewardDTO;

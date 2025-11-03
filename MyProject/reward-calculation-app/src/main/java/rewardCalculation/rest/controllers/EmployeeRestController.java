@@ -1,6 +1,4 @@
 package rewardCalculation.rest.controllers;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Timer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -8,9 +6,9 @@ import rewardCalculation.requests.CommonRequestForEmployeeParameters;
 import rewardCalculation.dto.EmployeeDTO;
 
 import rewardCalculation.responses.CommonResponseForEmployeeParameters;
-import rewardCalculation.servises.employee.CreateEmployeeService;
+import rewardCalculation.services.employee.CreateEmployeeService;
 import org.springframework.web.bind.annotation.*;
-import rewardCalculation.servises.employee.GetEmployeeService;
+import rewardCalculation.services.employee.GetEmployeeService;
 
 @RestController
 @RequestMapping("/api/test/employee")
@@ -38,11 +36,14 @@ public class EmployeeRestController {
     @GetMapping(path = "/getEmployee/{id}",
             produces = "application/json")
     public CommonResponseForEmployeeParameters getEmployee(@PathVariable Long id) {
+
         log.info("[{}] {} is start!", MDC.get("traceId"), this.getClass().getSimpleName());
-        CommonRequestForEmployeeParameters request = CommonRequestForEmployeeParameters.builder()
-                .employeeDTO(EmployeeDTO.builder().id(id).build()).build();
-        CommonResponseForEmployeeParameters response = getEmployeeService.execute(request);
+
+        CommonResponseForEmployeeParameters response = getEmployeeService.execute(CommonRequestForEmployeeParameters.builder()
+                .employeeDTO(EmployeeDTO.builder().id(id).build()).build());
+
         log.info("[{}] {} is execute!", MDC.get("traceId"), this.getClass().getSimpleName());
+
         return response;
     }
 }

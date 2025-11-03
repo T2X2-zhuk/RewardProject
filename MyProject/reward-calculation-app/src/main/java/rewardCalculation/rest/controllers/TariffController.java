@@ -1,6 +1,4 @@
 package rewardCalculation.rest.controllers;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Timer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -8,8 +6,8 @@ import rewardCalculation.dto.TariffDTO;
 import rewardCalculation.requests.CommonRequestForTariffParameters;
 import rewardCalculation.responses.CommonResponseForTariffParameters;
 import org.springframework.web.bind.annotation.*;
-import rewardCalculation.servises.tariff.CreateTariffService;
-import rewardCalculation.servises.tariff.GetTariffService;
+import rewardCalculation.services.tariff.CreateTariffService;
+import rewardCalculation.services.tariff.GetTariffService;
 
 @RestController
 @RequestMapping("/api/test/tariff")
@@ -38,10 +36,8 @@ public class TariffController {
     public CommonResponseForTariffParameters getTariff(@PathVariable Long id) {
         log.info("[{}] {} is start!", MDC.get("traceId"), this.getClass().getSimpleName());
 
-        CommonRequestForTariffParameters request = CommonRequestForTariffParameters.builder()
-                .tariffDTO(TariffDTO.builder().id(id).build()).build();
-
-        CommonResponseForTariffParameters response = getTariffService.execute(request);
+        CommonResponseForTariffParameters response = getTariffService.execute(CommonRequestForTariffParameters.builder()
+                .tariffDTO(TariffDTO.builder().id(id).build()).build());
 
         log.info("[{}] {} is execute!", MDC.get("traceId"), this.getClass().getSimpleName());
 
