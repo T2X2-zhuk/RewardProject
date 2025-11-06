@@ -1,7 +1,6 @@
 package rewardPayment.rest.payment;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Timer;
-import org.slf4j.MDC;
+
+import reactor.core.publisher.Mono;
 import rewardPayment.configCache.GetAllPaymentsUsingCache;
 import rewardPayment.dto.PaymentDTO;
 import rewardPayment.requests.CommonRequestForPaymentParameters;
@@ -22,30 +21,32 @@ public class PaymentController {
      private final RewardPaymentService rewardPaymentService;
      private final GetAllPaymentsUsingCache getAllPaymentsUsingCache;
 
-    @GetMapping(path = "/searchPayment/{employeeId}",
-            produces = "application/json")
-    public CommonResponseForPaymentParameters searchPaymentByEmployeeId(@PathVariable Long employeeId) {
-        log.info("[{}] {} is start!", MDC.get("traceId"), this.getClass().getSimpleName());
+    @GetMapping(path = "/searchPayment/{employeeId}", produces = "application/json")
+    public Mono<CommonResponseForPaymentParameters> searchPaymentByEmployeeId(@PathVariable Long employeeId) {
+        return Mono.deferContextual(ctx -> {
+            String traceId = ctx.getOrDefault("traceId", "no-traceId");
 
-        CommonRequestForPaymentParameters request = CommonRequestForPaymentParameters.builder()
-                .paymentDTO(PaymentDTO.builder()
-                        .employeeId(employeeId).build()).build();
-        CommonResponseForPaymentParameters response = service.execute(request);
+            log.info("[{}] {} is start!", traceId, this.getClass().getSimpleName());
 
-        log.info("[{}] {} is execute!", MDC.get("traceId"), this.getClass().getSimpleName());
-        return response;
+            CommonRequestForPaymentParameters request = CommonRequestForPaymentParameters.builder()
+                    .paymentDTO(PaymentDTO.builder().employeeId(employeeId).build())
+                    .build();
+
+            return service.execute(request)
+                    .doOnSuccess(r -> log.info("[{}] {} is execute!", traceId, this.getClass().getSimpleName()));
+        });
     }
 
-    @PostMapping(path = "/payReward",
-            consumes = "application/json",
-            produces = "application/json")
-    public CommonResponseForPaymentParameters payReward(@RequestBody CommonRequestForPaymentParameters request) {
-        log.info("[{}] {} is start!", MDC.get("traceId"), this.getClass().getSimpleName());
+    @PostMapping(path = "/payReward", consumes = "application/json", produces = "application/json")
+    public Mono<CommonResponseForPaymentParameters> payReward(@RequestBody CommonRequestForPaymentParameters request) {
+        return Mono.deferContextual(ctx -> {
+            String traceId = ctx.getOrDefault("traceId", "no-traceId");
 
-        CommonResponseForPaymentParameters response = rewardPaymentService.pay(request);
-        getAllPaymentsUsingCache.clearPAYMENTSCache();
+            log.info("[{}] {} is start!", traceId, this.getClass().getSimpleName());
 
-        log.info("[{}] {} is execute!", MDC.get("traceId"), this.getClass().getSimpleName());
-        return response;
+            return rewardPaymentService.pay(request)
+                    .flatMap(r -> getAllPaymentsUsingCache.clearPaymentsCache().thenReturn(r))
+                    .doOnSuccess(r -> log.info("[{}] {} is execute!", traceId, this.getClass().getSimpleName()));
+        });
     }
 }

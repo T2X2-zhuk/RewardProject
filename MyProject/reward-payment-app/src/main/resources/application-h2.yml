@@ -1,16 +1,20 @@
 spring:
+  # ✅ JDBC для Liquibase
   datasource:
-    url: jdbc:h2:mem:reward_payment_db
+    url: jdbc:h2:mem:reward_payment_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
     username: factor23
     password: factor25
 
-  jpa:
-    database: h2
-    show-sql: true
-    hibernate:
-      ddl-auto: none
-    database-platform: org.hibernate.dialect.H2Dialect
+  # ✅ R2DBC для реактивного слоя
+  r2dbc:
+    url: r2dbc:h2:mem:///reward_payment_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: factor23
+    password: factor25
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/changelog-master.xml
 
   h2:
     console:
@@ -18,4 +22,4 @@ spring:
       path: /h2-console
       settings:
         trace: false
-        web-allow-others: false
+        web-allow-others: true

@@ -1,4 +1,5 @@
 package rewardPayment.validations.MethodsValidatorClasses;
+import reactor.core.publisher.Mono;
 import rewardPayment.configCache.GetAllPaymentsUsingCache;
 import rewardPayment.util.forErrors.Placeholder;
 import rewardPayment.util.forErrors.ValidationError;
@@ -18,35 +19,33 @@ public class ValidatorClassWithMethodsForPayment {
     private final ValidationErrorFactory errorFactory;
     private final GetAllPaymentsUsingCache getAllPaymentsUsingCache;
 
-    public Optional<ValidationError> employeeIdNotBeEmpty(Long employeeId){
-        if (employeeId == null){
-            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_PAYMENT_1"));
-            log.debug("Error : {}",error);
-            return error;
+    public Mono<Optional<ValidationError>> employeeIdNotBeEmptyReactive(Long employeeId) {
+        if (employeeId == null) {
+            return Mono.just(Optional.of(errorFactory.buildError("ERROR_CODE_FOR_PAYMENT_1")));
         }
-       return Optional.empty();
+        return Mono.just(Optional.empty());
     }
 
-    public Optional<ValidationError> amountMustNotBeEmpty(BigDecimal amount){
-        if (amount == null || amount.compareTo(BigDecimal.ZERO) == 0){
-            Optional<ValidationError> error = Optional.of(errorFactory.buildError("ERROR_CODE_FOR_PAYMENT_2"));
-            log.debug("Error : {}",error);
-            return error;
+    public Mono<Optional<ValidationError>> amountMustNotBeEmptyReactive(BigDecimal amount) {
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) == 0) {
+            return Mono.just(Optional.of(errorFactory.buildError("ERROR_CODE_FOR_PAYMENT_2")));
         }
-        return Optional.empty();
+        return Mono.just(Optional.empty());
     }
 
-    public Optional<ValidationError> isSuchPaymentInDatabase(Long employeeId){
+    public Mono<Optional<ValidationError>> isSuchPaymentInDatabase(Long employeeId){
 
-        boolean exists = getAllPaymentsUsingCache.getAllPaymentsWithCache().stream()
-                .anyMatch(p -> p.getEmployeeId().equals(employeeId));
-
-        if (!exists){
-            Optional<ValidationError> error =  Optional.of(errorFactory.buildError("ERROR_CODE_FOR_PAYMENT_3",
-                    List.of(new Placeholder("id", String.valueOf(employeeId)))));
-            log.debug("Error : {}",error);
-            return error;
-        }
-        return Optional.empty();
+        return getAllPaymentsUsingCache.getAllPaymentsWithCache()
+                .filter(p -> p.getEmployeeId().equals(employeeId))
+                .hasElements()
+                .map(exists -> {
+                    if (!exists) {
+                        return Optional.of(errorFactory.buildError(
+                                "ERROR_CODE_FOR_PAYMENT_3",
+                                List.of(new Placeholder("id", String.valueOf(employeeId)))
+                        ));
+                    }
+                    return Optional.empty();
+                });
     }
 }

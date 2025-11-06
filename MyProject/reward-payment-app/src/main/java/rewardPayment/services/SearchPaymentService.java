@@ -1,21 +1,16 @@
 package rewardPayment.services;
 
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import rewardPayment.JPA.domain.Payment;
 import rewardPayment.configCache.GetAllPaymentsUsingCache;
 import rewardPayment.dto.PaymentDTO;
 import rewardPayment.requests.CommonRequestForPaymentParameters;
 import rewardPayment.responses.CommonResponseForPaymentParameters;
-import rewardPayment.util.forErrors.ValidationError;
 import rewardPayment.validations.validators.GetPaymentValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -24,43 +19,46 @@ public class SearchPaymentService {
     private final GetAllPaymentsUsingCache getAllPaymentsUsingCache;
     private final GetPaymentValidator validator;
 
-    @Transactional
-    public CommonResponseForPaymentParameters execute(CommonRequestForPaymentParameters request) {
-        log.info("{} is start!",this.getClass().getSimpleName());
+    public Mono<CommonResponseForPaymentParameters> execute(CommonRequestForPaymentParameters request) {
+        log.info("{} is start!", this.getClass().getSimpleName());
 
         CommonResponseForPaymentParameters response = new CommonResponseForPaymentParameters();
 
-        List<ValidationError> errors = validator.validate(request);
-        log.debug("Validation is execute!");
+        return validator.validate(request)
+                .flatMap(errors -> {
+                    log.debug("Validation is execute!");
 
-        if (errors.isEmpty()){
-
-            buildResponseWithoutErrors(response,request);
-        }else {
-
-            log.warn("Validation failed errors : {}" , errors);
-            response.setErrors(errors);
-        }
-
-        log.info("{} is execute!",this.getClass().getSimpleName());
-        return response;
+                    if (!errors.isEmpty()) {
+                        log.warn("Validation failed errors : {}", errors);
+                        response.setErrors(errors);
+                        return Mono.just(response);
+                    } else {
+                        return buildResponseWithoutErrors(response, request);
+                    }
+                })
+                .doOnSuccess(r -> log.info("{} is execute!", this.getClass().getSimpleName()));
     }
 
-    private void buildResponseWithoutErrors(CommonResponseForPaymentParameters response,CommonRequestForPaymentParameters request){
-        List<Payment>  payments = getPaymentsByEmployeeAndAmount(request.getPaymentDTO().getEmployeeId());
-        List<PaymentDTO> paymentDTOS = new ArrayList<>();
-        for(Payment payment : payments){
-            paymentDTOS.add(PaymentDTO.builder().id(payment.getId())
-                    .employeeId(payment.getEmployeeId()).rewardId(payment.getRewardId())
-                    .amount(payment.getAmount()).build());
-        }
-        response.setPaymentDTOS(paymentDTOS);
-        log.info("Payment : {} was successful received", paymentDTOS);
+    private Mono<CommonResponseForPaymentParameters> buildResponseWithoutErrors(CommonResponseForPaymentParameters response,
+                                                                                CommonRequestForPaymentParameters request) {
+        return getPaymentsByEmployeeAndAmount(request.getPaymentDTO().getEmployeeId())
+                .map(payment -> PaymentDTO.builder()
+                        .id(payment.getId())
+                        .employeeId(payment.getEmployeeId())
+                        .rewardId(payment.getRewardId())
+                        .amount(payment.getAmount())
+                        .build())
+                .collectList()
+                .map(paymentDTOS -> {
+                    response.setPaymentDTOS(paymentDTOS);
+                    log.info("Payment : {} was successful received", paymentDTOS);
+                    return response;
+                });
     }
 
-    private List<Payment> getPaymentsByEmployeeAndAmount(Long employeeId) {
-        return getAllPaymentsUsingCache.getAllPaymentsWithCache().stream()
-                .filter(p -> p.getEmployeeId().equals(employeeId))
-                .collect(Collectors.toList());
+    private Flux<Payment> getPaymentsByEmployeeAndAmount(Long employeeId) {
+        // Используем реактивный поток из кеша
+        return getAllPaymentsUsingCache.getAllPaymentsWithCache()
+                .filter(p -> p.getEmployeeId().equals(employeeId));
     }
 }

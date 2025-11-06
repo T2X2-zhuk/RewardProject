@@ -1,45 +1,30 @@
 package rewardPayment.configCache;
-import org.springframework.cache.CacheManager;
+
+
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.interceptor.SimpleKeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.cache.RedisCacheConfiguration;
-import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
+import org.springframework.data.redis.core.ReactiveRedisOperations;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-import java.time.Duration;
 
 @Configuration
 @EnableCaching
 public class RedisCacheConfig {
 
-    public static final String PAYMENTS = "payments";
-
     @Bean
-    public RedisCacheConfiguration redisCacheConfiguration() {
-        return RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofHours(1))
-                .disableCachingNullValues()
-                .serializeKeysWith(RedisSerializationContext.SerializationPair
-                        .fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair
-                        .fromSerializer(new GenericJackson2JsonRedisSerializer()));
-    }
+    public ReactiveRedisOperations<String, Object> reactiveRedisOperations(ReactiveRedisConnectionFactory factory) {
+        var keySerializer = new StringRedisSerializer();
+        var valueSerializer = new GenericJackson2JsonRedisSerializer();
 
-    @Bean
-    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
-        return RedisCacheManager.builder(redisConnectionFactory)
-                .cacheDefaults(redisCacheConfiguration())
+        var context = RedisSerializationContext
+                .<String, Object>newSerializationContext(keySerializer)
+                .value(RedisSerializationContext.SerializationPair.fromSerializer(valueSerializer))
                 .build();
-    }
 
-    @Bean
-    public SimpleKeyGenerator keyGenerator() {
-        return new SimpleKeyGenerator();
+        return new ReactiveRedisTemplate<>(factory, context);
     }
-
 }

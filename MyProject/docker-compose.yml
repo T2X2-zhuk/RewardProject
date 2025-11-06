@@ -1,5 +1,3 @@
-
-
 networks:
   danil-reward-project:
     name: danil-reward-project

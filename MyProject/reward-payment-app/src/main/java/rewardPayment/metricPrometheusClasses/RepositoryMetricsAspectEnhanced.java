@@ -7,15 +7,12 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 //Автоматически перехватывает все методы JPA репозиториев.
-//Классифицирует операцию как READ/WRITE/OTHER по названию метода.
-//Собирает метрики с понятными тегами:
-//repository – имя репозитория.
-//method – метод репозитория.
-//operation – READ или WRITE.
-// status – SUCCESS или FAIL.
+//Собирает метрики
 //Ведет таймер на выполнение каждого метода.
 @Aspect
 @Component
@@ -24,29 +21,34 @@ public class RepositoryMetricsAspectEnhanced {
 
     private final MeterRegistry meterRegistry;
 
-    @Around("execution(* org.springframework.data.repository.CrudRepository+.*(..))")
+    @Around("execution(* org.springframework.data.repository.reactive.ReactiveCrudRepository+.*(..))")
     public Object recordRepositoryMetrics(ProceedingJoinPoint joinPoint) throws Throwable {
-
-        Timer.Sample sample = Timer.start(meterRegistry);
-        String status = "SUCCESS";
-
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         String methodName = signature.getMethod().getName();
         String repositoryName = joinPoint.getTarget().getClass().getSimpleName();
-
-        // Определяем тип операции (READ / WRITE)
         String operationType = classifyOperation(methodName);
 
         try {
-            return joinPoint.proceed();
+            Object result = joinPoint.proceed();
+            if (result instanceof Mono<?> mono) {
+                Timer.Sample sample = Timer.start(meterRegistry);
+                return mono
+                        .doOnSuccess(r -> meterRegistration(repositoryName, methodName, operationType, "SUCCESS", sample))
+                        .doOnError(e -> meterRegistration(repositoryName, methodName, operationType, "FAIL", sample));
+            } else if (result instanceof Flux<?> flux) {
+                Timer.Sample sample = Timer.start(meterRegistry);
+                return flux
+                        .doOnComplete(() -> meterRegistration(repositoryName, methodName, operationType, "SUCCESS", sample))
+                        .doOnError(e -> meterRegistration(repositoryName, methodName, operationType, "FAIL", sample));
+            } else {
+                Timer.Sample sample = Timer.start(meterRegistry);
+                meterRegistration(repositoryName, methodName, operationType, "SUCCESS", sample);
+                return result;
+            }
         } catch (Exception ex) {
-            status = "FAIL";
             throw ex;
-        } finally {
-            meterRegistration(repositoryName, methodName, operationType, status, sample);
         }
     }
-
     private void meterRegistration(String repositoryName, String methodName, String operationType, String status, Timer.Sample sample) {
         // Счётчик
         meterRegistry.counter(

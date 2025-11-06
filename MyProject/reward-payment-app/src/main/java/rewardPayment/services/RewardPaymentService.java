@@ -1,17 +1,14 @@
 package rewardPayment.services;
 
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import rewardPayment.JPA.domain.Payment;
 import rewardPayment.JPA.repositories.PaymentRepository;
-import rewardPayment.dto.PaymentDTO;
 import rewardPayment.requests.CommonRequestForPaymentParameters;
 import rewardPayment.responses.CommonResponseForPaymentParameters;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -20,28 +17,29 @@ public class RewardPaymentService {
 
     private final PaymentRepository paymentRepository;
 
-    @Transactional
-    public CommonResponseForPaymentParameters pay(CommonRequestForPaymentParameters request) {
-        log.info("{} is start!",this.getClass().getSimpleName());
+    public Mono<CommonResponseForPaymentParameters> pay(CommonRequestForPaymentParameters request) {
+        log.info("{} is start!", this.getClass().getSimpleName());
 
-        CommonResponseForPaymentParameters response = new CommonResponseForPaymentParameters();
+        return paymentRepository.saveAll(convertingDTOSToPayments(request))
+                .collectList() // дождаться завершения всех сохранений
+                .map(savedPayments -> {
+                    log.debug("Successful saving all payments!");
+                    CommonResponseForPaymentParameters response = new CommonResponseForPaymentParameters();
+                    response.setSuccessfulSaving(true);
+                    return response;
+                })
+                .doOnSuccess(r -> log.info("{} is execute!", this.getClass().getSimpleName()));
+    }
 
-        List<Payment> payments = new ArrayList<>();
-
-        for (PaymentDTO paymentDTO : request.getPaymentDTOS()){
-            log.debug("Save payment with - {} parameters", paymentDTO);
-
-            payments.add(Payment.builder().employeeId(paymentDTO.getEmployeeId()).rewardId(paymentDTO.getRewardId())
-                    .amount(paymentDTO.getAmount()).build());
-        }
-
-        paymentRepository.saveAll(payments);
-
-        log.debug("Successful saving all payments!");
-
-        response.setSuccessfulSaving(true);
-
-        log.info("{} is execute!",this.getClass().getSimpleName());
-        return response;
+    private Flux<Payment> convertingDTOSToPayments(CommonRequestForPaymentParameters request) {
+        return Flux.fromIterable(request.getPaymentDTOS())
+                .map(paymentDTO -> {
+                    log.debug("Save payment with - {} parameters", paymentDTO);
+                    return Payment.builder()
+                            .employeeId(paymentDTO.getEmployeeId())
+                            .rewardId(paymentDTO.getRewardId())
+                            .amount(paymentDTO.getAmount())
+                            .build();
+                });
     }
 }

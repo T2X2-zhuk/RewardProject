@@ -1,35 +1,29 @@
 package rewardPayment.JPA.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigDecimal;
 
-@Entity
-@Table(name = "payments")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "payments")
 public class Payment {
 
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "employee_id")
+    @Column("employee_id")
     private Long employeeId;
 
-    @Column(name = "reward_id")
+    @Column("reward_id")
     private Long rewardId;
 
-    @Column(name = "amount", nullable = false, precision = 10, scale = 2)
+    @Column("amount")
     private BigDecimal amount;
 
 }

@@ -52,14 +52,15 @@ public class OutboxPaymentEventProcessor {
         }
 
         try {
-            log.info("Start processing Outbox event {} with rewards {}", event.getId(), event.getRewardIds());
+            log.info(
+                    "Start processing Outbox event {}",
+                    event.getId()
+            );
 
             PaymentDTO[] payments = objectMapper.readValue(event.getPayload(), PaymentDTO[].class);
 
-            log.debug("Payload deserialized: {}", Arrays.toString(payments));
-
             RewardPaymentResponse response = rewardPaymentClient.payReward(List.of(payments));
-            log.info("Payment response for event {}: {}", event.getId(), response);
+            log.info("Payment response for event {} received", event.getId());
 
             if (response.isSuccessfulSaving()) {
                 if (event.getRewardIds() != null && !event.getRewardIds().isEmpty()) {
@@ -76,7 +77,7 @@ public class OutboxPaymentEventProcessor {
 
         } catch (Exception e) {
             outboxRepo.markAsFailed(event.getId());
-            log.error("Failed to process event {}: {}", event.getId(), e.getMessage());
+            log.error("Failed to process event {}: {}", event.getId(), e.toString());
         }
     }
 

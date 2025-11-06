@@ -20,7 +20,7 @@ public class OutboxPaymentEvent {
     private Long id;
 
     // Таблица для rewardIds
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "outbox_payment_reward_ids",
             joinColumns = @JoinColumn(name = "outbox_id")

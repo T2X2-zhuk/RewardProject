@@ -1,15 +1,19 @@
 spring:
   profiles:
     default: h2
+
   application:
     name: reward-calculation-app
+
   liquibase:
     enabled: false
     change-log: classpath:db/changelog/changelog-master.xml
+
   cache:
     type: redis
     redis:
       key-prefix: "calc::"
+
   data:
     redis:
       host: redis-cache
@@ -69,7 +73,7 @@ server:
 app:
   transactionalOutBox: true # Если вы используете false то будет использоваться дефолтная , без outBox обычня реализация если true
   #то синхронизированная версия outBox однако в том случаи если useAsyncOutboxDispatcher false
-  useAsyncOutboxDispatcher: false #Не ставте в скобки false или true""!
+  useAsyncOutboxDispatcher: true #Не ставте в скобки false или true""!
   locks:
     rewardCalculation: reward-execution-lock
   reward_size: 15

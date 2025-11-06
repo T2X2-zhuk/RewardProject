@@ -12,6 +12,7 @@ spring:
       ddl-auto: none
     database-platform: org.hibernate.dialect.MySQLDialect
 
+# если используем несколько серверов запросы отправлять сюда -> load balancer reward-payment-lb
 reward:
   payment:
     api:

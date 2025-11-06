@@ -46,7 +46,7 @@ public class RewardCalculationAcceptanceTest {
                 .body("errors[0].errorCode", equalTo("ERROR_CODE_FOR_REWARD_1"));
     }
 
-    //Test validation working OutBoxPaymentDispatcher when OutBox is true PASSED!
+    //Test validation working when OutBox is true PASSED!
     //@Test
     public void acceptanceTestOutBoxDispatcher(){
         // 1. Делаем тип работы , тариф и сотрудника
@@ -58,9 +58,13 @@ public class RewardCalculationAcceptanceTest {
         // 2. Создаём награду
         Response response = RewardClassWithMethodsForAcceptanceTests.createReward(employeeId,"speech");
         Long rewardId = response.jsonPath().getLong("rewardDTO.id");
+
         // 3. Делаем расчет
         Response paymentResponse = RewardClassWithMethodsForAcceptanceTests.calculate();
         paymentResponse.then().statusCode(200).body("successfulSaving",equalTo(true));
+
+        PaymentClassWithMethodsForAcceptanceTests.getPayments(employeeId).then().statusCode(200)
+                .body("errors[0].errorCode",equalTo("ERROR_CODE_FOR_PAYMENT_3"));
 
         ClassWithMethodsForOutBoxDispatchers.outBoxDispatcher().then().statusCode(200);
 
