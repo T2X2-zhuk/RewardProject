@@ -18,7 +18,7 @@ import java.time.Duration;
 public class RedisCacheConfig {
 
     public static final String TARIFF_CACHE = "tariffs";
-    public static final String EMPLOYEES = "employees";
+    public static final String EMPLOYEE_CACHE = "employees";
 
     @Bean
     public RedisCacheConfiguration redisCacheConfiguration() {

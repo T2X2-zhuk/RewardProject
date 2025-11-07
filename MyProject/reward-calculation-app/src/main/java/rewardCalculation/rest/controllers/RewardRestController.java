@@ -32,7 +32,7 @@ public class RewardRestController {
     private final GetRewardService getRewardService;
     private final RewardExecutionLock rewardExecutionLock;
 
-    @Value( "${app.reward_size}" )
+    @Value( "${app.payments_size}" )
     private int rewardSize;
 
     @PostMapping(path = "/createReward",

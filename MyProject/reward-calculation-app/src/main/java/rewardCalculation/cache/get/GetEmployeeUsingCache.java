@@ -16,13 +16,13 @@ public class GetEmployeeUsingCache {
 
     private final EmployeeRepository employeeRepository;
 
-    @Cacheable(cacheNames = RedisCacheConfig.EMPLOYEES)
+    @Cacheable(cacheNames = RedisCacheConfig.EMPLOYEE_CACHE)
     public List<Employee> getAllEmployeesWithCache() {
 
         return employeeRepository.findAll();
     }
 
-    @CacheEvict(value = RedisCacheConfig.EMPLOYEES,allEntries = true)
+    @CacheEvict(value = RedisCacheConfig.EMPLOYEE_CACHE,allEntries = true)
     public void clearEMPLOYEESCache(){
 
     }
