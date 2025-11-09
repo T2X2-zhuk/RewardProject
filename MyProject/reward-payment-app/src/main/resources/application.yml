@@ -17,7 +17,6 @@ spring:
     type: redis
     redis:
       key-prefix: "pay::"
-
   data:
     redis:
       host: ${SPRING_REDIS_HOST:localhost}

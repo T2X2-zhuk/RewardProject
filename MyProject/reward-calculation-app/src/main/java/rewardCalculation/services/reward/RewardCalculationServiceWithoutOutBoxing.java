@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import rewardCalculation.dto.PaymentDTO;
 import rewardCalculation.jpa.domain.Reward;
 import rewardCalculation.restClientRewardPayment.CalculatePayment;
 import rewardCalculation.rest.commonServiceInterfices.RewardCalculationService;
@@ -42,10 +43,10 @@ class RewardCalculationServiceWithoutOutBoxing implements RewardCalculationServi
             coreResponse.setErrors(validationErrors);
             return coreResponse;
         }
-
-        coreResponse = client.payReward(calculatePayment.calculate(rewardList));
+        List<PaymentDTO> paymentDTOS =  calculatePayment.calculate(rewardList);
+        coreResponse = client.payReward(paymentDTOS);
 
         log.info("{} is execute!", this.getClass().getSimpleName());
-        return updatingRewardsDependingOnTheResultReceivedFromAnExternalService.result(coreResponse,rewardList);
+        return updatingRewardsDependingOnTheResultReceivedFromAnExternalService.result(coreResponse,rewardList,paymentDTOS);
     }
 }

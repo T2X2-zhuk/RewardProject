@@ -3,9 +3,6 @@ networks:
     name: danil-reward-project
 
 services:
-  # =============================
-  # MySQL для расчётов
-  # =============================
   reward-calculation-db:
     networks: [danil-reward-project]
     container_name: reward-calculation-db
@@ -23,9 +20,6 @@ services:
       start_period: 30s
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
-  # =============================
-  # MySQL для выплат
-  # =============================
   reward-payment-db:
     networks: [danil-reward-project]
     container_name: reward-payment-db
@@ -43,9 +37,6 @@ services:
       start_period: 30s
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
-  # =============================
-  # Redis — глобальный кеш
-  # =============================
   redis:
     networks: [danil-reward-project]
     container_name: redis-cache
@@ -62,9 +53,6 @@ services:
       retries: 10
       start_period: 30s
 
-  # =============================
-  # Контейнер Liquibase
-  # =============================
   liquibase-container-app:
     networks: [danil-reward-project]
     container_name: liquibase-container-app
@@ -175,9 +163,6 @@ services:
     volumes:
       - ./reward-payment-app/logs/server2:/MyProject/reward-payment-app/logs
 
-  # =============================
-  # Load balancer -> NGINX
-  # =============================
   reward-calculation-lb:
     networks: [ danil-reward-project ]
     image: nginx:latest
@@ -273,6 +258,39 @@ services:
     environment:
       - COLLECTOR_OTLP_ENABLED=true
       - LOG_LEVEL=debug
-#   http://localhost:16686 -> посмотреть веб-интерфейс Jaeger
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka
+    networks: [ danil-reward-project ]
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_NUM_PARTITIONS: 1
+      KAFKA_LOG_RETENTION_HOURS: 336
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+    depends_on:
+       zookeeper:
+         condition: service_healthy
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper
+    networks: [ danil-reward-project ]
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    healthcheck:
+      test: ["CMD", "echo", "ruok", "|", "nc", "localhost", "2181"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 volumes:
   redis-data:

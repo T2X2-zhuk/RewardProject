@@ -12,6 +12,28 @@ spring:
       ddl-auto: none
     database-platform: org.hibernate.dialect.MySQLDialect
 
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
+    producer:
+      acks: all
+      retries: 10
+      enable-idempotence: true
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    topic:
+      payments: reward-payments
+    consumer:
+      group-id: reward-calculation-group
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.value.default.type: java.util.Map
+        spring.json.use.type.headers: false
+    listener:
+      ack-mode: manual
+
 # если используем несколько серверов запросы отправлять сюда -> load balancer reward-payment-lb
 reward:
   payment:

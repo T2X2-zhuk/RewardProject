@@ -3,6 +3,7 @@ package rewardPayment.rest.payment;
 import reactor.core.publisher.Mono;
 import rewardPayment.configCache.GetAllPaymentsUsingCache;
 import rewardPayment.dto.PaymentDTO;
+import rewardPayment.requests.PaymentBatchMessage;
 import rewardPayment.requests.CommonRequestForPaymentParameters;
 import rewardPayment.responses.CommonResponseForPaymentParameters;
 import rewardPayment.services.RewardPaymentService;
@@ -44,7 +45,7 @@ public class PaymentController {
 
             log.info("[{}] {} is start!", traceId, this.getClass().getSimpleName());
 
-            return rewardPaymentService.pay(request)
+            return rewardPaymentService.pay(new PaymentBatchMessage(request.getPaymentDTOS()))
                     .flatMap(r -> getAllPaymentsUsingCache.clearPaymentsCache().thenReturn(r))
                     .doOnSuccess(r -> log.info("[{}] {} is execute!", traceId, this.getClass().getSimpleName()));
         });

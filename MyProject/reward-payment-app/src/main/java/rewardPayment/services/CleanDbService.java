@@ -1,5 +1,6 @@
 package rewardPayment.services;
 
+import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import rewardPayment.JPA.repositories.PaymentRepository;
 import rewardPayment.configCache.GetAllPaymentsUsingCache;
@@ -10,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-@Component
+@Service
 @RequiredArgsConstructor
 @Slf4j
 public class CleanDbService {
