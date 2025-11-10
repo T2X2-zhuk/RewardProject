@@ -1,17 +1,11 @@
 package test.acceptanceTests;
 
 import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import test.DTOS.JobTypeDTO;
 import test.classesWithRestTestsMethod.rewardCalculationApp.CleanRewardDbForTest;
 import test.classesWithRestTestsMethod.rewardCalculationApp.JobTypeClassWithRestMethodsForAcceptanceTests;
 import test.classesWithRestTestsMethod.rewardCalculationApp.TariffClassWithMethodsForAcceptanceTests;
-
-
 import java.math.BigDecimal;
-
-
 import static org.hamcrest.Matchers.equalTo;
 
 public class TariffRestControllerAcceptanceTests {

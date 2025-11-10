@@ -14,7 +14,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class RewardCalculationAcceptanceTest {
 
-    //@BeforeEach
+   //@BeforeEach
     public void cleanDB(){
         CleanRewardDbForTest.rewardCalculationCleanDb(true,true,true,true,true);
         CleanPaymentDbForTest.rewardPaymentCleanDb(true);

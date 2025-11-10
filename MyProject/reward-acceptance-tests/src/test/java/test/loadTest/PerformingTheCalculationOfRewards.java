@@ -1,5 +1,6 @@
 package test.loadTest;
 
+import test.classesWithRestTestsMethod.rewardCalculationApp.ClassWithMethodsForOutBoxDispatchers;
 import test.classesWithRestTestsMethod.rewardCalculationApp.RewardClassWithMethodsForAcceptanceTests;
 
 public class PerformingTheCalculationOfRewards {
